@@ -5,5 +5,10 @@
   "main": "index.js",
   "repository": "https://github.com/robozinho1711/AnamTec.git",
   "author": "Guilherme A. e Kenny Maciel",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "mysql2": "^3.14.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.22"
+  }
 }
