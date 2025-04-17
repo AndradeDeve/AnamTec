@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "dev": "index.js"
+  },
   "name": "AnamTec",
   "version": "1.0.0",
   "description": "Nosso TCC em DS",
