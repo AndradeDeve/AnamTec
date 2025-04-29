@@ -5,5 +5,4 @@ server.use(express.json)
 
 server.listen(333, () => {
     console.log("O servidor está funcionando! 😎")
-    console.log("Deu certo")
 })
