@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "node ./src/Server.js"
+    "dev": "node ./src/server.js"
   },
   "name": "AnamTec",
   "version": "1.0.0",
