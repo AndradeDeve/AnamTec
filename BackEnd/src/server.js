@@ -12,7 +12,7 @@ server.use(express.json)
 AppDataSource.initialize().then(async () => {
     console.log("Banco de dados conectado!!")
 
-    server.listen(333, () => {
+    server.listen(3333, () => {
         console.log("O servidor está funcionando! 😎")
     });
 });
