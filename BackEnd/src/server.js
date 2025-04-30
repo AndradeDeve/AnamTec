@@ -2,7 +2,7 @@ import express from "express";
 // import routes from "./Routes.js";
 import {AppDataSource} from "./database/data-souce.js";
 import cors from 'cors';
-
+//Criando o servidor
 
 const server = express();
 server.use(cors())
