@@ -1,8 +1,8 @@
 import express from "express";
-import userController from "./controller/userController";
+import professorController from "./controller/professorController.js";
 
 const routes = express();
 
-routes.use("/user", userController);
+routes.use("/", professorController);
 
 export default routes;
