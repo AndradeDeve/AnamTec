@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "node ./src/server.js",
+    "dev": "nodemon ./src/server.js",
     "generate_migrations": "npx typeorm -d ./src/database/data-souce.js migration:generate ./src/database/migration/db --outputJs",
     "run_migrations": "npx typeorm -d ./src/database/data-souce.js migration:run"
   },

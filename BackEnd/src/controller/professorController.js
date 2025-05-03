@@ -1,11 +1,10 @@
 import express from "express";
-import professor from "../entities/professor";
-import { AppDataSource } from "../database/data-souce";
+import professor from "../entities/professor.js";
+import { AppDataSource } from "../database/data-souce.js";
 import { Like } from "typeorm";
-import routes from "./userController";
 
-routes = express.Router();
-professorRepository = AppDataSource.getRepository(professor);
+const routes = express.Router();
+const professorRepository = AppDataSource.getRepository(professor);
 
 routes.get("/", async(request, response) =>{
     const professores = await professorRepository.findBy({tipo:"common"});
