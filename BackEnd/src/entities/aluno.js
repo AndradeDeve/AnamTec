@@ -4,7 +4,7 @@ const cadastro = new EntitySchema({
     name: "Alunos",
     tableName: "tbl_alunos",
     columns:{
-        id:{primary: true, type:"int", nullable:false, generatd: true},
+        id:{primary: true, type:"int", generatd: true},
         ra:{type:"varchar",  nullable:false, unique: true},
         nome:{type:"varchar", length: 50, nullable: false},
         data_nasc:{type:"date", nullable: false}, 

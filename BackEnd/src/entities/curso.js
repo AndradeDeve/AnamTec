@@ -7,7 +7,7 @@ const cursos = new EntitySchema({
         id: {primary: true, type: "int", generated: "increment"},
         curso: {type: "varchar", length: 20, nullable: false },
         turno: {type: "enum", enum:["Manhã", "Tarde","Noite"] , nullable: false },
-        semestre: {type: "int(2)", nullable: false},
+        semestre: {type: "int", nullable: false},
         modalidade:{type: "enum", enum:["Presencial","Híbrido","EAD"]},
         createdAt: {type: "datetime", nullable: false, default: ()=>
             "CURRENT_TIMESTAMP"},

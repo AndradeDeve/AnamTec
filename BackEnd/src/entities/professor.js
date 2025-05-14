@@ -5,7 +5,7 @@ const professor = new EntitySchema({
     tableName: "tbl_professor",
     columns:{
         id:{primary:true, type:"int", generated: true},
-        cpf:{typr:"int", unique:true, nullable: false},
+        cpf:{type:"int", unique:true, nullable: false},
         rm:{type:"int",unique: true, nullable:false},
         name:{type:"varchar", length: 50, nullable: false},
         email:{type:"varchar", length: 50, nullable: false, unique: true},
