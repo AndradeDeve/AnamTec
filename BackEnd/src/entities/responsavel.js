@@ -1,16 +1,19 @@
 import { EntitySchema } from "typeorm";
-
-const responsavel = new EntitySchema({ 
-    name: "responsavel",
-    tableName: "tbl_responsavel",
-    columns:{
-        cpf:{primary: true, type:"int",nullable:false},
-        nome:{type:"varchar", length: 45, nullable: false},
-        estado_civil:{type:"varchar", length: 10, nullable: false},
-        email:{type:"varchar", length: 45, nullable: false},
-        numero_tel:{type:"varchar", length: 15, nullable: false},    
-        createAt:{type:"datetime", nullable:false, default: () => "CURRENT_TIMESTAMP"},
-        deletAt:{type:"datetime", nullable: true},
+// Pronta
+const responsavel = new EntitySchema({
+    nome: "Responsavel",
+    tableName: "tbl_responsaveis",
+    columns: {
+        id: {primary: true, type: "int", generated: "increment"},
+        name: {type: "varchar",length: 50, nullable: false },
+        dataNasc: {type: "date", nullable: false },
+        estCivil: {type: "enum", enum: ["Solteiro(a)", "Casado(a)",
+            "Divorciado(a)","Viúvo(a)","Separado(a)"], nullable: false },
+        email: {type: "varchar", length: 50, nullable: false},
+        tell: {type: "int(11)", nullable: false},
+        createdAt: {type: "datetime", nullable: false, default: ()=>
+            "CURRENT_TIMESTAMP"},
+        deletdAt: {type: "datetime", nullable: true},
     }
 })
 
