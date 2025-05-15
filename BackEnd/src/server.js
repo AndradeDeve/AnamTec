@@ -10,6 +10,7 @@ server.use("/", routes)
 
 AppDataSource.initialize().then(async () => {
     console.log("Banco de dados conectado!!")
+    console.log("Deu certo")
 
     server.listen(3333, () => {
         console.log("O servidor está funcionando! 😎")
