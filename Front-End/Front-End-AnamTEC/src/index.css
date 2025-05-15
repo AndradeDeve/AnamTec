@@ -1,0 +1,12 @@
+@import './styles/paleta.css';
+
+body {
+    background-color: var(--branco);
+    font-family: var(--fonte-principal);
+  }
+  
+  button {
+    background-color: var(--roxo);
+    color: var(--branco);
+  }
+  
