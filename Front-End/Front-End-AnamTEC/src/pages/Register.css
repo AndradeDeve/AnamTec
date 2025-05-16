@@ -1,0 +1,93 @@
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #062f3d;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  background-color: #ecf0f1;
+  width: 100%;
+  padding: 20px 0;
+  justify-content: center;
+  flex-direction: row;
+  ;
+}
+.TitleLogo{
+  color: #1E2019;
+  font-size: 40pt;
+}
+
+.logo {
+  height: 120px;
+}
+
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-right: 100px;
+  background-color: #1E2019;
+  margin-right: 0px;
+  padding: 10px;
+  border-radius: 15px 15px 0px 0;
+}
+
+.tabs button {
+  background: none;
+  color: white;
+  font-size: 14pt;
+  border: none;
+  cursor: pointer;
+}
+
+.Forms-box{
+  display: flex;
+  flex-direction: column;
+  background-color: #062f3d;
+  box-shadow: 10px 10px 10px 0px;
+  border-radius: 18px;  
+}
+
+.register-form {
+  height: auto;
+  width: 500px;
+  padding: 20px;
+}
+.input {
+  margin-left: 10%;
+  padding: 5px 10px 0 0;   /* altura e largura internas */
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 400px;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  
+}
+
+.terms {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.terms label {
+  color: white;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.register-form button {
+  margin-left: 35%;
+  background-color: #1E2019;
+  color: white;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14pt;
+ 
+}
