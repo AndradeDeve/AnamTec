@@ -6,7 +6,7 @@
 .pnp.js
 
 #paginas de teste
-# src/pages/Sla.jsx
+src/pages/Sla.jsx
 
 # testing
 /coverage
