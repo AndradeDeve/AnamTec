@@ -1,15 +1,19 @@
-import "reflect-metadata";
-import { DataSource } from "typeorm";
+import mysql from 'mysql2';
 
-const AppDataSource = new DataSource({
-    type: "mysql",
-    host: "localhost",
-    username: "root", 
-    port: 3306,
-    password: "",
-    database: "Teste_TCC",
-    entities: ["src/entities/*.js"],
-    migrations: ["src/database/migration/*.cjs"]
-})
+const connection = await mysql.createConnection({
+  host: 'localhost',
+  port: '3306',
+  user: 'root',
+  password: '',
+  database: 'bd_TCC'
+});
 
-export {AppDataSource};
+connection.connect((err) => {
+  if (err) {
+    console.error('Erro ao conectar ao banco de dados:', err);
+    return;
+  }
+  console.log('Conectado ao banco de dados MySQL!');
+});
+
+export {connection};
