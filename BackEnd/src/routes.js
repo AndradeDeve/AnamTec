@@ -1,8 +1,8 @@
 import express from "express";
-import professorController from "./controller/professorController.js";
+import cadastroAlunoController from "./controller/cadastoAlunoController.js"
 
 const routes = express();
 
-routes.use("/", professorController);
+routes.use("/aluno", cadastroAlunoController);
 
 export default routes;
