@@ -1,8 +1,6 @@
 {
   "scripts": {
-    "dev": "nodemon ./src/server.js",
-    "generate_migrations": "npx typeorm -d ./src/database/data-souce.js migration:generate ./src/database/migration/db --outputJs",
-    "run_migrations": "npx typeorm -d ./src/database/data-souce.js migration:run"
+    "dev": "nodemon ./src/server.js"
   },
   "name": "AnamTec",
   "version": "1.0.0",
@@ -15,7 +13,10 @@
   "dependencies": {
     "axios": "^1.9.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.0.1",
     "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "nodemailer": "^7.0.4",
     "nodemon": "^3.1.10"
   },
   "devDependencies": {
