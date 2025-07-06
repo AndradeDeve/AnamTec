@@ -4,11 +4,14 @@
     "generate_migrations": "npx typeorm -d ./src/database/data-souce.js migration:generate ./src/database/migration/db --outputJs",
     "run_migrations": "npx typeorm -d ./src/database/data-souce.js migration:run"
   },
-  "name": "AnamTec",
+  "name": "anamtec",
   "version": "1.0.0",
   "description": "Nosso TCC em DS",
   "main": "index.js",
-  "repository": "https://github.com/robozinho1711/AnamTec.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robozinho1711/AnamTec.git"
+  },
   "author": "Guilherme A. e Kenny Maciel",
   "license": "MIT",
   "type": "module",
@@ -22,5 +25,10 @@
     "express": "^4.21.2",
     "mysql2": "^3.14.1",
     "nodemon": "^3.1.9"
-  }
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/robozinho1711/AnamTec/issues"
+  },
+  "homepage": "https://github.com/robozinho1711/AnamTec#readme"
 }
