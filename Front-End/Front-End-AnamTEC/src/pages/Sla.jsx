@@ -46,66 +46,50 @@ function Register() {
     <main className="Forms-box">
       {/* NAVEGAÇÃO ENTRE AS ABAS */}
       <div className="tabs">
-        <button onClick={() => setActiveTab("login")}>LOGIN</button>
-        <button onClick={() => setActiveTab("register")}>Register</button>
-        <button onClick={() => setActiveTab("reset")}>Reset Password</button>
-        
+        <button onClick={() => setActiveTab("register")}>Cadastro de Profissional</button>
       </div>
 
       {/* FORMULÁRIO DE CADASTRO */}
       {activeTab === "register" && (
         <form className="register-form">
-          
+          <div className="group">
+            <label>RM:</label>
+            <input 
+              className="input" type="number" placeholder="Informe o RM" value={formData.rm}
+              onChange={(e) => setFormData({ ...formData, rm: e.target.value })}
+            />
+          </div>
+          <div className="group">
+          <label for= "nome">Nome de Usuário:</label>
           <input 
-            className="input"
-            type="text"
-            placeholder="RA"
-            value={formData.ra}
-            onChange={(e) => setFormData({ ...formData, ra: e.target.value })}
-          />
-          <input 
-            className="input"
-            type="Text"
-            placeholder="Nome" 
-            value={formData.nome}
+            className="input" type="Text" placeholder="Nome"  value={formData.nome}
             onChange={(e) => setFormData({ ...formData, nome: e.target.value})}
             />
+      </div>
+         <div className="group">
+          <label>Email:</label>
           <input
-            className="input" 
-            type="date"
-            placeholder="Data de nascimento"
-            value={formData.data_nasc}
-            onChange={(e) => setFormData({ ...formData, data_nasc: e.target.value })}
-          />
-          <input
-          className="input"
-          type="text"
-          placeholder="Genero"
-          value={formData.genero}
-          onChange={(e) => setFormData({ ...formData, genero: e.target.value})}
-          />
-          <input
-            className="input"
-            type="text"
-            placeholder="Email"
-            value={formData.email}
+            className="input" type="text" placeholder="Email" value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value})}
           />
-          <input
-          className="input"
-          type="text"
-          placeholder="telefone"
-          value={formData.telefone}
-          onChange={(e) => setFormData({ ...formData, telefone: e.target.value})}
-          />
-          <div className="terms">
-            <input type="checkbox" id="terms" />
-            <label htmlFor="terms">Concordo com os Termos de Uso</label>
           </div>
-          <button type="submit" onClick={bntGetFunctionClick} >Get function </button>
-          <button type="submit" onClick={bntPostFunctionClick}>Post function </button>
+          <div className="group">
+           <label>Senha:</label>
+              <input
+            className="input" type="text" placeholder="Senha" value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value})}
+          />
+          </div>
+        <div className="group">
+           <label>Cargo:</label>
+              <input
+            className="input" type="text" placeholder="Selecione o cargo de acesso"
+            value={formData.cargo} onChange={(e) => setFormData({ ...formData, Cargo: e.target.value})}
+          />
+        </div>
+          <button type="submit" onClick={bntGetFunctionClick} >Cadastrar </button>
         </form>
-      
+        
     )}
     </main>
     </div>

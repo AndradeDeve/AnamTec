@@ -3,14 +3,16 @@
   flex-direction: column;
   align-items: center;
   background-color: #062f3d;
-  min-height: 100vh;
+  min-height: 100%;
+  
 }
 
 .header {
   display: flex;
   background-color: #ecf0f1;
   width: 100%;
-  padding: 20px 0;
+  
+  padding: 75px 1px;
   justify-content: center;
   flex-direction: row;
   ;
@@ -21,7 +23,7 @@
 }
 
 .logo {
-  height: 120px;
+  height: 130px;
 }
 
 
@@ -29,65 +31,80 @@
   display: flex;
   justify-content: space-around;
   margin-right: 100px;
-  background-color: #1E2019;
+  background-color: #062f3d;
   margin-right: 0px;
   padding: 10px;
   border-radius: 15px 15px 0px 0;
+  border: 5px solid #ccc
+  
 }
 
 .tabs button {
   background: none;
   color: white;
-  font-size: 14pt;
+  font-size: 18pt;
+  font-weight: 900;
   border: none;
   cursor: pointer;
+  padding: 10px;
+
 }
 
 .Forms-box{
   display: flex;
   flex-direction: column;
-  background-color: #062f3d;
+  margin-bottom: 20px;
+  background-color: #ecf0f1;
   box-shadow: 10px 10px 10px 0px;
-  border-radius: 18px;  
+  border-radius: 18px;
+  margin-bottom: 20px;  
 }
 
 .register-form {
   height: auto;
-  width: 500px;
+  width: 1100px;
   padding: 20px;
+    
 }
 .input {
-  margin-left: 10%;
-  padding: 5px 10px 0 0;   /* altura e largura internas */
+  margin-left: 10px;
+  padding: 10px 2px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 400px;
-  box-sizing: border-box;
-  margin-bottom: 12px;
+  width: 200px;
+  box-shadow: 3px 3px 9px 1.2px;
+ 
+  
   
 }
-
-.terms {
+.group{
   display: flex;
-  justify-content: center;
-  margin: 10px 0;
+  align-items: center;
+  margin-left: 10%;
+  padding: 2px 30px
+  
+}
+.group label{
+  font-weight: 900;
+  margin-right: 10px;
 }
 
-.terms label {
-  color: white;
-  font-size: 12px;
-  margin-left: 5px;
+.group input, select{
+  flex: 1;
+  padding: 8px;
 }
+
 
 .register-form button {
-  margin-left: 35%;
-  background-color: #1E2019;
+  margin-left: 38%;
+  margin-top: 10px;
+  background-color: #062f3d;
   color: white;
-  padding: 15px 40px;
+  padding: 15px 100px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14pt;
+  font-size: 16pt;
  
 }

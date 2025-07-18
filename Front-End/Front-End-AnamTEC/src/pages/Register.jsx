@@ -17,9 +17,9 @@ function Register() {
     <main className="Forms-box">
       {/* NAVEGAÇÃO ENTRE AS ABAS */}
       <div className="tabs">
-        <button onClick={() => setActiveTab("login")}>LOGIN</button>
+        
         <button onClick={() => setActiveTab("register")}>Register</button>
-        <button onClick={() => setActiveTab("reset")}>Reset Password</button>
+        
       </div>
 
       {/* FORMULÁRIO DE CADASTRO */}

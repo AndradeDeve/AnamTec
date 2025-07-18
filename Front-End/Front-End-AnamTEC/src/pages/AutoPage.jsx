@@ -17,8 +17,8 @@ function AuthPage() {
 
       <main className="Forms-box">
         <div className="tabs">
-          <button onClick={() => setActiveTab("login")}>LOGIN</button>
-          <button onClick={() => setActiveTab("register")}>REGISTER</button>
+          <button onClick={() => setActiveTab("login")}></button>
+          <button onClick={() => setActiveTab("register")}>Cadastro de profissional</button>
         </div>
 
         {activeTab === "login" && (
