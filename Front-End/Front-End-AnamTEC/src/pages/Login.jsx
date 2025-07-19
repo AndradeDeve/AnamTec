@@ -1,22 +1,26 @@
+// src/pages/Login.jsx
 import React from 'react';
-import './Login.css';
-
+import "./Login.css";
+import logoAnamTec from "../IMG/logoAnamTEC.png"
 function Login() {
-return (
-  <div className="login-container">
-    <div className='Background-blue'>
-    <h2>Login</h2>
-    <form className="login-form">
-        <label>Email:</label>
-          <input type="email" placeholder="Digite seu e-mail" />
-
-        <label>Senha:</label>
-          <input type="password" placeholder="Digite sua senha" />
-
-      <button type="submit">Entrar</button>
-    </form>
+    
+  return (
+    <div className='top-layout' >
+        <header className="header">
+            <h1 className="TitleLogo">AnamTec</h1>
+            <img src={logoAnamTec} alt="Logo" className="logo" />
+      </header>
+ <div className='bottom-layout'>
+        <h2 className='title'>Acesso ao Sistema</h2>
+      <form className='forms'>
+        <label>Digite seu Email</label>
+        <input className='input' type="text" placeholder="Email" />
+           <label>Digite sua Senha</label>
+        <input className='input' type="password" placeholder="Senha" />
+        <button className='btn-login' type="submit">Entrar</button>
+      </form>
     </div>
-  </div>
+   </div>
   );
 }
 

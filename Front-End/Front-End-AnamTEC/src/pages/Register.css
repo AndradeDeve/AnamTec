@@ -11,11 +11,10 @@
   display: flex;
   background-color: #ecf0f1;
   width: 100%;
-  
   padding: 75px 1px;
   justify-content: center;
   flex-direction: row;
-  ;
+  
 }
 .TitleLogo{
   color: #1E2019;

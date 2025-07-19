@@ -8,7 +8,9 @@ function Register() {
   const [activeTab, setActiveTab] = useState("register");
 
   function bntGetFunctionClick(e){
-    e.preventDefault();
+    e.preventDefault(); 
+    {/*impede que o botão recarregue a página (comportamento padrão de um  */}
+
 
     getFunction()
     .then(data => console.log(data))
@@ -24,14 +26,13 @@ function Register() {
     .then(data => console.log("Dados salvos:", data))
     .catch(err => console.error("Erro ao salvar:", err));
 }
-
+  {/*Dados que serão enviados para o banco. */}
   const [formData, setFormData] = useState({
-    ra: "",
+    rm: "",
     nome: "",
-    data_nasc: "",
-    genero: "",
     email: "",
-    telefone: ""
+    senha: "",
+    cargo: ""
   });
 
   return (

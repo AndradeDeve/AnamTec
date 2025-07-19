@@ -1,15 +1,18 @@
+// src/App.js
 import React from 'react';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Sla from './pages/Sla';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+import Login from './pages/Login';
+import Cadastro from './pages/Cadastro';
 
 function App() {
   return (
-    <div>
-      <Sla />
-      {/* <Register /> */}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+      </Routes>
+    </Router>
   );
 }
 
