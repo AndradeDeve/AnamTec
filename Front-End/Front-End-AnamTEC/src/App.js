@@ -9,7 +9,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Cadastro/>} />
         <Route path="/cadastro" element={<Cadastro />} />
       </Routes>
     </Router>

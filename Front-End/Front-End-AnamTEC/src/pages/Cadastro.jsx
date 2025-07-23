@@ -77,18 +77,23 @@ function Register() {
           <div className="group">
            <label>Senha:</label>
               <input
-            className="input" type="text" placeholder="Senha" value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value})}
+            className="input" type="text" placeholder="Senha" value={formData.senha}
+            onChange={(e) => setFormData({ ...formData, senha: e.target.value})}
           />
           </div>
         <div className="group">
            <label>Cargo:</label>
-              <input
-            className="input" type="text" placeholder="Selecione o cargo de acesso"
-            value={formData.cargo} onChange={(e) => setFormData({ ...formData, Cargo: e.target.value})}
-          />
+              <select
+            className="input" value={formData.cargo} onChange={(e) => setFormData({ ...formData, cargo: e.target.value})}
+          >
+            <option value="">Selecione o Cargo de acesso</option>
+             <option value="Secretária">Secretária</option>
+              <option value="Coordenador de Curso">Coordenador de Curso</option>
+              <option value="Professor">Professor</option>
+          </select>
         </div>
-          <button type="submit" onClick={bntGetFunctionClick} >Cadastrar </button>
+          <button type="submit" onClick={bntPostFunctionClick}>Cadastrar</button>
+
         </form>
         
     )}
