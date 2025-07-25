@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import "./Login.css";
 
 // Importa a imagem da logo
-import logoAnamTec from "../IMG/logoAnamTEC.png";
+import logoAnamTec from "../IMG/Anamtec-logo.png";
 
 // Componente funcional da tela de login
 export default function Login() {
@@ -29,7 +29,7 @@ export default function Login() {
 
       {/* Cartão de login */}
       <div className="login-card">
-        <div className="card-header">
+        <div className="login-card-header">
           <h2>Acesso ao Sistema</h2>
         </div>
 

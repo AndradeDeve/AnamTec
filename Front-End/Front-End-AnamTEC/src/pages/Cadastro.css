@@ -1,61 +1,50 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
 .register-container {
   display: flex;
+   height: 100vh;
   flex-direction: column;
-  align-items: center;
   background: linear-gradient(to bottom, #E4EDF1  55%, #044654 40%);
-  min-height: 100%;
-  
+  align-items: center;
 }
 
 .header {
   display: flex;
-  width: 100%;
-  padding: 75px 1px;
+  gap: 20px;
   justify-content: center;
-  flex-direction: row;
+  margin-top: 120px;
+  
   
 }
-.TitleLogo{
+.header h1{
   color: #1E2019;
-  font-size: 40pt;
+  font-size: 36pt;
 }
 
-.logo {
-  height: 130px;
-}
-
-
-.tabs {
-  display: flex;
-  justify-content: space-around;
-  margin-right: 100px;
+.register-card-header {
   background-color: #044654;
-  margin-right: 0px;
   padding: 10px;
-  border-radius: 15px 15px 0px 0;
- 
-  
+  text-align: center;
+  border-radius: 12px 12px 0px 0px;
 }
 
-.tabs button {
-  background: none;
-  color: white;
-  font-size: 18pt;
-  font-weight: 900;
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-
+.register-card-header h2 {
+  color: #E4EDF1;
+  font-size: 16pt;
+  margin:auto;
 }
 
 .Forms-box{
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
   background-color: #E4EDF1;
   box-shadow: 10px 10px 10px 0px;
   border-radius: 18px;
-  margin-bottom: 20px;  
+  margin-top: 65px;  
 }
 
 .register-form {
@@ -106,5 +95,5 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 16pt;
- 
+  font-weight: bold;
 }

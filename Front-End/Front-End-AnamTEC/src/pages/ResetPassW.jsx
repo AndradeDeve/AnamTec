@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "./ResetPassW.css";
-import logoAnamTec from "../IMG/logoAnamTEC.png";
+import logoAnamTec from "../IMG/Anamtec-logo.png";
 
 export default function ResetPassW() {
     const [formData, setFormData] = useState({
@@ -27,7 +27,7 @@ export default function ResetPassW() {
                 </div>
 
                 <form onSubmit={handleResetPassW} className="reset-card-body">
-                    <label htmlFor='senhaAtual'>Senha atual</label>
+                    <label htmlFor='senhaAtual'>Senha atual:</label>
                     <input
                         type="password"
                         id="senhaAtual"
@@ -38,7 +38,7 @@ export default function ResetPassW() {
                         }
                     />
 
-                    <label htmlFor='NovaSenha'>Nova Senha</label>
+                    <label htmlFor='NovaSenha'>Nova Senha:</label>
                     <input
                         type="password"
                         id="NovaSenha"
@@ -49,7 +49,7 @@ export default function ResetPassW() {
                         }
                     />
 
-                    <label htmlFor='ConfirmaSenha'>Confirmar Senha</label>
+                    <label htmlFor='ConfirmaSenha'>Confirmar Senha:</label>
                     <input
                         type="password"
                         id="ConfirmaSenha"

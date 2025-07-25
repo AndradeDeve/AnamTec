@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "./Register.css";
-import logoAnamTec from "../IMG/logoAnamTEC.png"
+import "./Cadastro.css";
+import logoAnamTec from "../IMG/Anamtec-logo.png"
 import {getFunction, postFunction} from "../services/APISevice"
 
 
@@ -41,14 +41,15 @@ function Register() {
       
       {/* TOPO - Logo e Título */}
       <header className="header">
-        <h1 className="TitleLogo">AnamTec</h1>
+        <h1>AnamTec</h1>
         <img src={logoAnamTec} alt="Logo" className="logo" />
       </header>
     <main className="Forms-box">
       {/* NAVEGAÇÃO ENTRE AS ABAS */}
-      <div className="tabs">
-        <button onClick={() => setActiveTab("register")}>Cadastro de Profissional</button>
-      </div>
+       <div className="register-card-header">
+          <h2>Cadastro de Profissional</h2>
+        </div>
+    
 
       {/* FORMULÁRIO DE CADASTRO */}
       {activeTab === "register" && (

@@ -10,9 +10,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/ResetarSenhar" element={<ResetPassW />} />
+        <Route path="/" element={<ResetPassW />} />
         <Route path="/Login" element={<Login/>} />
-        <Route path="/" element={<Cadastro />} />
+        <Route path="/Cadastro" element={<Cadastro />} />
       </Routes>
     </Router>
   );
