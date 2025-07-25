@@ -4,13 +4,15 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
+import ResetPassW from './pages/ResetPassW';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Cadastro/>} />
-        <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/ResetarSenhar" element={<ResetPassW />} />
+        <Route path="/Login" element={<Login/>} />
+        <Route path="/" element={<Cadastro />} />
       </Routes>
     </Router>
   );

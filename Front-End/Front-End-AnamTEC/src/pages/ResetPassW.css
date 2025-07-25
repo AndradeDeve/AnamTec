@@ -4,7 +4,7 @@ body, html {
   font-family: 'Roboto', sans-serif;
 }
 
-.login-container {
+.reset-container {
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -12,7 +12,7 @@ body, html {
   align-items: center;
 }
 
-.header {
+.reset-header {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,12 +20,13 @@ body, html {
   margin-top: 40px;
 }
 
-.logo {
+.reset-logo {
   width: 240px;
-  height: 240px;
+  height: 180px;
+  margin-top: 60px;
 }
 
-.login-card {
+.reset-card {
   background-color:#E4EDF1;
   margin-top: 15px;
   width: 90%;
@@ -33,33 +34,33 @@ body, html {
   border-radius: 14px 14px 14px 14px;
 }
 
-.card-header {
+.reset-card-header {
   background-color: #044654;
   padding: 10px ;
   text-align: center;
   border-radius: 12px 12px 0px 0px;
 }
 
-.card-header h2 {
+.reset-card-header h2 {
   color: #E4EDF1;
   font-size: 18px;
   margin: 0;
 }
 
-.card-body {
+.reset-card-body {
   padding: 25px;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.card-body label {
+.reset-card-body label {
   color: #1E2019;
   font-size: 18px;
   font-weight: 700;
 }
 
-.card-body input {
+.reset-card-body input {
   padding: 10px;
   border: none;
   border-radius: 3px;
@@ -67,13 +68,13 @@ body, html {
   box-shadow: 4px 4px 4px #1E2019;
 }
 
-.card-body input::placeholder {
+.reset-card-body input::placeholder {
   color: #818181;
   font-family: monospace;
   font-size: 15px;
 }
 
-.card-body button {
+.reset-card-body button {
   background-color: #044654;
   width: 25%;
   color: white;
