@@ -90,10 +90,10 @@ body, html {
   margin-top: 10px;
   background-color: #044654;
   color: white;
-  padding: 15px 100px;
+  padding: 12px 100px;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 16pt;
   font-weight: bold;
+  cursor: pointer;
 }

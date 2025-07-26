@@ -1,0 +1,33 @@
+/* Header.css */
+
+.header {
+  background-color: #f8f9fa;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2D3436;
+}
+
+.header .user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header .user-section img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.header .user-name {
+  font-weight: 500;
+  color: #2D3436;
+}
