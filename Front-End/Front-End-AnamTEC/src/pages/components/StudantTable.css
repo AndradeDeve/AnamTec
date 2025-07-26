@@ -1,0 +1,35 @@
+/* StudentsTable.css */
+
+.students-table {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.06);
+  margin-top: 1.5rem;
+}
+
+.students-table h3 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.students-table .table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.students-table .table th {
+  background-color: #5973FF;
+  color: white;
+  font-weight: 500;
+}
+
+.students-table .table td {
+  vertical-align: middle;
+}
+
+.students-table .badge {
+  font-size: 0.85rem;
+  padding: 0.5em 1em;
+  border-radius: 1rem;
+}

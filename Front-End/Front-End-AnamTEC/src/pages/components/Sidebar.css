@@ -1,0 +1,27 @@
+/* Sidebar.css */
+
+.sidebar {
+  background-color: #5E3EFF; /* roxo principal */
+  min-height: 100vh;
+  padding: 1rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar .nav-link {
+  color: white;
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
+
+.sidebar .nav-link:hover {
+  color: #FFD580; /* tom de destaque */
+}
+
+.sidebar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}

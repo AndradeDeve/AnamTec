@@ -1,0 +1,21 @@
+/* DashboardHeader.css */
+
+.dashboard-header {
+  background-color: #f8f9fa;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-header h2 {
+  color: #2D3436;
+  font-weight: 600;
+}
+
+.dashboard-header .user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

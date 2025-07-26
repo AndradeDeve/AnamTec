@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "./Register.css";
-import logoAnamTec from "../IMG/logoAnamTEC.png"
+import "./Cadastro.css";
+import logoAnamTec from "../IMG/Anamtec-logo.png"
 import {getFunction, postFunction} from "../services/APISevice"
 
 
@@ -41,14 +41,15 @@ function Register() {
       
       {/* TOPO - Logo e Título */}
       <header className="header">
-        <h1 className="TitleLogo">AnamTec</h1>
+        <h1>AnamTec</h1>
         <img src={logoAnamTec} alt="Logo" className="logo" />
       </header>
     <main className="Forms-box">
       {/* NAVEGAÇÃO ENTRE AS ABAS */}
-      <div className="tabs">
-        <button onClick={() => setActiveTab("register")}>Cadastro de Profissional</button>
-      </div>
+       <div className="register-card-header">
+          <h2>Cadastro de Profissional</h2>
+        </div>
+    
 
       {/* FORMULÁRIO DE CADASTRO */}
       {activeTab === "register" && (
@@ -77,18 +78,23 @@ function Register() {
           <div className="group">
            <label>Senha:</label>
               <input
-            className="input" type="text" placeholder="Senha" value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value})}
+            className="input" type="text" placeholder="Senha" value={formData.senha}
+            onChange={(e) => setFormData({ ...formData, senha: e.target.value})}
           />
           </div>
         <div className="group">
            <label>Cargo:</label>
-              <input
-            className="input" type="text" placeholder="Selecione o cargo de acesso"
-            value={formData.cargo} onChange={(e) => setFormData({ ...formData, Cargo: e.target.value})}
-          />
+              <select
+            className="input" value={formData.cargo} onChange={(e) => setFormData({ ...formData, cargo: e.target.value})}
+          >
+            <option value="">Selecione o Cargo de acesso</option>
+             <option value="Secretária">Secretária</option>
+              <option value="Coordenador de Curso">Coordenador de Curso</option>
+              <option value="Professor">Professor</option>
+          </select>
         </div>
-          <button type="submit" onClick={bntGetFunctionClick} >Cadastrar </button>
+          <button type="submit" onClick={bntPostFunctionClick}>Cadastrar</button>
+
         </form>
         
     )}
