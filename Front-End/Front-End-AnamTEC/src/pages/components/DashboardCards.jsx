@@ -1,18 +1,20 @@
 import React from 'react';
-import '../components/DashboardCards.css'
+import './DashboardCards.css';
+import formIcon from '../../IMG/forms-icon.png';
 const cards = [
-  { title: 'Alunos Cadastrados', value: 1000, color: 'bg-cyan-600' },
-  { title: 'Anamneses Concluídas', value: 856, color: 'bg-green-600' },
-  { title: 'Anamneses Pendentes', value: 144, color: 'bg-red-600' },
+  { title: 'Alunos Cadastrados', value: 1000, color: 'bg-cyan' },
+  { title: 'Anamneses Concluídas', value: 856, color: 'bg-green' },
+  { title: 'Anamneses Pendentes', value: 144, color: 'bg-red' },
 ];
 
 export default function DashboardCards() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="cards-container">
       {cards.map((card, index) => (
-        <div key={index} className={`${card.color} text-white p-6 rounded-lg shadow`}>
-          <h3 className="text-lg font-semibold">{card.title}</h3>
-          <p className="text-2xl">{card.value}</p>
+        <div key={index} className={`dashboard-card ${card.color}`}>
+          <img src={formIcon} alt="" />
+          <p>{card.value}</p>
+          <h3>{card.title}</h3>
         </div>
       ))}
     </div>
