@@ -7,10 +7,10 @@ const mockData = [
 
 export default function StudentTable() {
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white shadow rounded-lg">
+    <div className="studants-table">
+      <table className="table">
         <thead>
-          <tr className="bg-gray-200 text-gray-700 text-left">
+          <tr className="search">
             <th className="p-3">RM</th>
             <th className="p-3">Nome do Aluno</th>
             <th className="p-3">Curso</th>
@@ -24,7 +24,7 @@ export default function StudentTable() {
         </thead>
         <tbody>
           {mockData.map((aluno, index) => (
-            <tr key={index} className="border-t">
+            <tr key={index} className="table-itens">
               <td className="p-3">{aluno.rm}</td>
               <td className="p-3">{aluno.nome}</td>
               <td className="p-3">{aluno.curso}</td>
@@ -33,10 +33,10 @@ export default function StudentTable() {
               <td className="p-3">{aluno.coordenador}</td>
               <td className={`p-3 font-semibold ${aluno.status === 'Concluída' ? 'text-green-600' : 'text-red-600'}`}>{aluno.status}</td>
               <td className="p-3">
-                <button className="bg-blue-500 text-white px-3 py-1 rounded">ACESSAR</button>
+                <button className="btn-table">ACESSAR</button>
               </td>
               <td className="p-3">
-                <button className="bg-blue-500 text-white px-3 py-1 rounded">ACESSAR</button>
+                <button className="btn-table">ACESSAR</button>
               </td>
             </tr>
           ))}

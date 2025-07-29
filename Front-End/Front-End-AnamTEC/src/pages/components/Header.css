@@ -1,33 +1,73 @@
-/* Header.css */
-
-.header {
-  background-color: #f8f9fa;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+/* Botão do menu */
+.header{
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+  position:relative;
+  bottom: 120px;
+  width: 100%;
+ padding: 10px;
+  background-color: #044654;
 }
 
-.header h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #2D3436;
+.menu-toggle {
+  font-size: 30pt;
+  cursor: pointer;
+  color: #E4EDF1;
+  background-color: #044654;
+  border-radius: 5px;
 }
 
-.header .user-section {
+/* Dropdown */
+.dropdown-menu {
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 220px;
+}
+
+.menu-dropdown {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-dropdown li {
   display: flex;
   align-items: center;
-  gap: 1rem;
-}
-
-.header .user-section img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.header .user-name {
+  gap: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #E4EDF1;
   font-weight: 500;
-  color: #2D3436;
+  cursor: pointer;
+}
+
+.menu-dropdown li:hover {
+  background-color: #044654;
+  border-radius: 5px;
+}
+
+.menu-dropdown img {
+  width: 20px;
+  height: 20px;
+}
+
+.logo{
+  font-size: 32pt;
+  font-weight: 900;
+  color: #E4EDF1;
+  margin-left: 25%;
+}
+
+.user-section {
+  font-size: 14pt;
+  color: #E4EDF1;
+}
+
+.config-btn{
+  font-size: 32pt;
+  border: none;
+  cursor:pointer;
 }

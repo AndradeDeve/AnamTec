@@ -1,21 +1,26 @@
-/* DashboardHeader.css */
+.cards-container {
+ display: grid;
+ grid-template-columns: 1fr 1fr 1fr;
 
-.dashboard-header {
-  background-color: #f8f9fa;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #dee2e6;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
-.dashboard-header h2 {
-  color: #2D3436;
-  font-weight: 600;
-}
-
-.dashboard-header .user-info {
+.dashboard-card {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  margin: 1px 150px;
+  font-size: 16pt;
+  font-weight: 900;
+  padding: 10px  15px;
+  border-radius: 10px;
+  color: white;
+  
 }
+.dashboard-card p, h3{
+  margin-left: 16px;
+  font-size: 16pt;
+  font-weight: 700;
+}
+
+.bg-cyan { background-color: #044654; }
+.bg-green { background-color: #00CC92; }
+.bg-red { background-color: #FE4120; }

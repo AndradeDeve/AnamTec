@@ -1,15 +1,45 @@
-import React from 'react';
-import '../components/Header.css'
-export default function Header() {
+import React, { useState } from 'react';
+import homeIcon from '../../IMG/home.png';
+import personIcon from '../../IMG/person.png';
+import passWordIcon from '../../IMG/password.png';
+import nsaIcon from '../../IMG/nsa.png';
+import controlAcessIcon from '../../IMG/control-acess.png';
+import relatorioIcon from '../../IMG/relatorio.png';
+import logoAnamtec from '../../IMG/Anamtec-logo.png'
+import '../components/Header.css';
+
+export const Header = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
   return (
-    <header className="bg-primary text-white flex justify-between items-center p-4 shadow">
-      <div className="text-2xl font-bold">AnamTec <span className="text-xl">⚙</span></div>
-      <div className="text-sm">
-        Bem-vindo <strong>(Coordenador)</strong>
+    <header className="header">
+      <div className="left-section">
+        <div className="menu-toggle" onClick={toggleMenu}>☰</div>
+
+        {menuOpen && (
+          <aside className="dropdown-menu">
+            <ul className="menu-dropdown">
+              <li><img src={homeIcon} alt="Home" /><p>Home</p></li>
+              <li><img src={personIcon} alt="Cadastrar" /><p>Cadastrar</p></li>
+              <li><img src={passWordIcon} alt="Senha" /><p>Resetar Senha</p></li>
+              <li><img src={nsaIcon} alt="NSA" /><p>Acesso ao NSA</p></li>
+              <li><img src={controlAcessIcon} alt="Acesso" /><p>Controle de Acesso</p></li>
+              <li><img src={relatorioIcon} alt="Relatório" /><p>Relatório</p></li>
+            </ul>
+          </aside>
+        )}
       </div>
-      <button className="text-white hover:text-gray-300">
-       
-      </button>
+
+      <div className="logo">AnamTec <img src={logoAnamtec}alt="Imagem logo" /></div>
+
+      <div className="user-section">
+        <span>Bem-vindo <strong>(Coordenador Pedagógico)</strong></span>
+      </div>
+        <button className="config-btn">⚙</button>
     </header>
   );
-}
+};
