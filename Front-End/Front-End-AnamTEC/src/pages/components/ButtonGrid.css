@@ -1,0 +1,32 @@
+.btn-actions {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+    background-color: #E4EDF1;
+    border-radius: 18px;
+    position:relative;
+    margin: 0px 85px;
+    font-size: 14pt;
+    
+   
+}
+.btn-cadastro{
+    background-color:#044654 ;
+    padding: 12px 10px;
+    border-radius: 8px;
+    margin: 8px 8px;
+    
+}
+.btn-EnviarEmail{
+    background-color:#044654 ;
+    padding: 12px 10px;
+    border-radius: 8px;
+    margin: 8px 8px; 
+}
+
+.btn-Pesquisar{
+    background-color:#044654 ;
+    padding: 12px 10px;
+    border-radius: 8px;
+    margin: 8px 8px;
+}
