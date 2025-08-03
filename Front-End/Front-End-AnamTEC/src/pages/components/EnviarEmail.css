@@ -1,0 +1,42 @@
+.modal{
+   margin: 10% 0%;
+   font-family: Arial, Helvetica, sans-serif;
+
+   
+}
+
+.modalheader{
+    background-color: #044654;   
+    color:#E4EDF1;
+   
+}
+
+.modalTitle{
+    font-size: 18pt;
+    font-weight: 600;
+    color:#E4EDF1;
+}
+
+.modalbody{
+    background-color: #044654;
+     border: 2px solid #044654;
+}
+
+.modalbody p{
+    font-size: 16pt;
+    color:#E4EDF1;
+}
+
+.modalbody ul{
+    font-size: 14pt;
+    color: #E4EDF1;
+}
+
+.modalfooter{
+    background-color: #044654;
+    border: 2px solid #044654;
+}
+
+.modalfooter button{
+    background-color: #1E2019;
+}

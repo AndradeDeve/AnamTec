@@ -1,10 +1,10 @@
 .filter-bar {
   display: flex;
   position: relative;
-  top: 100px;
+  top: 50px;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
+  gap: 1px;
   padding: 20px 0;
 }
 
@@ -16,6 +16,7 @@
   box-shadow: 2px 2px 5px #1E2019;
   padding: 5px 10px;
   transition: box-shadow 0.3s ease;
+  margin: 2px 15px
 }
 
 .filter-input:hover {

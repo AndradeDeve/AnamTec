@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import ResetPassW from './pages/ResetPassW';
 import MasterDashboard from './pages/MasterDashboard';
+import ObservacoesUsers from './pages/ObservacoesUsers';
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
         <Route path="/ResetarSenha" element={<ResetPassW />} />
         <Route path="/Login" element={<Login/>} />
         <Route path="/Cadastro" element={<Cadastro />} />
-        <Route path="/" element={<MasterDashboard />} />
+        <Route path="/CoordenadorPedagogico" element={<MasterDashboard />} />
+        <Route path="/" element={<ObservacoesUsers />} />
       </Routes>
     </Router>
   );

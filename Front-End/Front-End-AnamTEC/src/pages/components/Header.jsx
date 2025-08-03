@@ -8,7 +8,7 @@ import relatorioIcon from '../../IMG/relatorio.png';
 import logoAnamtec from '../../IMG/Anamtec-logo.png'
 import '../components/Header.css';
 
-export const Header = () => {
+const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -17,22 +17,21 @@ export const Header = () => {
 
   return (
     <header className="header">
-      <div className="left-section">
-        <div className="menu-toggle" onClick={toggleMenu}>☰</div>
+      <div className="menu-toggle" onClick={toggleMenu}>☰</div>
+   <aside className={`dropdown-menu ${menuOpen ? 'show' : 'hide'}`}>
+  {menuOpen && (
+    <ul className="menu-dropdown">
+      <li><img src={homeIcon} alt="Home" /><p>Home</p></li>
+      <li><img src={personIcon} alt="Cadastrar" /><p>Cadastrar</p></li>
+      <li><img src={passWordIcon} alt="Senha" /><p>Resetar Senha</p></li>
+      <li><img src={nsaIcon} alt="NSA" /><p>Acesso ao NSA</p></li>
+      <li><img src={controlAcessIcon} alt="Acesso" /><p>Controle de Acesso</p></li>
+      <li><img src={relatorioIcon} alt="Relatório" /><p>Relatório</p></li>
+    </ul>
+  )}
+</aside>
 
-        {menuOpen && (
-          <aside className="dropdown-menu">
-            <ul className="menu-dropdown">
-              <li><img src={homeIcon} alt="Home" /><p>Home</p></li>
-              <li><img src={personIcon} alt="Cadastrar" /><p>Cadastrar</p></li>
-              <li><img src={passWordIcon} alt="Senha" /><p>Resetar Senha</p></li>
-              <li><img src={nsaIcon} alt="NSA" /><p>Acesso ao NSA</p></li>
-              <li><img src={controlAcessIcon} alt="Acesso" /><p>Controle de Acesso</p></li>
-              <li><img src={relatorioIcon} alt="Relatório" /><p>Relatório</p></li>
-            </ul>
-          </aside>
-        )}
-      </div>
+   
 
       <div className="logo">AnamTec <img src={logoAnamtec}alt="Imagem logo" /></div>
 
@@ -43,3 +42,5 @@ export const Header = () => {
     </header>
   );
 };
+
+export default Header;
