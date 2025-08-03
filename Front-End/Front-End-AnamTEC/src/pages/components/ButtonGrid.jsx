@@ -1,15 +1,27 @@
 import React from "react";
-import './ButtonGrid.css'
+import EnviarEmailModal from './EnviarEmail';
+import './ButtonGrid.css';
 
-  // Função executada quando o usuário clica no botão "ENTRAR"
-  const BtnActions =({onCadastrar, onEnviarEmail, onPesquisar }) => {
-    return (
-        <div className="btn-actions">
-            <button className="btn-cadastro" onClick={onCadastrar}>Cadastrar</button>
-            <button className="btn-EnviarEmail" onClick={onEnviarEmail}>Enviar Email</button>
-            <button className="btn-Pesquisar" onClick={onPesquisar}>Pesquisar</button>
-        </div>
-    );
-  };
+const ButtonGrid = ({ onCadastrar, onEnviarEmail, onPesquisar, showModal, setShowModal, alunosPendentes, onEnviar }) => {
+  return (
+    <div className="btn-actions">
+      <button className="btn-cadastro" onClick={onCadastrar}>Cadastrar</button>
 
-  export default BtnActions;
+      <button className="btn-EnviarEmail" onClick={onEnviarEmail}>
+        Enviar Email
+      </button>
+
+      <EnviarEmailModal 
+      className="btn-EnviarEmail"
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        alunosPendentes={alunosPendentes}
+        onEnviar={onEnviar}
+      />
+
+      <button className="btn-Pesquisar" onClick={onPesquisar}>Pesquisar</button>
+    </div>
+  );
+};
+
+export default ButtonGrid;

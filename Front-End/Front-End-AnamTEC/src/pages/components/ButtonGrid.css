@@ -23,6 +23,12 @@
     border-radius: 8px;
     margin: 8px 8px; 
 }
+.EnviarEmailModal{
+       background-color:#044654 ;
+    padding: 12px 10px;
+    border-radius: 8px;
+    margin: 8px 8px; 
+}
 
 .btn-Pesquisar{
     background-color:#044654 ;
