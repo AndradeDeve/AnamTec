@@ -1,6 +1,7 @@
 import React from 'react';
 import './DashboardCards.css';
 import formIcon from '../../IMG/forms-icon.png';
+
 const cards = [
   { title: 'Alunos Cadastrados', value: 1000, color: 'bg-cyan' },
   { title: 'Anamneses Concluídas', value: 856, color: 'bg-green' },
@@ -9,14 +10,21 @@ const cards = [
 
 export default function DashboardCards() {
   return (
-    <div className="cards-container">
-      {cards.map((card, index) => (
-        <div key={index} className={`dashboard-card ${card.color}`}>
-          <img src={formIcon} alt="" />
-          <p>{card.value}</p>
-          <h3>{card.title}</h3>
-        </div>
-      ))}
+    <div className="container my-1">
+      <div className="row">
+        {cards.map((card, index) => (
+          <div
+            key={index}
+            className="col-12 col-md-6 col-lg-4 mb-4"
+          >
+            <div className={`dashboard-card text-white text-center p-4 rounded shadow ${card.color}`}>
+              <img src={formIcon} alt="ícone formulário" className="mb-2" />
+              <p className="display-5">{card.value}</p>
+              <h3 className="h4">{card.title}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -4,22 +4,27 @@ import './ButtonGrid.css';
 
 const ButtonGrid = ({ onCadastrar, onEnviarEmail, onPesquisar, showModal, setShowModal, alunosPendentes, onEnviar }) => {
   return (
-    <div className="btn-actions">
-      <button className="btn-cadastro" onClick={onCadastrar}>Cadastrar</button>
+    <div className="container my-3">
+      <div className="row justify-content-center">
+        <div className="col-12">
+          <button className="custom-btn" onClick={onCadastrar}>Cadastrar</button>
+        </div>
 
-      <button className="btn-EnviarEmail" onClick={onEnviarEmail}>
-        Enviar Email
-      </button>
+        <div className="col-12">
+          <button className="custom-btn" onClick={onEnviarEmail}>Enviar Email</button>
+        </div>
 
-      <EnviarEmailModal 
-      className="btn-EnviarEmail"
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        alunosPendentes={alunosPendentes}
-        onEnviar={onEnviar}
-      />
+        <div className="col-12">
+          <button className="custom-btn" onClick={onPesquisar}>Pesquisar</button>
+        </div>
 
-      <button className="btn-Pesquisar" onClick={onPesquisar}>Pesquisar</button>
+        <EnviarEmailModal
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          alunosPendentes={alunosPendentes}
+          onEnviar={onEnviar}
+        />
+      </div>
     </div>
   );
 };
