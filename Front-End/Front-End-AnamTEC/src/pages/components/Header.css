@@ -1,83 +1,70 @@
-/* Botão do menu */
-.header{
+.header {
   display: flex;
-  position: relative; /* mantém dropdown posicionado dentro do header */
-  bottom: 7.5rem;
-  justify-content: space-between; /* melhor distribuição */
-  align-items: center;
-  width: 100vw;
-  padding: 10px 30px;
   background-color: #044654;
+  color: #E4EDF1;
+  
 }
 
 .menu-toggle {
-  display: inline-block;
-  font-size: 30pt;
+  font-size: 40px;
   cursor: pointer;
   color: #E4EDF1;
-  border-radius: 5px;
+  border: none;
+  background: none;
 }
 
-/* Dropdown */
-.dropdown-menu {
+/* Dropdown personalizado */
+.dropdown-menu-custom {
   position: absolute;
-  top: 85px; /* abaixo do botão */
-}
-
-.dropdown-menu.hide {
+  top: 80%;
+  left: 0;
+  background-color: #044654;
+  border-radius: 8px;
+  padding: 0.5rem;
+  z-index: 1000;
   display: none;
 }
 
-.dropdown-menu.show {
-  display:grid;
-  background-color: transparent;
-  border: none;
+.dropdown-menu-custom.show {
+  display: block;
 }
 
-.menu-dropdown li {
+.dropdown-menu-custom li {
   display: flex;
-  position: relative;
-  right:30px;
-  background-color: #044554;
-  color: #E4EDF1;
   align-items: center;
-  padding: 1rem 2rem;
-  margin: 1px;
-  gap: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  font-size: 14pt;
-  font-weight: 500;
+  gap: 20px;
+  padding: 8px 12px;
+  color: #fff;
+  border-radius: 5px;
+  transition: background 0.2s;
   cursor: pointer;
-  transition: max-height 0.4s ease;
-    
- 
 }
 
-.menu-dropdown li:hover {
-  background-color: #5e929ef6;
-  border-radius: 12px;
+.dropdown-menu-custom li:hover {
+  background-color: #056172;
 }
-
-.menu-dropdown img {
-  width: 40px;
-  height: 40px;
-}
-
 .logo{
-  font-size: 32pt;
-  font-weight: 900;
+  position: relative;
+  left: 50px;
+  margin: 0px 220px;
+  font-size: 28pt;
+  font-weight: 600;
+}
+
+.logo img {
+  width: 80px;
+  margin-left: 10px;
+}
+
+.config-btn {
+  
+  font-size: 34px;
+  background: none;
+  border: none;
   color: #E4EDF1;
-  margin-left: 25%;
+  cursor: pointer;
 }
 
 .user-section {
   font-size: 14pt;
-  color: #E4EDF1;
-}
-
-.config-btn{
-  font-size: 32pt;
-  border: none;
-  cursor:pointer;
 }

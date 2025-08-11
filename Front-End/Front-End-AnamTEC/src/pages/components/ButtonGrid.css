@@ -1,38 +1,19 @@
-.btn-actions {
-    display: flex;
-    flex-direction: column;
-    min-width: 180px;
-    background-color: #E4EDF1;
-    border-radius: 18px;
-    position:relative;
-    margin: 0px 85px;
-    font-size: 14pt;
-    
-   
-}
-.btn-cadastro{
-    background-color:#044654 ;
-    padding: 12px 10px;
-    border-radius: 8px;
-    margin: 8px 8px;
-    
-}
-.btn-EnviarEmail{
-    background-color:#044654 ;
-    padding: 12px 10px;
-    border-radius: 8px;
-    margin: 8px 8px; 
-}
-.EnviarEmailModal{
-       background-color:#044654 ;
-    padding: 12px 10px;
-    border-radius: 8px;
-    margin: 8px 8px; 
+.custom-btn {
+  background-color: #044654;      /* Azul escuro */
+  color: white;                   /* Texto branco */
+  padding: 12px 20px;             /* Espaçamento interno */
+  margin: 6px 0;                 /* Espaço entre os botões */
+        /* Borda preta */
+  border-radius: 10px;            /* Cantos arredondados */
+  width: 60%;                    /* Ocupa toda a largura da coluna */
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 1.4); /* Sombra leve */
+  transition: all 0.3s ease;
 }
 
-.btn-Pesquisar{
-    background-color:#044654 ;
-    padding: 12px 10px;
-    border-radius: 8px;
-    margin: 8px 8px;
+.custom-btn:hover {
+  background-color: #033442; /* Cor um pouco mais escura ao passar o mouse */
+  transform: scale(1.02);    /* Leve crescimento no hover */
+  cursor: pointer;
 }
