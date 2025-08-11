@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "./ResetPassW.css";
-import logoAnamTec from "../IMG/Anamtec-logo.png";
+import logoAnamTec from "../assets/Anamtec-logo.png";
 
 export default function ResetPassW() {
     const [formData, setFormData] = useState({

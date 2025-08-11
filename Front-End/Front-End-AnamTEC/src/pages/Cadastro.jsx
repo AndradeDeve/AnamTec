@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./Cadastro.css";
-import logoAnamTec from "../IMG/Anamtec-logo.png"
+import logoAnamTec from "../assets/Anamtec-logo.png"
 import {getFunction, postFunction} from "../services/APISevice"
+import { useNavigate } from 'react-router-dom';
 
 
 function Register() {
@@ -21,7 +22,9 @@ function Register() {
 
   function bntPostFunctionClick(e) {
   e.preventDefault(); // previne o reload da página
-
+    <nav>
+        <link to="/"/>
+    </nav>
   postFunction(formData)
     .then(data => console.log("Dados salvos:", data))
     .catch(err => console.error("Erro ao salvar:", err));

@@ -1,7 +1,7 @@
 // AuthPage.js
 import React, { useState } from "react";
 import "./Register.css";
-import logoAnamTec from "../IMG/logoAnamTEC.png";
+import logoAnamTec from "../assets/logoAnamTEC.png";
 import Register from "./Register";
 import Login from "./Login";
 

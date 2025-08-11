@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import "./Login.css";
 
 // Importa a imagem da logo
-import logoAnamTec from "../IMG/Anamtec-logo.png";
+import logoAnamTec from "../assets/Anamtec-logo.png";
 
 // Componente funcional da tela de login
 export default function Login() {
