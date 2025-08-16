@@ -43,20 +43,23 @@ function Register() {
     <div className="register-container">
       
       {/* TOPO - Logo e Título */}
-      <header className="header">
+      <div className="asideContainerCadastro">
+      <header className="header-Cadastro">
         <h1>AnamTec</h1>
-        <img src={logoAnamTec} alt="Logo" className="logo" />
+        <img src={logoAnamTec} alt="Logo" className="logoa" />
       </header>
-    <main className="Forms-box">
-      {/* NAVEGAÇÃO ENTRE AS ABAS */}
-       <div className="register-card-header">
-          <h2>Cadastro de Profissional</h2>
-        </div>
+      <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
+      </div>
+
+ 
     
 
       {/* FORMULÁRIO DE CADASTRO */}
       {activeTab === "register" && (
         <form className="register-form">
+       <div className="register-card-header">
+          <h2>Cadastro de Profissional</h2>
+        </div>
           <div className="group">
             <label>RM:</label>
             <input 
@@ -101,7 +104,6 @@ function Register() {
         </form>
         
     )}
-    </main>
     </div>
   );
 }

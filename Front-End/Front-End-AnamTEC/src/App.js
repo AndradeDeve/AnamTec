@@ -14,9 +14,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/ResetarSenha" element={<ResetPassW />} />
-        <Route path="/Login" element={<Login/>} />
-        <Route path="/Cadastro" element={<Cadastro />} />
-        <Route path="/" element={<MasterDashboard />} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/" element={<Cadastro />} />
+        <Route path="/CoordP" element={<MasterDashboard />} />
         <Route path="/Observacoes" element={<ObservacoesUsers />} />
       </Routes>
     </Router>

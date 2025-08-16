@@ -9,8 +9,9 @@ import logoAnamTec from "../assets/Anamtec-logo.png";
 
 // Componente funcional da tela de login
 export default function Login() {
-  // Cria o estado formData para armazenar email e senha digitados
-  const [formData, setFormData] = useState({ email: "", senha: "" });
+
+// Cria o estado formData para armazenar email e senha digitados
+const [formData, setFormData] = useState({ email: "", senha: "" });
 
   // Função executada quando o usuário clica no botão "ENTRAR"
   const handleLogin = (e) => {
@@ -22,9 +23,12 @@ export default function Login() {
   return (
     <div className="login-container">
       {/* Cabeçalho com logo e nome do sistema */}
-      <div className="header">
+      <div className="aside-containerLogin">
+      <div className="header-logo">
         <h1>AnamTec</h1>
         <img src={logoAnamTec} alt="Logo" className="logo" />
+      </div>
+       <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
       </div>
 
       {/* Cartão de login */}

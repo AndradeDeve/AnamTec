@@ -16,11 +16,13 @@ export default function ResetPassW() {
 
     return (
         <div className="reset-container">
+            <div className="aside-container">
             <div className="reset-header">
                 <h1>AnamTec</h1>
                 <img src={logoAnamTec} alt="Logo" className='reset-logo' />
             </div>
-
+                <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
+            </div>
             <div className="reset-card">
                 <div className="reset-card-header">
                     <h2>Resetar Senha</h2>

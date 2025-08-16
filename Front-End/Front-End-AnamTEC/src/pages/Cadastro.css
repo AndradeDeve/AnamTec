@@ -5,29 +5,48 @@ body, html {
 }
 
 .register-container {
-  display: flex;
-   height: 100vh;
-  flex-direction: column;
-  background: linear-gradient(to bottom, #E4EDF1  55%, #044654 40%);
+ display: flex;
+  height: 100vh;
+  flex-direction: row;
+  justify-content:space-between;
   align-items: center;
+  background: linear-gradient(to left, #E4EDF1  50%, #044654 50%);
 }
 
-.header {
+.header-Cadastro {
+   position: relative;
+  bottom: 35%;
+  left: 12%;
   display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 120px;
-  
-  
+  justify-content:space-around;
+  align-items: center;    
 }
-.header h1{
-  color: #1E2019;
+.header-Cadastro h1{
+ position: relative;
+  right: 3%;
+  font-weight: 800;
   font-size: 36pt;
+  color: #E4EDF1;
 }
 
+.asideContainerCadastro{
+    position: relative;
+  left: 10%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  bottom: 10%;
+}
+.asideContainerCadastro p {
+  position: relative;
+  left: 10%;
+  font-size: 16pt;
+  font-weight: 600;
+  color:#E4EDF1
+}
 .register-card-header {
   background-color: #044654;
-  padding: 10px;
+  padding: 10px ;
   text-align: center;
   border-radius: 12px 12px 0px 0px;
 }
@@ -38,33 +57,29 @@ body, html {
   margin:auto;
 }
 
-.Forms-box{
-  display: flex;
-  flex-direction: column;
-  background-color: #E4EDF1;
-  box-shadow: 10px 10px 10px 0px;
-  border-radius: 18px;
-  margin-top: 65px;  
-}
 
 .register-form {
-  height: auto;
-  width: 1200px;
-  padding: 20px;
-    
+  position: relative;
+  right: 3%;
+  width: 45%;
+  background-color:#E4EDF1;
+  box-shadow: 6px 6px 10px #1E2019;
+  border-radius: 14px 14px 14px 14px;    
 }
+
+.group input{
+  color: #818181;
+  font-size: 15px;
+}
+
 .input {
-  margin-left: 10px;
-  padding: 10px 2px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 200px;
-  box-shadow: 6px 6px 10px #1E2019;;
- 
-  
-  
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  font-size: 14px;
+  box-shadow: 4px 4px 4px #1E2019;
 }
+
 .group{
   display: flex;
   align-items: center;
@@ -72,10 +87,11 @@ body, html {
   padding: 2px 30px
   
 }
+
 .group label{
-  font-size: 14pt;
-  font-weight: 900;
-  margin-right: 10px;
+   color: #1E2019;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .group input, select{
@@ -86,14 +102,17 @@ body, html {
 
 
 .register-form button {
-  margin-left: 38%;
-  margin-top: 10px;
+  position: relative;
+  bottom: 5px;
   background-color: #044654;
+  width: 25%;
   color: white;
-  padding: 12px 100px;
   border: none;
-  border-radius: 8px;
-  font-size: 16pt;
+  padding: 12px;
+  margin-top: 10px;
+  margin-left: 38%;
   font-weight: bold;
+  font-size: 14pt;
   cursor: pointer;
+  border-radius: 6px;
 }
