@@ -3,31 +3,51 @@ body, html {
   padding: 0;
   font-family: 'Roboto', sans-serif;
 }
-
+.aside-containerLogin{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  bottom: 10%;
+}
+.aside-containerLogin p {
+  position: relative;
+  left: 24%;
+  font-size: 16pt;
+  font-weight: 600;
+  color:#E4EDF1
+}
 .login-container {
   display: flex;
   height: 100vh;
-  flex-direction: column;
-  background: linear-gradient(to bottom, #E4EDF1  55%, #044654 40%);
-  align-items: center;
-}
-
-.header {
-  display: flex;
-  align-items: center;
+  flex-direction: row;
   justify-content: center;
-  gap: 20px;
+  align-items: center;
+  background: linear-gradient(to left, #E4EDF1  50%, #044654 50%);
 }
-.header h1{
-  color: #1E2019;
-  font-size: 36pt;;
+
+.header-logo{
+  position: relative;
+  bottom: 35%;
+  right: 8%;
+  display: flex;
+  justify-content:space-around;
+  align-items: center;  
+}
+.header-logo h1{
+  position: relative;
+  left:32%;
+  font-weight: 800;
+  font-size: 36pt;
+  color: #E4EDF1;
 }
 
 
-.login-card {
+
+.login-card { 
+  position: relative;
+  right: 3%;
+  width: 45%;
   background-color:#E4EDF1;
-  margin-top: 65px;
-  width: 90%;
   box-shadow: 6px 6px 10px #1E2019;
   border-radius: 14px 14px 14px 14px;
 }
@@ -46,9 +66,9 @@ body, html {
 }
 
 .card-body {
-  padding: 25px;
   display: flex;
   flex-direction: column;
+  padding: 25px;
   gap: 15px;
 }
 

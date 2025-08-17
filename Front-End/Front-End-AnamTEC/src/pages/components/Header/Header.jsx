@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import homeIcon from '../../assets/home.png';
-import personIcon from '../../assets/person.png';
-import passWordIcon from '../../assets/password.png';
-import nsaIcon from '../../assets/nsa.png';
-import controlAcessIcon from '../../assets/control-acess.png';
-import relatorioIcon from '../../assets/relatorio.png';
-import logoAnamtec from '../../assets/Anamtec-logo.png';
+import homeIcon from '../../../assets/home.png';
+import personIcon from '../../../assets/person.png';
+import passWordIcon from '../../../assets/password.png';
+import nsaIcon from '../../../assets/nsa.png';
+import controlAcessIcon from '../../../assets/control-acess.png';
+import relatorioIcon from '../../../assets/relatorio.png';
+import logoAnamtec from '../../../assets/Anamtec-logo.png';
 
-import '../components/Header.css'; // mantém seu CSS personalizado
+import './Header.css'; // mantém seu CSS personalizado
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
