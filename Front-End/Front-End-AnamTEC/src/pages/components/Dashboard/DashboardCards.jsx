@@ -1,6 +1,6 @@
 import React from 'react';
 import './DashboardCards.css';
-import formIcon from '../../assets/forms-icon.png';
+import formIcon from '../../../assets/forms-icon.png';
 
 const cards = [
   { title: 'Alunos Cadastrados', value: 17, color: 'bg-cyan' },

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Cadastro.css";
+import "./Register.css";
 import logoAnamTec from "../assets/Anamtec-logo.png"
 import {getFunction, postFunction} from "../services/APISevice"
 import { useNavigate } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../components/StudantTable.css';
+import './StudantTable.css';
 
 const mockData = [
   { rm: '24561', nome: 'Weslley Samuel Novaes Santana', curso: 'Desenvolvimento de Sistemas', semestre: '2º Semestre', turno: 'Noturno', coordenador: 'Marcos Costa', status: 'Concluída' },

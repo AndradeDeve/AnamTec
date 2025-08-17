@@ -1,5 +1,5 @@
 import React from "react";
-import EnviarEmailModal from './EnviarEmail';
+import EnviarEmailModal from '../SendingEmail/EnviarEmail';
 import './ButtonGrid.css';
 
 const ButtonGrid = ({ onCadastrar, onEnviarEmail, onPesquisar, showModal, setShowModal, alunosPendentes, onEnviar }) => {

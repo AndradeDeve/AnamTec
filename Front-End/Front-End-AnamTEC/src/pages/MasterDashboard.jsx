@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Header from '../pages/components/Header';
-import DashboardCards from '../pages/components/DashboardCards';
-import FilterBar from '../pages/components/FilterBar';
-import StudentTable from '../pages/components/StudantTable';
-import ButtonGrid from '../pages/components/ButtonGrid';
+import Header from './components/Header/Header';
+import DashboardCards from './components/Dashboard/DashboardCards';
+import FilterBar from './components/SearchBar/FilterBar';
+import StudentTable from './components/StudantTable/StudantTable';
+import ButtonGrid from './components/ButtonGrid/ButtonGrid';
 
 export default function MasterDashboard() {
   const [showModal, setShowModal] = useState(false);

@@ -1,10 +1,10 @@
 import React from 'react';
-import '../components/FilterBar.css';
-import personIcon from '../../assets/person-icon.png';
-import professorIcon from '../../assets/professor-icon.png';
-import turnIcon from '../../assets/turn-icon.png';
-import searchIcon from '../../assets/search-icon.png';
-import anamneseIcon from '../../assets/anamnese-icon.png';
+import './FilterBar.css';
+import personIcon from '../../../assets/person-icon.png';
+import professorIcon from '../../../assets/professor-icon.png';
+import turnIcon from '../../../assets/turn-icon.png';
+import searchIcon from '../../../assets/search-icon.png';
+import anamneseIcon from '../../../assets/anamnese-icon.png';
 
 export default function FilterBar() {
   return (
