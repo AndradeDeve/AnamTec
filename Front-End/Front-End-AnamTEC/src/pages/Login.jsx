@@ -4,18 +4,40 @@ import React, { useState } from 'react';
 // Importa o CSS específico da tela de login
 import "./Login.css";
 
+// Importa a função post para fazer o login do usuario 
+import { postFunctionUser } from '../services/APISevice';
+
 // Importa a imagem da logo
 import logoAnamTec from "../IMG/Anamtec-logo.png";
+import { data, replace, useNavigate } from 'react-router-dom';
+
 
 // Componente funcional da tela de login
 export default function Login() {
   // Cria o estado formData para armazenar email e senha digitados
   const [formData, setFormData] = useState({ email: "", senha: "" });
 
+  const navigate = useNavigate(); // Hook do React Router para navegar entre páginas
+const navCoord = () => {
+  navigate("/CoordenadorPedagogico", { replace: true}); // Redireciona para a página do coordenador pedagógico
+}
+
   // Função executada quando o usuário clica no botão "ENTRAR"
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault(); // Evita o recarregamento da página
-    console.log("Login com:", formData); // Aqui podemos enviar os dados para um backend ou API
+
+    const data = await postFunctionUser(formData)
+     // Chama a função para enviar os dados do login
+    try{
+        if(data.status === 200) {
+          alert("Login efetuado com sucesso!");
+          console.log("Dados do login:", data.data);
+          localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
+          navCoord(); // Redireciona para a página do coordenador pedagógico
+        }
+    }catch(error){
+      console.error("Erro ao efetuar o login:", error);
+    }
   };
 
   // Estrutura visual (HTML JSX) da tela de login

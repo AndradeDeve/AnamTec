@@ -16,7 +16,7 @@ routes.get("/", async(request, response) => {
         console.log("Erro ao buscar deficiência:", err);
         return response.status(500).json({err: "Erro no servidor."});
     }
-});
+}); 
 
 routes.post("/", async(request, response) => {
     const {deficiencia, tp_deficiencia} = request.body;

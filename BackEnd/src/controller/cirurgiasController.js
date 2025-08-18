@@ -1,4 +1,4 @@
-import express, { request, response } from 'express';
+import express from 'express';
 import { getConnection } from '../database/data-souce.js';
 
 const routes = express.Router();
