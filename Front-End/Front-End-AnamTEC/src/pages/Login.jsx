@@ -42,15 +42,14 @@ const navCoord = () => {
           draggable: true,
           progress: undefined,
           theme: "dark",
-          // transition: Bounce,
           });
           console.log("Dados do login:", data.data);
           localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
           navCoord(); // Redireciona para a página do coordenador pedagógico
         }
     }catch(error){
-      console.error("Erro ao efetuar o login:", error);
-      toast.warn('🦄 Wow so easy!', {
+      console.error("Erro ao efetuar o login, verifique se o e-mail e a senha estão corretos.", error);
+      toast.warn('Erro ao efetuar Login,', {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
