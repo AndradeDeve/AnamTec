@@ -16,10 +16,10 @@ function App() {
       <Routes>
         <Route path="/ResetarSenha" element={<ResetPassW />} />
         <Route path="/login" element={<Login/>} />
-        <Route path="/Cadastro" element={<Cadastro />} />
+        <Route path="/" element={<Cadastro />} />
         <Route path="/Coord" element={<MasterDashboard />} />
         <Route path="/Observacoes" element={<ObservacoesUsers />} />
-         <Route path="/" element={<ControllAcess />} />
+         <Route path="/Controle" element={<ControllAcess />} />
       </Routes>
     </Router>
   );

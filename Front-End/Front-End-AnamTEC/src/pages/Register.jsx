@@ -1,48 +1,89 @@
-import React, { useState } from "react";
+// src/pages/Cadastro.jsx
+import React, { useState, useEffect } from "react";
+import { postFunction } from "../services/APISevice"; // seu serviço de API
+import logoAnamTec from "../assets/Anamtec-logo.png"; // Importa a logo 
 import "./Register.css";
-import logoAnamTec from "../assets/Anamtec-logo.png"
-import {getFunction, postFunction} from "../services/APISevice"
-import { useNavigate } from 'react-router-dom';
-
-
-function Register() {
-  const [activeTab, setActiveTab] = useState("register");
-
-  function bntGetFunctionClick(e){
-    e.preventDefault(); 
-    {/*impede que o botão recarregue a página (comportamento padrão de um  */}
-
-
-    getFunction()
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
-    }
-
-
-
-  function bntPostFunctionClick(e) {
-  e.preventDefault(); // previne o reload da página
-    <nav>
-        <link to="/"/>
-    </nav>
-  postFunction(formData)
-    .then(data => console.log("Dados salvos:", data))
-    .catch(err => console.error("Erro ao salvar:", err));
-}
-  {/*Dados que serão enviados para o banco. */}
+//ARQUIVO ATUALIZADO PEN
+export default function Cadastro() {
+  // estado do formulário
   const [formData, setFormData] = useState({
     rm: "",
+    cpf: "",
     nome: "",
     email: "",
     senha: "",
-    cargo: ""
+    cargo: "",
+    curso: "" // será usado apenas quando necessário
   });
 
-  return (
+  // lista de cursos (pode vir da API futuramente)
+  const cursosDisponiveis = [
+    "Desenvolvimento de Sistemas",
+    "Redes de Computadores",
+    "Administração",
+    "Logística",
+    "Não se aplica"
+  ];
 
-    <div className="register-container">
-      
-      {/* TOPO - Logo e Título */}
+  // cargos possíveis
+  const cargos = [
+    { value: "", label: "Selecione o cargo" },
+    { value: "Coordenador Pedagógico", label:"Coordenador Pedagógico" },
+    { value: "Secretaria", label: "Secretaria" },
+    { value: "Coordenador de Curso", label: "Coordenador de Curso" },
+    { value: "Professor", label: "Professor" }
+  ];
+
+  // helper para saber se devemos mostrar o campo de curso
+  const precisaCurso = (cargo) =>
+    cargo === "Coordenador de Curso" || cargo === "Professor";
+
+  // quando o cargo mudar e não precisar de curso, limpamos o campo curso
+  useEffect(() => {
+    if (!precisaCurso(formData.cargo) && formData.curso !== "") {
+      setFormData((prev) => ({ ...prev, curso: "" }));
+    }
+  }, [formData.cargo]);
+
+  // manipula mudanças nos inputs/selects
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+
+  // submit do formulário
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    // validações simples
+    if (!formData.cargo) {
+      alert("Selecione um cargo.");
+      return;
+    }
+    if (precisaCurso(formData.cargo) && !formData.curso) {
+      alert("Para esse cargo, selecione um curso.");
+      return;
+    }
+    if (!formData.nome || !formData.email || !formData.senha) {
+      alert("Preencha os campos obrigatórios (nome, email, senha).");
+      return;
+    }
+
+    try {
+      const result = await postFunction(formData); // chama seu serviço
+      console.log("Resposta do servidor:", result);
+      alert("Cadastro realizado com sucesso!");
+      // opcional: limpar formulário
+      setFormData({ rm: "",cpf:"" ,nome: "", email: "", senha: "", cargo: "", curso: "" });
+    } catch (err) {
+      console.error("Erro ao cadastrar:", err);
+      alert("Erro ao cadastrar. Veja console para detalhes.");
+    }
+  }
+
+  return (
+    <div className="cadastro-wrapper">
+            {/* TOPO - Logo e Título */}
       <div className="asideContainerCadastro">
       <header className="header-Cadastro">
         <h1>AnamTec</h1>
@@ -50,64 +91,118 @@ function Register() {
       </header>
       <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
       </div>
-
- 
-    
-
-      {/* FORMULÁRIO DE CADASTRO */}
-      {activeTab === "register" && (
-        <form className="register-form">
-       <div className="register-card-header">
-          <h2>Cadastro de Profissional</h2>
+      <div className="register-card">
+        <div className="title">
+        <h2>Cadastro de Profissional</h2>
         </div>
-          <div className="group">
-            <label>RM:</label>
-            <input 
-              className="input" type="number" placeholder="Informe o RM" value={formData.rm}
-              onChange={(e) => setFormData({ ...formData, rm: e.target.value })}
-            />
+      <form className="cadastro-form" onSubmit={handleSubmit}>
+          <div className="field">
+        <label htmlFor="cargo">Cargo:</label>
+        <select
+          id="cargo"
+          name="cargo"
+          value={formData.cargo}
+          onChange={handleChange}
+          required
+        >
+          {cargos.map((c) => (
+            <option key={c.value} value={c.value}>
+              {c.label}
+            </option>
+          ))}
+        </select>
+        </div>
+
+        {/* Se cargo for Coordenador ou Professor mostra o select de curso */}
+        {precisaCurso(formData.cargo) && (
+          <div className="field">
+            <label htmlFor="curso">Curso:</label>
+            <select
+              id="curso"
+              name="curso"
+              value={formData.curso}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Selecione o curso</option>
+              {cursosDisponiveis.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="group">
-          <label for= "nome">Nome de Usuário:</label>
-          <input 
-            className="input" type="Text" placeholder="Nome"  value={formData.nome}
-            onChange={(e) => setFormData({ ...formData, nome: e.target.value})}
-            />
-      </div>
-         <div className="group">
-          <label>Email:</label>
+        )}
+
+        <div className="field">
+          <label htmlFor="rm">RM:</label>
           <input
-            className="input" type="text" placeholder="Email" value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value})}
+            type="text"
+            id="rm"
+            name="rm"
+            placeholder="Informe o RM"
+            value={formData.rm}
+            onChange={handleChange}
           />
-          </div>
-          <div className="group">
-           <label>Senha:</label>
-              <input
-            className="input" type="text" placeholder="Senha" value={formData.senha}
-            onChange={(e) => setFormData({ ...formData, senha: e.target.value})}
-          />
-          </div>
-        <div className="group">
-           <label>Cargo:</label>
-              <select
-            className="input" value={formData.cargo} onChange={(e) => setFormData({ ...formData, cargo: e.target.value})}
-          >
-            <option value="">Selecione o Cargo de acesso</option>
-             <option value="Secretária">Secretária</option>
-              <option value="Coordenador de Curso">Coordenador de Curso</option>
-              <option value="Professor">Professor</option>
-          </select>
         </div>
-          <button type="submit" onClick={bntPostFunctionClick}>Cadastrar</button>
+        <div className="field">
+          <label htmlFor="cpf">CPF:</label>
+          <input
+            type="number"
+            id="cpf"
+            name="cpf"
+            placeholder="Informe o CPF"
+            value={formData.cpf}
+            onChange={handleChange}
+          />
+        </div>
 
-        </form>
-        
-    )}
+        <div className="field">
+          <label htmlFor="nome">Nome:</label>
+          <input
+            type="text"
+            id="nome"
+            name="nome"
+            placeholder="Nome"
+            value={formData.nome}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="senha">Senha:</label>
+          <input
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Senha"
+            value={formData.senha}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="actions">
+          <button type="submit" className="btn-submit">
+            Cadastrar
+          </button>
+        </div>
+      </form>
+      </div>
     </div>
   );
 }
-
-// axios()
-
-export default Register;
