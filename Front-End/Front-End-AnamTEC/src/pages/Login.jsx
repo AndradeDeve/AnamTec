@@ -1,6 +1,8 @@
 // Importa o React e o useState, que vamos usar para controlar os campos do formulário
 import React, { useState } from 'react';
 
+import { ToastContainer, toast } from 'react-toastify';
+
 // Importa o CSS específico da tela de login
 import "./Login.css";
 
@@ -26,17 +28,38 @@ const navCoord = () => {
   const handleLogin = async (e) => {
     e.preventDefault(); // Evita o recarregamento da página
 
-    const data = await postFunctionUser(formData)
+    
      // Chama a função para enviar os dados do login
     try{
+        const data = await postFunctionUser(formData)
         if(data.status === 200) {
-          alert("Login efetuado com sucesso!");
+          toast.success('Login efetuado com sucesso', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          // transition: Bounce,
+          });
           console.log("Dados do login:", data.data);
           localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
           navCoord(); // Redireciona para a página do coordenador pedagógico
         }
     }catch(error){
       console.error("Erro ao efetuar o login:", error);
+      toast.warn('🦄 Wow so easy!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
     }
   };
 
