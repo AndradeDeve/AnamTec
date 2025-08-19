@@ -10,14 +10,19 @@ import "./Login.css";
 import { postFunctionUser } from '../services/APISevice';
 
 // Importa a imagem da logo
+<<<<<<< HEAD
 import logoAnamTec from "../IMG/Anamtec-logo.png";
 import { data, replace, useNavigate } from 'react-router-dom';
 
+=======
+import logoAnamTec from "../assets/Anamtec-logo.png";
+>>>>>>> main
 
 // Componente funcional da tela de login
 export default function Login() {
-  // Cria o estado formData para armazenar email e senha digitados
-  const [formData, setFormData] = useState({ email: "", senha: "" });
+
+// Cria o estado formData para armazenar email e senha digitados
+const [formData, setFormData] = useState({ email: "", senha: "" });
 
   const navigate = useNavigate(); // Hook do React Router para navegar entre páginas
 const navCoord = () => {
@@ -66,9 +71,12 @@ const navCoord = () => {
   return (
     <div className="login-container">
       {/* Cabeçalho com logo e nome do sistema */}
-      <div className="header">
+      <div className="aside-containerLogin">
+      <div className="header-logo">
         <h1>AnamTec</h1>
         <img src={logoAnamTec} alt="Logo" className="logo" />
+      </div>
+       <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
       </div>
 
       {/* Cartão de login */}

@@ -1,0 +1,20 @@
+.dashboard-card {
+  background-color: #044654; /* fallback padrão */
+}
+
+.bg-cyan {
+  background-color: #044654 !important;
+}
+
+.bg-green {
+  background-color: #00cc92 !important;
+}
+
+.bg-red {
+  background-color: #Fe4120 !important;
+}
+
+.dashboard-card img {
+  width: 50px;
+  height: 50px;
+}
