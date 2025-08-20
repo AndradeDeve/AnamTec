@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import "./Register.css";
 import logoAnamTec from "../assets/Anamtec-logo.png"
 import {getFunction, postFunction} from "../services/APISevice"
@@ -13,30 +14,37 @@ function Register() {
     {/*impede que o botão recarregue a página (comportamento padrão de um  */}
 
 
-    getFunction()
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
+    // getFunctionaluno()
+    // .then(data => console.log(data))
+    // .catch(err => console.log(err));
     }
 
 
 
   function bntPostFunctionClick(e) {
   e.preventDefault(); // previne o reload da página
+
     <nav>
         <link to="/"/>
     </nav>
-  postFunction(formData)
-    .then(data => console.log("Dados salvos:", data))
-    .catch(err => console.error("Erro ao salvar:", err));
+  // postFunctiona(formData) arrumar função para enviar os dados do formulário
+
+    // .then(data => console.log("Dados salvos:", data))
+    // .catch(err => console.error("Erro ao salvar:", err));
 }
   {/*Dados que serão enviados para o banco. */}
+
+  const token = localStorage.getItem("token"); // Pega o token do localStorage
   const [formData, setFormData] = useState({
     rm: "",
     nome: "",
     email: "",
     senha: "",
-    cargo: ""
+    cargo: "",
+    token
   });
+
+  
 
   return (
 

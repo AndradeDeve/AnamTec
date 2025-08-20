@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 import Login from './pages/Login';
 import Cadastro from './pages/Register.jsx';
@@ -12,6 +13,7 @@ import ControllAcess from './pages/ControllAcess';
 
 function App() {
   return (
+    <>
     <Router>
       <Routes>
         <Route path="/ResetarSenha" element={<ResetPassW />} />
@@ -22,6 +24,8 @@ function App() {
          <Route path="/" element={<ControllAcess />} />
       </Routes>
     </Router>
+      <ToastContainer />
+      </>
   );
 }
 
