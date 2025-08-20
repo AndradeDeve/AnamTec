@@ -10,13 +10,9 @@ import "./Login.css";
 import { postFunctionUser } from '../services/APISevice';
 
 // Importa a imagem da logo
-<<<<<<< HEAD
-import logoAnamTec from "../IMG/Anamtec-logo.png";
-import { data, replace, useNavigate } from 'react-router-dom';
 
-=======
 import logoAnamTec from "../assets/Anamtec-logo.png";
->>>>>>> main
+import { useNavigate } from 'react-router-dom';
 
 // Componente funcional da tela de login
 export default function Login() {
@@ -26,7 +22,9 @@ const [formData, setFormData] = useState({ email: "", senha: "" });
 
   const navigate = useNavigate(); // Hook do React Router para navegar entre páginas
 const navCoord = () => {
-  navigate("/CoordenadorPedagogico", { replace: true}); // Redireciona para a página do coordenador pedagógico
+  
+    navigate("/Coord", { replace: true}); // Redireciona para a página do coordenador pedagógico
+  
 }
 
   // Função executada quando o usuário clica no botão "ENTRAR"
@@ -48,6 +46,7 @@ const navCoord = () => {
           progress: undefined,
           theme: "dark",
           });
+          
           console.log("Dados do login:", data.data);
           localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
           navCoord(); // Redireciona para a página do coordenador pedagógico

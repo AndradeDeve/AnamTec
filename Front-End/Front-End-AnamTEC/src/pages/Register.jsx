@@ -1,14 +1,9 @@
 import React, { useState } from "react";
-<<<<<<< HEAD:Front-End/Front-End-AnamTEC/src/pages/Cadastro.jsx
-import "./Cadastro.css";
-import logoAnamTec from "../IMG/Anamtec-logo.png"
-import {getFunctionaluno, postFunctionaluno} from "../services/APISevice"
-=======
+
 import "./Register.css";
 import logoAnamTec from "../assets/Anamtec-logo.png"
 import {getFunction, postFunction} from "../services/APISevice"
 import { useNavigate } from 'react-router-dom';
->>>>>>> main:Front-End/Front-End-AnamTEC/src/pages/Register.jsx
 
 
 function Register() {
@@ -19,26 +14,23 @@ function Register() {
     {/*impede que o botão recarregue a página (comportamento padrão de um  */}
 
 
-    getFunctionaluno()
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
+    // getFunctionaluno()
+    // .then(data => console.log(data))
+    // .catch(err => console.log(err));
     }
 
 
 
   function bntPostFunctionClick(e) {
   e.preventDefault(); // previne o reload da página
-<<<<<<< HEAD:Front-End/Front-End-AnamTEC/src/pages/Cadastro.jsx
 
-  postFunctionaluno(formData)
-=======
     <nav>
         <link to="/"/>
     </nav>
-  postFunction(formData)
->>>>>>> main:Front-End/Front-End-AnamTEC/src/pages/Register.jsx
-    .then(data => console.log("Dados salvos:", data))
-    .catch(err => console.error("Erro ao salvar:", err));
+  // postFunctiona(formData) arrumar função para enviar os dados do formulário
+
+    // .then(data => console.log("Dados salvos:", data))
+    // .catch(err => console.error("Erro ao salvar:", err));
 }
   {/*Dados que serão enviados para o banco. */}
 

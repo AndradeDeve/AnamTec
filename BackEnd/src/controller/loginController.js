@@ -31,7 +31,7 @@ routes.post("/", async(request, response) => {
         }        
         const token = genereteToken({user:user.nome, email:user.email, id_type:user.id_type});
         
-        return response.status(200).json({response: "Login efetuado com sucesso.", token});
+        return response.status(200).json({response: "Login efetuado com sucesso.", token, user:user.id_type});
     }catch(err){
         console.log("Erro ao efetuar o login:", err);
         return response.status(500).json({err: "Erro no servidor."});
