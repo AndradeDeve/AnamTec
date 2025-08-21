@@ -6,7 +6,7 @@ import alergiaController from './controller/alergiaController.js';
 import deficienciaController from './controller/deficienciaController.js'
 import cirurgiasController from './controller/cirurgiasController.js';
 import loginController from './controller/loginController.js';
-import { authenticate } from "./utils/jwt.js";// OBS Eu nn sei aonde usar isso 🤔 Kenny me ajudaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+import { authenticate } from "./utils/jwt.js";
 import { authorizationRoles } from './utils/jwt.js';
 //  authorizationRoles("coordenador curso") Exemplo de como usar 
 
