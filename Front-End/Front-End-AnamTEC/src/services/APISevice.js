@@ -26,15 +26,13 @@ export async function postFunctionaluno(dados) {
 }
 
 export async function postFunctionUser(dados) {
-  try{
-    console.log(dados);
     const response = await axios.post(`${API_URL}/login`, dados);
-    console.log(response);
-    console.log("Status  asvchas dhsavdah", response.status);
     return response;
-  }catch(error){
-    console.error("Erro ao efetuar o login:", error);
-    throw error; // Relança o erro para ser tratado onde a função foi chamada
-  }
+}
 
+export async function putFunctionResetSenha(dados) {
+  console.log("dados: ",dados)
+  const response = await axios.put(`${API_URL}/login/`, dados);
+  console.log("Resposta do servidor:", response); 
+  return response;
 }

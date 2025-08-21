@@ -30,7 +30,6 @@ const navCoord = () => {
   // Função executada quando o usuário clica no botão "ENTRAR"
   const handleLogin = async (e) => {
     e.preventDefault(); // Evita o recarregamento da página
-
     
      // Chama a função para enviar os dados do login
     try{
@@ -47,7 +46,7 @@ const navCoord = () => {
           theme: "dark",
           });
           
-          console.log("Dados do login:", data.data);
+          localStorage.setItem("email", data.data.email); // Armazena o e-mail no localStorage
           localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
           navCoord(); // Redireciona para a página do coordenador pedagógico
         }
