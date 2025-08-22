@@ -38,6 +38,7 @@ export default function Cadastro() {
   const precisaCurso = (cargo) =>
     cargo === "Coordenador de Curso" || cargo === "Professor";
 
+
   // quando o cargo mudar e não precisar de curso, limpamos o campo curso
   useEffect(() => {
     if (!precisaCurso(formData.cargo) && formData.curso !== "") {
@@ -54,6 +55,34 @@ export default function Cadastro() {
   // submit do formulário
   async function handleSubmit(e) {
     e.preventDefault();
+
+
+  function bntPostFunctionClick(e) {
+  e.preventDefault(); // previne o reload da página
+
+    <nav>
+        <link to="/"/>
+    </nav>
+  // postFunctiona(formData) arrumar função para enviar os dados do formulário
+
+    // .then(data => console.log("Dados salvos:", data))
+    // .catch(err => console.error("Erro ao salvar:", err));
+}
+  {/*Dados que serão enviados para o banco. */}
+
+  const token = localStorage.getItem("token"); // Pega o token do localStorage
+  const [formData, setFormData] = useState({
+    rm: "",
+    nome: "",
+    email: "",
+    senha: "",
+    cargo: "",
+    token
+  });
+
+  
+
+  return (
 
     // validações simples
     if (!formData.cargo) {
@@ -80,6 +109,7 @@ export default function Cadastro() {
       alert("Erro ao cadastrar. Veja console para detalhes.");
     }
   }
+
 
   return (
     <div className="cadastro-wrapper">
