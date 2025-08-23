@@ -48,7 +48,7 @@ routes.put("/:id", async(request, response) => {
     }
 
     try{
-        const deficienciaOptions = ["sim", "não"];
+        const deficienciaOptions = ["sim", "nao"];
         if(!deficienciaOptions.includes(deficiencia.toLowerCase())){
             return response.status(400).json({err: "Opção de deficiência inválida."});
         }

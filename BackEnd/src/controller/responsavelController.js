@@ -75,17 +75,17 @@ routes.post("/", async (request, response) =>{
         return response.status(201).json({response: "Responsável cadastrado com sucesso."})
 
     }catch(err){
-        console.log("Erro ao buscar responsavel:", err);
+        console.log("Erro ao adicionar responsavel:", err);
         return response.status(500).json({err: "Erro no servidor."});
     }
 
 })
 
-routes.put("/:cpf", async (request, response) => {
-    const {cpf} = request.params;
-    const {CPF, nome, data_nasc, estado_civil, email, telefone} = request.body;
+routes.put("/:CPF", async (request, response) => {
+    const {CPF} = request.params;
+    const {cpf, nome, data_nasc, estado_civil, email, telefone} = request.body;
     try{
-        if(!validarCPF(CPF)){
+        if(!validarCPF(cpf)){
             return response.status(400).json({err: "CPF inválido."});
         }
 
@@ -115,7 +115,7 @@ routes.put("/:cpf", async (request, response) => {
 
         const [rows] = await connection.execute(
             `UPDATE tbl_responsavel SET CPF = ?, nome = ?, data_nasc = ?, estado_civil = ?, email = ?, telefone = ? WHERE deletedAt IS NULL AND CPF = ?`,
-            [CPF, nome, data_nasc, estado_civil, email, telefone, cpf]
+            [cpf, nome, data_nasc, estado_civil, email, telefone, CPF]
         );
         if(rows.affectedRows === 0){
             return response.status(400).json({err: "Responsavel não encontrado."})
