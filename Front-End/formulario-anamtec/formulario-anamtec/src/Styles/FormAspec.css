@@ -1,0 +1,92 @@
+.form-container {
+  background-color: #ecf0f1;
+  padding: 30px;
+  font-family: 'Roboto', sans-serif;
+  min-height: 100vh;
+}
+
+.form-header {
+  background-color: #064550;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+.logo {
+  height: 40px;
+}
+
+.progress-bar {
+  margin: 20px 0;
+  position: relative;
+}
+
+.etapa {
+  font-size: 14px;
+  margin-left: 15px;
+}
+
+.etapa.ativa::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: #000;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.linha {
+  height: 2px;
+  background-color: #ccc;
+  margin-top: 10px;
+}
+
+.form-box {
+  background-color: white;
+  border-radius: 6px;
+  padding: 30px;
+  box-shadow: 0 0 10px #bbb;
+  max-width: 900px;
+  margin: auto;
+}
+
+.linha-form {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.linha-form label {
+  width: 100%;
+  max-width: 130px;
+  font-weight: bold;
+}
+
+.linha-form input,
+.linha-form select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.botoes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.voltar, .proximo {
+  background-color: #064550;
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
