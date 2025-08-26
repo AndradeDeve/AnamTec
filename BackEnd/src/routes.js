@@ -17,7 +17,7 @@ routes.use("/deficiencia", deficienciaController);
 routes.use("/alergias", alergiaController);     
 routes.use("/responsavel", responsavelController);
 routes.use("/aluno", cadastroAlunoController);
-routes.use("/usuario", usuarioController);
+routes.use("/user", authenticate, usuarioController);
 routes.use("/login", loginController);
 
 export default routes;

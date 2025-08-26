@@ -26,13 +26,18 @@ export async function postFunctionaluno(dados) {
 }
 
 export async function postFunctionUser(dados) {
+  // console.log("dados: ", dados);
+  const response = await axios.post(`${API_URL}/user`, dados , { 
+    headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+  return response;
+}
+
+export async function postFunctionLogin(dados) {
     const response = await axios.post(`${API_URL}/login`, dados);
     return response;
 }
 
-export async function putFunctionResetSenha(dados) {
-  console.log("dados: ",dados)
-  const response = await axios.put(`${API_URL}/login/`, dados);
-  console.log("Resposta do servidor:", response); 
+export async function putFunctionResetSenha(dados ) {
+  const response = await axios.put(`${API_URL}/login/`, dados );
   return response;
 }

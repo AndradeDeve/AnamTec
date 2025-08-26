@@ -10,7 +10,6 @@ export default function ResetPassW() {
         senha: "",
         senhaNova: "",
         confirmaSenha: "",
-        email: localStorage.getItem("email")
     });
 
     const  handleResetPassW = async (e) => {

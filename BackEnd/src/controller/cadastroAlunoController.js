@@ -44,7 +44,7 @@ routes.post("/", async(request, response) =>{
   try{
 
     const [existe] = await connection.execute(
-      "SELECT * FROM tbl_cadastro_aluno WHERE rm = ? AND id != ? AND deletedAt IS NULL",
+      "SELECT * FROM tbl_cadastro_aluno WHERE rm = ? AND deletedAt IS NULL",
       [rm]
     );
     if (existe.length > 0) {

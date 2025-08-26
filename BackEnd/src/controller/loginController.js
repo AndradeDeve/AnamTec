@@ -24,7 +24,7 @@ routes.post("/", async(request, response) => {
             return response.status(401).json({err: "Usuário não encontrado."});
         }
 
-        const user = rows[0];
+        const user = rows[0];       
         
         const senhaValida = await VerificarSenha(senha, user.senha);
         if(!senhaValida){
@@ -40,7 +40,7 @@ routes.post("/", async(request, response) => {
 })
 
 routes.put("/emailReset", async(request, response) => {
-    const {email} = request.body;
+    const email = request.user.email;
 
     try{
         const [rows] = await connection.execute(
@@ -66,7 +66,9 @@ routes.put("/emailReset", async(request, response) => {
 })
 
 routes.put("/", async(request, response) => {
-    const {senha, senhaNova, confirmaSenha, email} = request.body;
+    const email = request.user;
+    const {senha, senhaNova, confirmaSenha} = request.body;
+    console.log("email", email);
     try{
         const [results] = await connection.execute(`select * from tbl_usuario where email = ? and deletedAt is null`, [email]);
         if(results.length === 0){

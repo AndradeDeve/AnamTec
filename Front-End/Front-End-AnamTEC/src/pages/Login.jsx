@@ -1,5 +1,5 @@
 // Importa o React e o useState, que vamos usar para controlar os campos do formulário
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import "./Login.css";
 
 // Importa a função post para fazer o login do usuario 
-import { postFunctionUser } from '../services/APISevice';
+import { postFunctionLogin, postFunctionUser } from '../services/APISevice';
 
 // Importa a imagem da logo
 
@@ -19,6 +19,11 @@ export default function Login() {
 
 // Cria o estado formData para armazenar email e senha digitados
 const [formData, setFormData] = useState({ email: "", senha: "" });
+useEffect(() => {
+    if (formData.email) {
+      localStorage.setItem("email", formData.email);
+    }
+  }, [formData.email]);
 
   const navigate = useNavigate(); // Hook do React Router para navegar entre páginas
 const navCoord = () => {
@@ -33,7 +38,7 @@ const navCoord = () => {
     
      // Chama a função para enviar os dados do login
     try{
-        const data = await postFunctionUser(formData)
+        const data = await postFunctionLogin(formData)
         if(data.status === 200) {
           toast.success('Login efetuado com sucesso', {
           position: "top-center",

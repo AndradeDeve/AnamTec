@@ -10,15 +10,15 @@ routes.get("/", async (request, response) => {
     const {nome, cpf} = request.query;
     
     try{
-        let sql = `SELECT u.id, u.CPF, u.nome, u.email, t.tipo AS tipo, c.curso AS curso FROM tbl_usuario u JOIN tbl_type t ON u.id_type = t.id JOIN tbl_curso c on u.id_curso = c.id WHERE u.deletedAt IS NULL`;
+        let sql = `SELECT id, rm, CPF, nome, email, id_curso, id_type  FROM tbl_usuario WHERE deletedAt IS NULL`;
         const params = [];
         if(nome){
-            sql += ` AND u.nome LIKE ?`;
+            sql += ` AND nome LIKE ?`;
             params.push(`%${nome}%`);
         }
 
         if(cpf){
-            sql += ` AND u.CPF = ?`;
+            sql += ` AND CPF = ?`;
             params.push(cpf);
         }
 
@@ -37,20 +37,42 @@ routes.get("/", async (request, response) => {
 
 
 routes.post("/", async (request, response) => {
-    const {cpf, nome, email, senha, id_type, id_curso} = request.body;
-
+    const {cpf, nome, email, senha, cargo, curso} = request.body;
+    let {rm} = request.body;
     try{
+        if(rm){
+            const rmRegex = /^\d{7,15}$/;
+            if(!rm || !rmRegex.test(rm.toLowerCase().trim())){
+                return response.status(400).json({err: "Rm inválido"})
+            }
+        }else{
+            rm = null;
+        }
+        
+        let id_curso; 
+
+        if (curso) {
+            const [cursoExiste] = await connection.execute(
+                `SELECT * FROM tbl_curso WHERE curso = ?`, 
+                [curso]
+            );
+
+            if (cursoExiste.length === 0) {
+                return response.status(400).json({ err: "Curso inválido" });
+            }
+
+            id_curso = cursoExiste[0]?.id; // só atribui depois da validação
+        } else {
+            id_curso = null;
+        }   
+        
         if(!validarCPF(cpf)){
             return response.status(400).json({err: "Cpf inválido."});
         }
-
-        const [cursoExiste] = await connection.execute(`SELECT * FROM tbl_curso WHERE id = ?`, [id_curso]);
-
-        if(cursoExiste.length === 0){
-            return response.status(400).json({err: "Curso inválido"});
-        }
-
-        const [tipoExiste] =  await connection.execute(`SELECT * FROM tbl_type WHERE id = ?`, [id_type]);
+        cargo.toLowerCase()
+        const [tipoExiste] =  await connection.execute(`SELECT * FROM tbl_type WHERE tipo = ?`, [cargo]);
+        
+        const id_tipo = tipoExiste[0]?.id;
 
         if (tipoExiste.length === 0) {
             return response.status(400).json({ erro: "Tipo de usuário inválido." });
@@ -72,8 +94,8 @@ routes.post("/", async (request, response) => {
 
         const hashedSenha = await hash(senha, 10);
 
-        await connection.execute(`INSERT INTO tbl_usuario (CPF, nome, email, senha, id_type, id_curso) VALUES(?, ?, ?, ?, ?, ?)`,
-            [cpf, nome, email, hashedSenha, id_type, id_curso]
+        await connection.execute(`INSERT INTO tbl_usuario (rm, CPF, nome, email, senha, id_type, id_curso) VALUES(?, ?, ?, ?, ?, ?, ?)`,
+            [rm, cpf, nome, email, hashedSenha, id_tipo, id_curso]
         );
         return response.status(201).json({response: "Cadastro efetuado com sucesso."});  
     }catch(err){
@@ -143,8 +165,8 @@ routes.delete("/:cpf", async(request, response) => {
             return response.status(400).json({err: "Cpf inválido."});
         }
     try{
-        const dataDelet = new date;
-        const [rows] = connection.execute(
+        const dataDelet = new Date();
+        const [rows] = await connection.execute(
             `UPDATE tbl_usuario SET deletedAt = ? WHERE CPF = ?`,
              [dataDelet, cpf]);
 

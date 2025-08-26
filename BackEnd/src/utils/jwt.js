@@ -28,6 +28,8 @@
         });
     }
 
+
+
     function authorizationRoles(...allowedRoles){
         return (request, response, next)=>{
             const userRole = request.user?.tipo;
