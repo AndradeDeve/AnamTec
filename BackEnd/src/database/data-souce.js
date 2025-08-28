@@ -6,7 +6,7 @@ export async function getConnection() {
     port: '3306',
     user: 'root',
     password: '',
-    database: 'bd_tcc_Atual'
+    database: 'bd_tcc'
   });
 
   return connection;
