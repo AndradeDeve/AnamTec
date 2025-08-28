@@ -1,8 +1,8 @@
 // Importando bibliotecas React e componentes do Bootstrap
 import React, { useState } from "react";
 import { Container, Row, Col, Button, Card, Form } from "react-bootstrap";
-import Header from '../pages/components/Header';
-import './ObservacoesUsers.css'
+import Header from './components/Header/Header';
+import './UserObservation.css'
 
 // Função principal do componente
 const ObservacoesProfessor = () => {

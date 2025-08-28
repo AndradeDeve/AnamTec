@@ -1,0 +1,12 @@
+Form {
+
+}
+
+.btnSearch{
+    background-color: #044654;
+    margin: 0px 20px;
+    width: 120px;
+    height: 40px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 1.4);
+}
+

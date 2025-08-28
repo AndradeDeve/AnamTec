@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "./Cadastro.css";
+
+import "./Register.css";
 import logoAnamTec from "../assets/Anamtec-logo.png"
 import {getFunction, postFunction} from "../services/APISevice"
 import { useNavigate } from 'react-router-dom';
@@ -13,50 +14,60 @@ function Register() {
     {/*impede que o botão recarregue a página (comportamento padrão de um  */}
 
 
-    getFunction()
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
+    // getFunctionaluno()
+    // .then(data => console.log(data))
+    // .catch(err => console.log(err));
     }
 
 
 
   function bntPostFunctionClick(e) {
   e.preventDefault(); // previne o reload da página
+
     <nav>
         <link to="/"/>
     </nav>
-  postFunction(formData)
-    .then(data => console.log("Dados salvos:", data))
-    .catch(err => console.error("Erro ao salvar:", err));
+  // postFunctiona(formData) arrumar função para enviar os dados do formulário
+
+    // .then(data => console.log("Dados salvos:", data))
+    // .catch(err => console.error("Erro ao salvar:", err));
 }
   {/*Dados que serão enviados para o banco. */}
+
+  const token = localStorage.getItem("token"); // Pega o token do localStorage
   const [formData, setFormData] = useState({
     rm: "",
     nome: "",
     email: "",
     senha: "",
-    cargo: ""
+    cargo: "",
+    token
   });
+
+  
 
   return (
 
     <div className="register-container">
       
       {/* TOPO - Logo e Título */}
-      <header className="header">
+      <div className="asideContainerCadastro">
+      <header className="header-Cadastro">
         <h1>AnamTec</h1>
-        <img src={logoAnamTec} alt="Logo" className="logo" />
+        <img src={logoAnamTec} alt="Logo" className="logoa" />
       </header>
-    <main className="Forms-box">
-      {/* NAVEGAÇÃO ENTRE AS ABAS */}
-       <div className="register-card-header">
-          <h2>Cadastro de Profissional</h2>
-        </div>
+      <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
+      </div>
+
+ 
     
 
       {/* FORMULÁRIO DE CADASTRO */}
       {activeTab === "register" && (
         <form className="register-form">
+       <div className="register-card-header">
+          <h2>Cadastro de Profissional</h2>
+        </div>
           <div className="group">
             <label>RM:</label>
             <input 
@@ -101,7 +112,6 @@ function Register() {
         </form>
         
     )}
-    </main>
     </div>
   );
 }

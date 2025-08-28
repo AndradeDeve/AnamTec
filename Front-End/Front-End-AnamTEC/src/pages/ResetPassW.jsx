@@ -2,25 +2,58 @@ import React, { useState } from 'react';
 import "./ResetPassW.css";
 import logoAnamTec from "../assets/Anamtec-logo.png";
 
+import { ToastContainer, toast } from 'react-toastify';
+import { putFunctionResetSenha } from '../services/APISevice';
+
 export default function ResetPassW() {
     const [formData, setFormData] = useState({
-        senhaAtual: "",
+        senha: "",
         senhaNova: "",
-        confirmSenha: ""
+        confirmaSenha: "",
+        email: localStorage.getItem("email")
     });
 
-    const handleResetPassW = (e) => {
+    const  handleResetPassW = async (e) => {
         e.preventDefault(); // Evita o recarregamento da página
-        console.log("Resetar a Senha", formData); // Aqui podemos enviar os dados para um backend ou API
+        try{
+            console.log("Dados enviados:", formData);
+            const data = await putFunctionResetSenha(formData);
+            if(data.status === 200) {
+                toast.success('Senha alterada com sucesso.', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
+            }
+        }catch(error) {
+            console.error("Erro ao resetar a senha:", error);
+            toast.warn('Erro ao resetar a senha.', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
+        }
     };
 
     return (
         <div className="reset-container">
+            <div className="aside-container">
             <div className="reset-header">
                 <h1>AnamTec</h1>
                 <img src={logoAnamTec} alt="Logo" className='reset-logo' />
             </div>
-
+                <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
+            </div>
             <div className="reset-card">
                 <div className="reset-card-header">
                     <h2>Resetar Senha</h2>
@@ -32,9 +65,9 @@ export default function ResetPassW() {
                         type="password"
                         id="senhaAtual"
                         placeholder="Informe a senha atual"
-                        value={formData.senhaAtual}
+                        value={formData.senha}
                         onChange={(e) =>
-                            setFormData({ ...formData, senhaAtual: e.target.value })
+                            setFormData({ ...formData, senha: e.target.value })
                         }
                     />
 
@@ -54,9 +87,9 @@ export default function ResetPassW() {
                         type="password"
                         id="ConfirmaSenha"
                         placeholder="Confirme a sua nova senha"
-                        value={formData.confirmSenha}
+                        value={formData.confirmaSenha}
                         onChange={(e) =>
-                            setFormData({ ...formData, confirmSenha: e.target.value })
+                            setFormData({ ...formData, confirmaSenha: e.target.value })
                         }
                     />
 
