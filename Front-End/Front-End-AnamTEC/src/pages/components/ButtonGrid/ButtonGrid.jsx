@@ -14,10 +14,6 @@ const ButtonGrid = ({ onCadastrar, onEnviarEmail, onPesquisar, showModal, setSho
           <button className="custom-btn" onClick={onEnviarEmail}>Enviar Email</button>
         </div>
 
-        <div className="col-12">
-          <button className="custom-btn" onClick={onPesquisar}>Pesquisar</button>
-        </div>
-
         <EnviarEmailModal
           show={showModal}
           onClose={() => setShowModal(false)}

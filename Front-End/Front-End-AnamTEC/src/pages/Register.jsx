@@ -1,8 +1,9 @@
 // src/pages/Cadastro.jsx
 import React, { useState, useEffect } from "react";
-import { postFunction } from "../services/APISevice"; // seu serviço de API
+import { postFunctionUser } from "../services/APISevice"; // seu serviço de API
 import logoAnamTec from "../assets/Anamtec-logo.png"; // Importa a logo 
 import "./Register.css";
+import { toast } from 'react-toastify';
 //ARQUIVO ATUALIZADO PEN
 export default function Cadastro() {
   // estado do formulário
@@ -38,7 +39,6 @@ export default function Cadastro() {
   const precisaCurso = (cargo) =>
     cargo === "Coordenador de Curso" || cargo === "Professor";
 
-
   // quando o cargo mudar e não precisar de curso, limpamos o campo curso
   useEffect(() => {
     if (!precisaCurso(formData.cargo) && formData.curso !== "") {
@@ -56,34 +56,6 @@ export default function Cadastro() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-
-  function bntPostFunctionClick(e) {
-  e.preventDefault(); // previne o reload da página
-
-    <nav>
-        <link to="/"/>
-    </nav>
-  // postFunctiona(formData) arrumar função para enviar os dados do formulário
-
-    // .then(data => console.log("Dados salvos:", data))
-    // .catch(err => console.error("Erro ao salvar:", err));
-}
-  {/*Dados que serão enviados para o banco. */}
-
-  const token = localStorage.getItem("token"); // Pega o token do localStorage
-  const [formData, setFormData] = useState({
-    rm: "",
-    nome: "",
-    email: "",
-    senha: "",
-    cargo: "",
-    token
-  });
-
-  
-
-  return (
-
     // validações simples
     if (!formData.cargo) {
       alert("Selecione um cargo.");
@@ -99,17 +71,36 @@ export default function Cadastro() {
     }
 
     try {
-      const result = await postFunction(formData); // chama seu serviço
-      console.log("Resposta do servidor:", result);
-      alert("Cadastro realizado com sucesso!");
+      const data = await postFunctionUser(formData); // chama seu serviço
+      // console.log("Resposta do servidor:", result);
+      if(data.status === 201) {
+        toast.success('Login efetuado com sucesso', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
+      }
       // opcional: limpar formulário
-      setFormData({ rm: "",cpf:"" ,nome: "", email: "", senha: "", cargo: "", curso: "" });
-    } catch (err) {
-      console.error("Erro ao cadastrar:", err);
-      alert("Erro ao cadastrar. Veja console para detalhes.");
+      // setFormData({ rm: "",cpf:"" ,nome: "", email: "", senha: "", cargo: "", curso: "" });
+    } catch (error) {
+      console.log("Erro ao cadastrar:", error);
+      toast.warn('Erro ao efetuar Login,', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+      });
     }
   }
-
 
   return (
     <div className="cadastro-wrapper">

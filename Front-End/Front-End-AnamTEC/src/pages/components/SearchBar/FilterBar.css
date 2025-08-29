@@ -1,37 +1,51 @@
 .filter-container {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  position: relative;
+  left: 25%
   
 }
+.form-select{
+  width:  180px;  
+}
 
-.filter-input {
-  display: flex;
-  align-items: center;
+.form-control{
+  width: 450px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 2px 2px 5px #1E2019;
   padding: 5px 10px;
   transition: box-shadow 0.3s ease;
-  width: 90%;
+
+}
+.filter-input {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px #1E2019;
+  padding: 5px 10px;
+  transition: box-shadow 0.3s ease;
+  width: 60px;
 }
 
 .filter-input:hover {
   box-shadow: 2px 2px 10px #747373;
 }
 
-.filter-input img {
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
+.custon-btn{
+  position: relative;
+  left: 255%;
+  background-color: #044654;      
+  color: white;                   
+  padding: 5px;             
+  margin: 6px 0;                 
+  border-radius: 10px;           
+  width: 135px;                    
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 1.4); /* Sombra leve */
+  transition: all 0.3s ease;
 }
-
-.filter-input input {
-  border: none;
-  outline: none;
-  padding: 6px 2px;
-  font-size: 14px;
-  background-color: transparent;
-  flex: 1;
+.custom-btn:hover {
+  background-color: #033442; /* Cor um pouco mais escura ao passar o mouse */
+  transform: scale(1.02);    /* Leve crescimento no hover */
+  cursor: pointer;
 }

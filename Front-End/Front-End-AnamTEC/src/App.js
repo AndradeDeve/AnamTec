@@ -18,8 +18,8 @@ function App() {
       <Routes>
         <Route path="/ResetarSenha" element={<ResetPassW />} />
         <Route path="/login" element={<Login/>} />
-        <Route path="/" element={<Cadastro />} />
-        <Route path="/Coord" element={<MasterDashboard />} />
+        <Route path="/cad" element={<Cadastro />} />
+        <Route path="/" element={<MasterDashboard />} />
         <Route path="/Observacoes" element={<ObservacoesUsers />} />
          <Route path="/Controle" element={<ControllAcess />} />
       </Routes>
