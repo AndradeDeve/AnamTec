@@ -4,15 +4,15 @@ import fs from 'fs';
 
 function sendEmail(newPassword, userEmail){
     const transporter = nodemailer.createTransport({
-        service: process.env.servico,
+        service: process.env.SERVICO,
         auth: {
-            user: process.env.usuario,
-            pass: process.env.passWord
+            user: process.env.USUARIO,
+            pass: process.env.PASSWORD
         }
     });
 
     let mailOptions = {
-        from: process.env.usuario,
+        from: process.env.USUARIO,
         to: userEmail,
         subject: "Recuperação de senha.",
         html: getEmailTemplate(newPassword)
