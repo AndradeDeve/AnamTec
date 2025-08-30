@@ -16,10 +16,10 @@ function App() {
     <>
     <Router>
       <Routes>
-        <Route path="/" element={<ResetPassW />} />
-        <Route path="/login" element={<Login/>} />
+        <Route path="/ResetarSenha" element={<ResetPassW />} />
+        <Route path="/Login" element={<Login/>} />
         <Route path="/Cad" element={<Cadastro />} />
-        <Route path="/coord" element={<MasterDashboard />} />
+        <Route path="/" element={<MasterDashboard />} />
         <Route path="/Observacoes" element={<ObservacoesUsers />} />
          <Route path="/Controle" element={<ControllAcess />} />
       </Routes>

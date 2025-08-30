@@ -7,24 +7,29 @@ import nsaIcon from '../../../assets/nsa.png';
 import controlAcessIcon from '../../../assets/control-acess.png';
 import relatorioIcon from '../../../assets/relatorio.png';
 import logoAnamtec from '../../../assets/Anamtec-logo.png';
+import configIcon from '../../../assets/config-icon.png'
 
 import './Header.css'; // mantém seu CSS personalizado
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
+  }
+  const [configOpen, setconfigOpen] = useState(false);
+  const toggleConfig = () => {
+    setconfigOpen((prev) => !prev);
   };
+
 
   const navigate = useNavigate();
 
   return (
-    <header className="header d-flex justify-content-around mt-0 mb-5 container-fluid   py-3 px-4">
+    <header className="header d-flex justify-content-around mt-0 mb-5 py-3">
       {/* Linha principal do Header */}
       <div className="d-flex justify-content-around align-items-center row">
         {/* Ícone de menu e dropdown */}
-        <div className="col-auto position-relative justify-content-aroud">
+        <div className="col-auto position-relative justify-content-around">
           <div className="menu-toggle" onClick={toggleMenu}>☰</div>
 
           {/* Dropdown - aparece abaixo do menu */}
@@ -47,11 +52,21 @@ const Header = () => {
         </div>
 
         {/* Saudação e engrenagem */}
-        <div className="col-auto d-flex align-items-center gap-2">
+        <div className="col-auto d-flex align-items-center gap-5">
           <span className="user-section">
             Bem-vindo <strong>(Coordenador Pedagógico)</strong>
           </span>
-          <button className="config-btn">⚙</button>
+
+          <div className="col-auto position-relative justify-content-around ">
+          <div className="menu-toggle" onClick={toggleConfig}>⚙</div>
+          <div className={`dropdown-config-custom ${configOpen ? 'show' : ''}`}>
+            <ul className="list-unstyled m-0 p-2">
+              {/*NAVEGAÇÂO ENTRE AS PÁGINAS ==> */}
+              <li onClick={() => navigate('')}><img src={configIcon} alt="Página de Configurações" /><span>Configurações</span></li>
+              <li onClick={() => navigate('/login')}><img src={personIcon} alt="Sair do sistema" /><span>Sair</span></li>
+            </ul>
+          </div>
+          </div>
         </div>
       </div>
     </header>

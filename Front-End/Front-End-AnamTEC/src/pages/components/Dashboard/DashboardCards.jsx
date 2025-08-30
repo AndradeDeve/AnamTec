@@ -11,11 +11,11 @@ const cards = [
 export default function DashboardCards() {
   return (
     <div className="container my-1">
-      <div className="row">
+      <div className="row g-3">
         {cards.map((card, index) => (
           <div
             key={index}
-            className="col-12 col-md-6 col-lg-4 mb-4"
+            className="col-12 col-sm-6 col-md-4 col-lg-4 mb-4"
           >
             <div className={`dashboard-card text-white text-center p-4 rounded shadow ${card.color}`}>
               <img src={formIcon} alt="ícone formulário" className="mb-2" />

@@ -74,6 +74,19 @@ body, html {
   font-weight: 700;
 }
 
+.footer-modal{
+  display: flex;
+   justify-content: space-between;
+}
+
+.footer-modal p {
+  margin: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  color:rgb(24, 24, 153);
+  text-decoration: underline;
+}
+
 .resetForm input {
   padding: 10px;
   border: none;

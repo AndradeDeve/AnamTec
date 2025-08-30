@@ -4,16 +4,24 @@ import logoAnamTec from "../assets/Anamtec-logo.png";
 import RedefineSenha from "../pages/components/EmailPassword/index"
 import { toast } from 'react-toastify';
 import { putFunctionResetSenha } from '../services/APISevice';
-
+import { useNavigate } from 'react-router-dom';
 export default function ResetPassW() {
+
+    const [showModal, setShowModal] = useState(false)
+
+    const navigate = useNavigate()
+
+    const [returnLogin, setReturnLogin] = useState("");
+    const navLogin = () => {
+        setReturnLogin(navigate("/Login", {replace: true}));
+    }
+    
     const [formData, setFormData] = useState({
         senha: "",
         senhaNova: "",
         confirmaSenha: "",
         email: localStorage.getItem("email")
     });
-
-    const [showModal, setShowModal] = useState(false)
 
     const  handleResetPassW = async (e) => {
         e.preventDefault(); // Evita o recarregamento da página
@@ -92,11 +100,16 @@ export default function ResetPassW() {
                             setFormData({ ...formData, confirmaSenha: e.target.value })
                         }
                     />
-
-                      <p className="redefineSenha"
-                        onClick={() => setShowModal(true)}
-                        >
-                            Redefinir senha</p>
+                        <div className="footer-modal">
+                            <p className="voltar-login"
+                                onClick={navLogin}
+                                >voltar 
+                            </p>
+                            <p className="redefineSenha"
+                                onClick={() => setShowModal(true)}>
+                                Enviar nova senha no email
+                            </p>
+                        </div>
                     <button type="submit">Salvar</button>
                 </form>
             </div>

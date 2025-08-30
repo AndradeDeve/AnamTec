@@ -1,51 +1,54 @@
-.filter-container {
-  display: flex;
-  position: relative;
-  left: 25%
-  
-}
-.form-select{
-  width:  180px;  
+.form-select {
+  width: 100%;  
+  max-width: 220px;  /* limite em telas grandes */
 }
 
-.form-control{
-  width: 450px;
+.form-control {
+  width: 100%;
+  min-width: 400px;
+  max-width: 500px; /* em telas grandes ele não passa disso */
   background-color: white;
   border-radius: 10px;
   box-shadow: 2px 2px 5px #1E2019;
   padding: 5px 10px;
   transition: box-shadow 0.3s ease;
-
-}
-.filter-input {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 2px 2px 5px #1E2019;
-  padding: 5px 10px;
-  transition: box-shadow 0.3s ease;
-  width: 60px;
 }
 
-.filter-input:hover {
+.form-control:hover {
   box-shadow: 2px 2px 10px #747373;
 }
 
-.custon-btn{
-  position: relative;
-  left: 255%;
+/* Botão */
+
+.custon-btn {
   background-color: #044654;      
   color: white;                   
-  padding: 5px;             
+  padding: 8px;             
   margin: 6px 0;                 
   border-radius: 10px;           
-  width: 135px;                    
+  width: 100%;   /* Agora respeita o grid */
   font-size: 16px;
   font-weight: 500;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 1.4); /* Sombra leve */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 1.4);
   transition: all 0.3s ease;
 }
-.custom-btn:hover {
-  background-color: #033442; /* Cor um pouco mais escura ao passar o mouse */
-  transform: scale(1.02);    /* Leve crescimento no hover */
+
+
+.custon-btn:hover {
+  background-color: #033442;
+  transform: scale(1.02);
   cursor: pointer;
+}
+
+/* 🔹 Ajustes para telas grandes */
+@media (min-width: 992px) {
+  .form-select {
+    max-width: 200px;
+  }
+  .form-control {
+    max-width: 450px;
+  }
+  .custon-btn {
+    max-width: 150px;
+  }
 }

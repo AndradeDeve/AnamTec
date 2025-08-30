@@ -1,29 +1,28 @@
-import React from 'react';
+
+import  React,{ useState } from 'react';
 import './FilterBar.css';
-import  { useState } from 'react';
 
 
 function FilterBar({onSearch}) {
   const [termo, setTermo] = useState(""); 
   const [filtro, setFiltro] = useState("");
 
-  const HandleSearch = () =>{
+  const handleSearch = () =>{
 
     if (!termo){
       alert("Digite algo para pesquisar")
       return;
     }
 
-    onchange(filtro, termo)
+    onSearch(filtro, termo)
   }
 
-
  return (
-  <div className="filter-container mt-3 mb-3 col-md-3">
-      <div className="row g-1 align-items-center">
+  <div className="d-flex  align-items-center justify-content-center container-fluid ">
+      <div className="d-flex row g-3 align-items-center ">
         
         {/* Dropdown */}
-        <div className="col-12 col-md-5">
+        <div className="col-12 col-sm-6 col-md-3">
           <select
             className="form-select"
             value={filtro}
@@ -39,7 +38,7 @@ function FilterBar({onSearch}) {
         </div>
 
         {/* Campo de pesquisa */}
-        <div className="col-12 col-md-3">
+        <div className="col-12  col-sm-6 col-md-7">
           <input
             type="text"
             className="form-control"
@@ -50,8 +49,8 @@ function FilterBar({onSearch}) {
         </div>
 
         {/* Botão */}
-        <div className="col-12 col-md-2 d-grid ">
-          <button className="custon-btn" onClick={HandleSearch}>
+        <div className="col-12 col-sm-12 col-md-2 d-grid">
+          <button className="custon-btn" onClick={handleSearch}>
             Pesquisar
           </button>
         </div>

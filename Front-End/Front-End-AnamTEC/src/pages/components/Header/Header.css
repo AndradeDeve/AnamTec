@@ -4,44 +4,12 @@
   color: #E4EDF1;
   
 }
-
 .menu-toggle {
-  font-size: 40px;
+  font-size: 35px;
   cursor: pointer;
   color: #E4EDF1;
   border: none;
   background: none;
-}
-
-/* Dropdown personalizado */
-.dropdown-menu-custom {
-  position: absolute;
-  top: 80%;
-  left: 0;
-  background-color: #044654;
-  border-radius: 8px;
-  padding: 0.5rem;
-  z-index: 1000;
-  display: none;
-}
-
-.dropdown-menu-custom.show {
-  display: block;
-}
-
-.dropdown-menu-custom li {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 8px 12px;
-  color: #fff;
-  border-radius: 5px;
-  transition: background 0.2s;
-  cursor: pointer;
-}
-
-.dropdown-menu-custom li:hover {
-  background-color: #056172;
 }
 .logo{
   position: relative;
@@ -50,21 +18,80 @@
   font-size: 28pt;
   font-weight: 600;
 }
-
 .logo img {
   width: 80px;
   margin-left: 10px;
 }
 
+/* Dropdown personalizado */
+.dropdown-menu-custom {
+  position: absolute;
+  top: 80%;
+  left: 2px;
+  background-color: #044654;
+  border-radius: 8px;
+  padding: 0.5rem;
+  z-index: 1000;
+  display: none;
+}
+.dropdown-menu-custom.show {
+  display: block;
+}
+
+.dropdown-menu-custom li {
+  display: flex;
+  position: relative;
+  left: 20px;
+  align-items: center;
+  gap: 20px;
+  padding: 5px 5px;
+  color: #ffff;
+  border-radius: 5px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.dropdown-menu-custom li:hover {
+  background-color: #056172;
+}
+.dropdown-config-custom{
+  position: absolute;
+  top: 80%;
+  right: 1px;
+  background-color: #044654;
+  border-radius: 8px;
+  padding: 0.5rem;
+  z-index: 1000;
+  display: none;
+}
+.dropdown-config-custom.show {
+  display: block;
+}
+
+.dropdown-config-custom li {
+  display: flex;
+  position: relative;
+  left: 20px;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 5px;
+  color: #ffff;
+  border-radius: 5px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.dropdown-config-custom li:hover {
+  background-color: #056172;
+}
+
+
+
 .config-btn {
-  
   font-size: 34px;
   background: none;
   border: none;
   color: #E4EDF1;
   cursor: pointer;
 }
-
 .user-section {
   font-size: 14pt;
 }
