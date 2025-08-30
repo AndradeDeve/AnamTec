@@ -2,7 +2,7 @@ import React from "react";
 import EnviarEmailModal from '../SendingEmail/EnviarEmail';
 import './ButtonGrid.css';
 
-const ButtonGrid = ({ onCadastrar, onEnviarEmail, onPesquisar, showModal, setShowModal, alunosPendentes, onEnviar }) => {
+const ButtonGrid = ({ onCadastrar, onEnviarEmail, showModal, setShowModal, alunosPendentes, onEnviar }) => {
   return (
     <div className="container my-3">
       <div className="row justify-content-center">

@@ -5,7 +5,7 @@ body, html {
 }
 
 .cadastro-wrapper {
-   display: flex;
+  display: flex;
   height: 100vh;
   flex-direction: row;
   justify-content:space-between;
@@ -15,7 +15,7 @@ body, html {
 
 
 .header-Cadastro {
-   position: relative;
+  position: relative;
   bottom: 35%;
   left: 12%;
   display: flex;
@@ -101,6 +101,8 @@ body, html {
 
 .actions { text-align:center; margin-top:16px; }
 .btn-submit {
+  position: relative;
+  bottom: 8px;
   background:#044654;
   color:white;
   padding:10px 28px;

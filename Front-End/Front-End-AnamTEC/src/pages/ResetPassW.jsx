@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import "./ResetPassW.css";
 import logoAnamTec from "../assets/Anamtec-logo.png";
-
-import { ToastContainer, toast } from 'react-toastify';
+import RedefineSenha from "../pages/components/EmailPassword/index"
+import { toast } from 'react-toastify';
 import { putFunctionResetSenha } from '../services/APISevice';
 
 export default function ResetPassW() {
@@ -12,6 +12,8 @@ export default function ResetPassW() {
         confirmaSenha: "",
         email: localStorage.getItem("email")
     });
+
+    const [showModal, setShowModal] = useState(false)
 
     const  handleResetPassW = async (e) => {
         e.preventDefault(); // Evita o recarregamento da página
@@ -47,7 +49,7 @@ export default function ResetPassW() {
 
     return (
         <div className="reset-container">
-            <div className="aside-container">
+            <div className="aside-containerReset">
             <div className="reset-header">
                 <h1>AnamTec</h1>
                 <img src={logoAnamTec} alt="Logo" className='reset-logo' />
@@ -58,8 +60,7 @@ export default function ResetPassW() {
                 <div className="reset-card-header">
                     <h2>Resetar Senha</h2>
                 </div>
-
-                <form onSubmit={handleResetPassW} className="reset-card-body">
+                <form onSubmit={handleResetPassW} className="resetForm">
                     <label htmlFor='senhaAtual'>Senha atual:</label>
                     <input
                         type="password"
@@ -70,7 +71,6 @@ export default function ResetPassW() {
                             setFormData({ ...formData, senha: e.target.value })
                         }
                     />
-
                     <label htmlFor='NovaSenha'>Nova Senha:</label>
                     <input
                         type="password"
@@ -93,9 +93,21 @@ export default function ResetPassW() {
                         }
                     />
 
+                      <p className="redefineSenha"
+                        onClick={() => setShowModal(true)}
+                        >
+                            Redefinir senha</p>
                     <button type="submit">Salvar</button>
                 </form>
             </div>
+                <RedefineSenha 
+                    show={showModal} 
+                    onClose={() => setShowModal(false)} 
+                    onEnviar={() => {
+                    console.log("Enviar lembrete para redefinição de senha");
+                    setShowModal(false);
+                    }}
+                />
         </div>
     );
 }
