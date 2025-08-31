@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import "./Login.css";
 
 // Importa a função post para fazer o login do usuario 
-import { postFunctionLogin, postFunctionUser } from '../services/APISevice';
+import { postFunctionLogin, postFunctionUser } from '../services/APIService.js';
 
 // Importa a imagem da logo
 
@@ -50,8 +50,6 @@ const navCoord = () => {
           progress: undefined,
           theme: "dark",
           });
-          
-          localStorage.setItem("email", data.data.email); // Armazena o e-mail no localStorage
           localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
           navCoord(); // Redireciona para a página do coordenador pedagógico
         }

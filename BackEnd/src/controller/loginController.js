@@ -40,7 +40,7 @@ routes.post("/", async(request, response) => {
 })
 
 routes.put("/emailReset", async(request, response) => {
-    const email = request.user.email;
+    const {email} = request.body;
 
     try{
         const [rows] = await connection.execute(
@@ -66,7 +66,7 @@ routes.put("/emailReset", async(request, response) => {
 })
 
 routes.put("/", async(request, response) => {
-    const email = request.user;
+    const email = request.user.email;
     const {senha, senhaNova, confirmaSenha} = request.body;
     console.log("email", email);
     try{

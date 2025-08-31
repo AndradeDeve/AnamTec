@@ -51,4 +51,4 @@
         }
     }
 
-    export {genereteToken, authenticate, authorizationRoles, VerificarSenha};
+export {genereteToken, authenticate, authorizationRoles, VerificarSenha};

@@ -4,156 +4,240 @@ import { getConnection } from "../database/data-souce.js";
 const routes = express.Router();
 const connection = await getConnection();
 
-routes.get("/", async (request, response) => {
-  const {id, rm, nome} = request.query;
+routes.get("/", async (req, res) => {
+  const { id, ra, nome } = req.query;
+
   try {
-    let sql = `SELECT * FROM tbl_cadastro_aluno WHERE deletedAt IS NULL`;
+    let sql = `SELECT * FROM tbl_cadastro_al WHERE deletedAt IS NULL`;
     const params = [];
 
-    if(id){
-      sql += ` AND ID = ?`;
+    if (id) {
+      sql += ` AND id = ?`;
       params.push(id);
     }
 
-    if(rm){
-      sql += ` AND RM = ?`;
-      params.push(rm);
+    if (ra) {
+      sql += ` AND ra = ?`;
+      params.push(ra);
     }
 
-    if(nome){
+    if (nome) {
       sql += ` AND nome LIKE ?`;
       params.push(`%${nome}%`);
     }
 
     const [rows] = await connection.execute(sql, params);
-    if (!Array.isArray(rows) || rows.length === 0) {
-            return response.status(404).json({ err: "Aluno não encontrado." });
+
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ err: "Aluno não encontrado." });
     }
 
-    return response.status(200).json({response: rows })
+    return res.status(200).json(rows);
   } catch (err) {
     console.error("Erro ao buscar alunos:", err);
-    return response.status(500).json({ err: "Erro no servidor." });
+    return res.status(500).json({ err: "Erro no servidor." });
   }
 });
 
+routes.get("/:id", async (req, res) => {
+  const { id } = req.params;
 
-routes.post("/", async(request, response) =>{
-  const { rm, nome, data_nasc, genero, email, telefone } = request.body;
-
-  try{
-
-    const [existe] = await connection.execute(
-      "SELECT * FROM tbl_cadastro_aluno WHERE rm = ? AND deletedAt IS NULL",
-      [rm]
+  try {
+    const [rows] = await connection.execute(
+      `SELECT * FROM tbl_cadastro_al WHERE id = ? AND deletedAt IS NULL`,
+      [id]
     );
-    if (existe.length > 0) {
-      return response.status(400).json({ err: "Este RM já está em uso por outro aluno." });
+
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ err: "Aluno não encontrado." });
     }
 
-    const rmRegex = /^\d{7}$/;
-    if(!rm || !rmRegex.test(rm.toLowerCase().trim())){
-      return response.status(400).json({err: "Rm inválido"})
+    return res.status(200).json(rows[0]);
+  } catch (err) {
+    console.error("Erro ao buscar aluno:", err);
+    return res.status(500).json({ err: "Erro no servidor." });
+  }
+});
+
+routes.post("/", async (req, res) => {
+  const { ra, nome, data_nasc, genero, email, telefone, cep } = req.body;
+
+  try {
+    const [enderecoExistente] = await connection.execute(
+      "SELECT * FROM tbl_endereco WHERE cep = ? AND deletedAt IS NULL",
+      [cep]
+    );
+    const id_endereco = enderecoExistente[0]?.id;
+    if (!id_endereco) {
+      return res.status(400).json({ err: "Endereço não encontrado." });
     }
 
-    if(data_nasc <= "1935/01/01"){
-      return response.status(400).json({err: "A data de nascimento não pode ser anterior a 01/01/1935."})
+    const [existeRa] = await connection.execute(
+      "SELECT * FROM tbl_cadastro_al WHERE ra = ? AND deletedAt IS NULL",
+      [ra]
+    );
+    if (existeRa.length > 0) {
+      return res.status(400).json({ err: "Este RA já está em uso." });
+    }
+
+    const [existeEmail] = await connection.execute(
+      "SELECT * FROM tbl_cadastro_al WHERE email = ? AND deletedAt IS NULL",
+      [email]
+    );
+    if (existeEmail.length > 0) {
+      return res.status(400).json({ err: "Este e-mail já está em uso." });
+    }
+
+    const [existeTel] = await connection.execute(
+      "SELECT * FROM tbl_cadastro_al WHERE telefone = ? AND deletedAt IS NULL",
+      [telefone]
+    );
+    if (existeTel.length > 0) {
+      return res.status(400).json({ err: "Este telefone já está em uso." });
+    }
+
+    const raRegex = /^\d{1,15}$/;
+    if (!ra || !raRegex.test(ra.trim())) {
+      return res.status(400).json({ err: "RA inválido." });
     }
 
     const nomeRegex = /^[\p{L}\s\-']{2,45}$/u;
-    if(!nome || !nomeRegex.test(nome.trim())){
-      return response.status(400).json({err: "Nome inválido."});
+    if (!nome || !nomeRegex.test(nome.trim())) {
+      return res.status(400).json({ err: "Nome inválido." });
+    }
+
+    if (new Date(data_nasc) <= new Date("1935-01-01")) {
+      return res.status(400).json({ err: "Data de nascimento inválida." });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!email || !emailRegex.test(email.trim())){
-      return response.status(400).json({err: "E-mail inválido"});
+    if (!email || !emailRegex.test(email.trim())) {
+      return res.status(400).json({ err: "E-mail inválido." });
     }
 
-    if(genero.toLowerCase() !== "feminino" && genero.toLowerCase() !== "masculino" && genero.toLowerCase() !== "não binario" && genero.toLowerCase() !== "prefiro não informar" && genero.toLowerCase() !== "outros"){
-      return response.status(400).json({err: "Genero inválido."});
-    } 
+    const generosValidos = [
+      "Feminino",
+      "Masculino",
+      "Não Binario",
+      "Prefiro não informar",
+      "Outros",
+    ];
+    if (!generosValidos.includes(genero)) {
+      return res.status(400).json({ err: "Gênero inválido." });
+    }
 
     const telefoneRegex = /^\d{10,20}$/;
-    if(!telefone || !telefoneRegex.test(telefone.trim())){
-      return response. status(400).json({err: "Telefone inválido."});
+    if (!telefone || !telefoneRegex.test(telefone.trim())) {
+      return res.status(400).json({ err: "Telefone inválido." });
     }
+
     await connection.execute(
-      `INSERT INTO tbl_cadastro_aluno (RM, nome, data_nasc, genero, email, telefone) values(?, ?, ?, ?, ?, ?)`,
-      [rm, nome, data_nasc, genero, email, telefone]
+      `INSERT INTO tbl_cadastro_al 
+       (ra, nome, data_nasc, genero, email, telefone, id_endereco) 
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [ra, nome, data_nasc, genero, email, telefone, id_endereco]
     );
-    return response.status(201).json({response: "Aluno cadastrado com sucesso."})
+
+    return res.status(201).json({ msg: "Aluno cadastrado com sucesso." });
   } catch (err) {
     console.error("Erro ao cadastrar aluno:", err);
-    return response.status(400).json({ err: "Erro ao cadastrar aluno," });
+    return res.status(500).json({ err: "Erro no servidor." });
   }
-
 });
 
-routes.put("/:RM", async (request, response) =>{
-  const { RM } = request.params;
-  const { rm, nome, data_nasc, genero, email, telefone } = request.body;
+routes.put("/:RA", async (req, res) => {
+  const { RA } = req.params;
+  const { ra, nome, data_nasc, genero, email, telefone, cep } = req.body;
 
-  try{
+  try {
+    const [enderecoExistente] = await connection.execute(
+      "SELECT * FROM tbl_endereco WHERE cep = ? AND deletedAt IS NULL",
+      [cep]
+    );
+    const id_endereco = enderecoExistente[0]?.id;
+    if (!id_endereco) {
+      return res.status(400).json({ err: "Endereço não encontrado." });
+    }
 
-    const rmRegex = /^\d{7}$/;
-    if(!rm || !rmRegex.test(rm.toLowerCase().trim())){
-      return response.status(400).json({err: "Rm inválido"})
+    const raRegex = /^\d{1,15}$/;
+    if (!ra || !raRegex.test(ra.trim())) {
+      return res.status(400).json({ err: "RA inválido." });
     }
 
     const nomeRegex = /^[\p{L}\s\-']{2,45}$/u;
-    if(!nome || !nomeRegex.test(nome.trim())){
-      return response.status(400).json({err: "O campo 'Nome' não pode conter numeros ou caracteres especiais, e deve conter entre 2 a 45 caracteres."});
+    if (!nome || !nomeRegex.test(nome.trim())) {
+      return res.status(400).json({ err: "Nome inválido." });
     }
+
+    if (new Date(data_nasc) <= new Date("1935-01-01")) {
+      return res.status(400).json({ err: "Data de nascimento inválida." });
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if(!email || !emailRegex.test(email.trim())){
-      return response.status(400).json({err: "E-mail inválido"});
+    if (!email || !emailRegex.test(email.trim())) {
+      return res.status(400).json({ err: "E-mail inválido." });
     }
 
-    if(genero.toLowerCase() !== "feminino" && genero.toLowerCase() !== "masculino" && genero.toLowerCase() !== "não binario" && genero.toLowerCase() !== "prefiro não informar" && genero.toLowerCase() !== "outros"){
-      return response.status(400).json({err: "Campo 'Genero' inválido"});
+    const generosValidos = [
+      "Feminino",
+      "Masculino",
+      "Não Binario",
+      "Prefiro não informar",
+      "Outros",
+    ];
+    if (!generosValidos.includes(genero)) {
+      return res.status(400).json({ err: "Gênero inválido." });
     }
-    
+
     const telefoneRegex = /^\d{10,20}$/;
-    if(!telefone || !telefoneRegex.test(telefone.trim())){
-      return response. status(400).json({err: "Telefone inválido."});
+    if (!telefone || !telefoneRegex.test(telefone.trim())) {
+      return res.status(400).json({ err: "Telefone inválido." });
     }
-    
+
     const [rows] = await connection.execute(
-      `UPDATE tbl_cadastro_aluno set RM = ?, nome = ?, data_nasc = ?, genero = ?, email = ?, telefone = ? WHERE deletedAt IS NULL AND RM = ?`,
-      [rm, nome, data_nasc, genero, email, telefone, RM]
+      `UPDATE tbl_cadastro_al 
+       SET ra = ?, nome = ?, data_nasc = ?, genero = ?, email = ?, telefone = ?, id_endereco = ?
+       WHERE deletedAt IS NULL AND ra = ?`,
+      [ra, nome, data_nasc, genero, email, telefone, id_endereco, RA]
     );
-    if(rows.affectedRows === 0){
-      return response.status(400).json({err: "Aluno não encontrado."});
+
+    if (rows.affectedRows === 0) {
+      return res.status(404).json({ err: "Aluno não encontrado." });
     }
 
-    return response.status(201).json({response: "Aluno atualizado com sucesso."})
-  }catch(error){
-    console.error("Erro ao atualizar aluno", error);
-    return response.status(500).json({err: "Erro no servidor."})
+    return res.status(200).json({ msg: "Aluno atualizado com sucesso." });
+  } catch (err) {
+    console.error("Erro ao atualizar aluno:", err);
+    return res.status(500).json({ err: "Erro no servidor." });
   }
-})
-
-routes.delete("/:id", async (request, response) =>{
-  const { id } = request.params;
-  
-
-  if(isNaN(id)){
-    return response.status(400).json({err: "O id do aluno deve conter um valor númerico."})
-  }
-  try{
-    const dataDelete = new Date();
-    const [rows] = await connection.execute(`UPDATE tbl_cadastro_aluno SET deletedAt = ? WHERE ID = ?`, [dataDelete, id]);
-
-    if(rows.affectedRows == 0){
-      return response.status(400).json({err: "Aluno não encontrado."});
-    };
-    return response.status(201).json({response: "Aluno deletado com sucesso."});
-  }catch (err){
-    console.error("Erro ao deletar aluno",err);
-    return response.status(500).json({err: "Erro no servidor."});
-  };
 });
 
-export default routes;  
+routes.delete("/:RA", async (req, res) => {
+  const { RA } = req.params;
+
+  if (!RA) {
+    return res.status(400).json({ err: "Informe o RA do aluno." });
+  }
+
+  try {
+    const dataDelete = new Date();
+
+    const [rows] = await connection.execute(
+      `UPDATE tbl_cadastro_al 
+       SET deletedAt = ? 
+       WHERE ra = ? AND deletedAt IS NULL`,
+      [dataDelete, RA]
+    );
+
+    if (rows.affectedRows === 0) {
+      return res.status(404).json({ err: "Aluno não encontrado." });
+    }
+
+    return res.status(200).json({ msg: "Aluno deletado com sucesso." });
+  } catch (err) {
+    console.error("Erro ao deletar aluno:", err);
+    return res.status(500).json({ err: "Erro no servidor." });
+  }
+});
+
+export default routes;

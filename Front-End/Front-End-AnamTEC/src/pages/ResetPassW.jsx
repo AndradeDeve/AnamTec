@@ -3,7 +3,7 @@ import "./ResetPassW.css";
 import logoAnamTec from "../assets/Anamtec-logo.png";
 
 import { ToastContainer, toast } from 'react-toastify';
-import { putFunctionResetSenha } from '../services/APISevice';
+import { putFunctionResetSenha } from '../services/APIService.js';
 
 export default function ResetPassW() {
     const [formData, setFormData] = useState({

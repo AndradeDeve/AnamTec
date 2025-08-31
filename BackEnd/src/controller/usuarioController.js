@@ -10,7 +10,8 @@ routes.get("/", async (request, response) => {
     const {nome, cpf} = request.query;
     
     try{
-        let sql = `SELECT id, rm, CPF, nome, email, id_curso, id_type  FROM tbl_usuario WHERE deletedAt IS NULL`;
+
+        let sql = `SELECT * FROM tbl_usuario WHERE deletedAt IS NULL`;
         const params = [];
         if(nome){
             sql += ` AND nome LIKE ?`;
@@ -37,8 +38,8 @@ routes.get("/", async (request, response) => {
 
 
 routes.post("/", async (request, response) => {
-    const {cpf, nome, email, senha, cargo, curso} = request.body;
-    let {rm} = request.body;
+    const {cpf, nome, email, senha, curso} = request.body;
+    let {rm, cargo} = request.body;
     try{
         if(rm){
             const rmRegex = /^\d{7,15}$/;
@@ -69,7 +70,7 @@ routes.post("/", async (request, response) => {
         if(!validarCPF(cpf)){
             return response.status(400).json({err: "Cpf inválido."});
         }
-        cargo.toLowerCase()
+        cargo = cargo.toLowerCase()
         const [tipoExiste] =  await connection.execute(`SELECT * FROM tbl_type WHERE tipo = ?`, [cargo]);
         
         const id_tipo = tipoExiste[0]?.id;
@@ -94,9 +95,25 @@ routes.post("/", async (request, response) => {
 
         const hashedSenha = await hash(senha, 10);
 
-        await connection.execute(`INSERT INTO tbl_usuario (rm, CPF, nome, email, senha, id_type, id_curso) VALUES(?, ?, ?, ?, ?, ?, ?)`,
-            [rm, cpf, nome, email, hashedSenha, id_tipo, id_curso]
+        await connection.execute(`INSERT INTO tbl_usuario (RM, CPF, nome, email, senha) VALUES(?, ?, ?, ?, ?)`,
+            [rm, cpf, nome, email, hashedSenha]
         );
+        const [idUserExiste] = await connection.execute(`SELECT * FROM tbl_usuario WHERE CPF = ?`, [cpf])
+
+        if(idUserExiste.length === 0){
+            return response.status(400).json({response: "Erro ao cadastrar usuário."})
+        }
+        const id_user = idUserExiste[idUserExiste.length - 1];
+
+        if (id_curso) {
+            await connection.execute(
+                `INSERT INTO juncao_curso_user (id_curso, id_user) VALUES(?, ?)`,
+                [id_curso, id_user.id]
+      );
+    }
+
+        await connection.execute(`INSERT INTO juncao_type_user (id_type, id_user) VALUES(?, ?)`, [id_tipo, id_user.id])
+
         return response.status(201).json({response: "Cadastro efetuado com sucesso."});  
     }catch(err){
         console.log("Erro ao efetuar o cadastrar:", err);
