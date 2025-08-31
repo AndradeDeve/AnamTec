@@ -1,5 +1,5 @@
 .tabela-container {
-  max-height: 500px; /* altura máxima da tabela */
+  max-height: 600px; /* altura máxima da tabela */
   overflow-y: auto;   /* scroll vertical */
   padding: 10px;
   border: 1px solid #ddd;
@@ -41,4 +41,13 @@ thead th {
 
 .btn-table:hover {
   background-color: #296a79;
+}
+
+@media (max-width: 768px) {
+  thead {
+    font-size: 0.9rem;
+  }
+  tbody {
+      font-size: 0.9rem;
+  }
 }
