@@ -19,9 +19,9 @@ function App() {
         <Route path="/ResetarSenha" element={<ResetPassW />} />
         <Route path="/Login" element={<Login/>} />
         <Route path="/Cad" element={<Cadastro />} />
-        <Route path="/" element={<MasterDashboard />} />
+        <Route path="/Coord" element={<MasterDashboard />} />
         <Route path="/Observacoes" element={<ObservacoesUsers />} />
-         <Route path="/Controle" element={<ControllAcess />} />
+         <Route path="/" element={<ControllAcess />} />
       </Routes>
     </Router>
       <ToastContainer />

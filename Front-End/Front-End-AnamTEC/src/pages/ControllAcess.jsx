@@ -6,8 +6,8 @@ const ControllAcess = () => {
     return (
      <div className="">
         <Header />
-          <h3 className="title" >Controle de Acessos</h3>
       <div className="flex-grow-1">
+          
         <div className="container mt-5">
           <AccessFilters />
           <Table />

@@ -29,23 +29,23 @@ export default function StudentTable() {
 
    const navigate = useNavigate();
   return (
-    <div className="tabela-container">
+    <div className="tabela-container col-12 col-md-12">
       <div className="tabela-scroll-horizontal">
         <table className="table table-hover table-bordered table-striped align-middle text-center">
           <thead className="thead-dark sticky-top">
-            <tr>
-              <th className="p-3">RM</th>
-              <th className="p-3">Nome do Aluno</th>
-              <th className="p-3">Curso</th>
-              <th className="p-3">Semestre</th>
-              <th className="p-3">Turno</th>
-              <th className="p-3">Coordenador</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Anamnese</th>
-              <th className="p-3">Observações</th>
+            <tr className=''>
+              <th className="p-4">RM</th>
+              <th className="p-4">Nome do Aluno</th>
+              <th className="p-4">Curso</th>
+              <th className="p-4">Semestre</th>
+              <th className="p-4">Turno</th>
+              <th className="p-4">Coordenador</th>
+              <th className="p-4">Status</th>
+              <th className="p-4">Anamnese</th>
+              <th className="p-4">Observações</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className=''>
             {mockData.map((aluno, index) => (
               <tr key={index}>
                 <td className="p-3">{aluno.rm}</td>

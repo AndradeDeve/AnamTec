@@ -31,9 +31,12 @@ export default function MasterDashboard() {
     <header>
       <Header />
       <main>
-        <aside className="d-flex">
+        <aside className="container my-2">
+          <div className="row">
+            <div className="col-12 col-md-9">
           <DashboardCards />
-          <div className="me-1">
+          </div>
+          <div className="d-flex col-9 col-md-3">
             <ButtonGrid
               onCadastrar={() => console.log("Cadastrar")}
               onPesquisar={() => console.log("Pesquisar")}
@@ -43,6 +46,7 @@ export default function MasterDashboard() {
               alunosPendentes={alunosPendentes}
               onEnviar={enviarLembretes}
             />
+          </div>
           </div>
         </aside>
         <FilterBar />
