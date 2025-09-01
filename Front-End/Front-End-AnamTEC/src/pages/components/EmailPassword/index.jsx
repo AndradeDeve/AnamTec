@@ -57,7 +57,7 @@ const RedefineSenha = ({ show, onClose,  onEnviar }) => {
                   id="email"
                   name="email"
                   placeholder="Informe o email"
-                  value={setFormData.email}
+                  value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
@@ -67,7 +67,7 @@ const RedefineSenha = ({ show, onClose,  onEnviar }) => {
       </Modal.Body>
       <Modal.Footer className="modal-footer">
         <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-        <Button type="submit" >Enviar e-mail</Button>
+        <Button onClick={sendEmail}>Enviar e-mail</Button>
       </Modal.Footer>
     </Modal>
   );

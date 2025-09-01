@@ -117,7 +117,7 @@ export default function ResetPassW() {
                     show={showModal} 
                     onClose={() => setShowModal(false)} 
                     onEnviar={() => {
-                        ;
+                        console.log("Enviar nova senha por email");
                     setShowModal(false);
 
                     }}

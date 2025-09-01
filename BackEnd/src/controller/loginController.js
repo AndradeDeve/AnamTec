@@ -3,6 +3,7 @@ import { getConnection } from '../database/data-source.js';
 import { genereteToken } from '../utils/jwt.js';
 import {generateNewPassword} from '../utils/geradorSenha.js'; 
 import { sendEmail } from '../helpers/nodemailer.js'; 
+import { hash } from 'bcrypt';
 import { VerificarSenha } from '../utils/jwt.js';
 
 const routes = express.Router();

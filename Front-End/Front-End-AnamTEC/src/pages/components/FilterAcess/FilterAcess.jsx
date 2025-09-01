@@ -1,35 +1,54 @@
-import React from "react";
+
+import React,{useState} from 'react'
 import { Form, Button, Row, Col } from 
 "react-bootstrap";
-import personIcon from '../../../assets/person-icon.png';
-import searchIcon from '../../../assets/search-icon.png';
 import './FilterAcess.css'
-const AccessFilters = () => {
+
+function FilterAcess({onSearch}) {
+  const [termo, setTermo] = useState("");
+  const [pesquisa, setPesquisa] = useState("");
+
+
+const handleAcess = () =>{
+  if (!termo){
+    alert("Digite algo para pesquisar")
+    return;
+  }
+  onSearch(pesquisa,termo)
+}
   return (
-    <Form className="d-flex p-2  mb-2">
-      <Row className="mb-2">
-        <div className="d-flex">
-        <Col md={2}><Form.Control className="InputSearch" type="text" placeholder="RM" /></Col>
-        <Col classeName="InputSearch" md={3}><Form.Control type="text" placeholder="Nome" /></Col>
-        <Col classeName="InputSearch" md={3}><Form.Control type="text" placeholder="Curso" /></Col>
-       
-        <Col md={2}>
-          <Form.Select>
-            <option>Aluno</option>
-            <option>Professor</option>
-          </Form.Select>
-        </Col>
-        <Col md={2}>
-          <Form.Select>
-            <option>Ativo</option>
-            <option>Inativo</option>
-          </Form.Select>
-        </Col>
-        </div>
-      </Row>
-      <Button className="btnSearch">Pesquisar</Button>
-    </Form>
+    <div className="d-flex align-items-center justify-content-center container-fluid">
+    <div className="d-flex row g-3 align-items-center">
+      <div className='col-12 col-sm-6 col-md-3'>
+        <select
+          className='form-select'
+          value={pesquisa}
+          onChange={(e) => setPesquisa(e.target.value)}
+        >
+          <option value="RM">RM</option>
+          <option value="nome">Nome do Aluno</option>
+          <option value="curso">Curso</option>
+          <option value="coordenador">Coordenador</option>
+        </select>
+      </div>
+      <div className='col-12 col-sm-6 col-md-3'>
+        <input 
+          type="text" 
+          className="form-control"
+          placeholder={`Pesquisar por ${pesquisa.toLocaleLowerCase()}`}
+          value={termo}
+          onChange={(e) => (e.target.value)} 
+          />
+      </div>
+
+      <div className="col-12 col-sm-12-col-md-4 d-grid">
+      <button className="custon-btn" onClick={handleAcess}>
+        Pesquisar
+      </button>
+      </div>
+    </div>
+    </div>
   );
 };
 
-export default AccessFilters;
+export default FilterAcess;

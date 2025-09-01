@@ -25,50 +25,82 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="header d-flex justify-content-around mt-0 mb-5 py-3">
+    <header className="header py-3">
+      <div className="container-fluid">
       {/* Linha principal do Header */}
-      <div className="d-flex justify-content-around align-items-center row">
+      <div className="row align-items-center justify-content-between">
+
         {/* Ícone de menu e dropdown */}
-        <div className="col-auto position-relative justify-content-around">
-          <div className="menu-toggle" onClick={toggleMenu}>☰</div>
+        <div className="col-auto">
+          <div className="menu-toggle d-md-flex" onClick={toggleMenu}>☰</div>
+
 
           {/* Dropdown - aparece abaixo do menu */}
           <div className={`dropdown-menu-custom ${menuOpen ? 'show' : ''}`}>
             <ul className="list-unstyled m-0 p-2">
               {/*NAVEGAÇÂO ENTRE AS PÁGINAS ==> */}
-              <li onClick={() => navigate('/')}><img src={homeIcon} alt="Página Home" /><span>Home</span></li>
-              <li onClick={() => navigate('/Cadastro')}><img src={personIcon} alt="Página de Cadastro" /><span>Cadastrar</span></li>
-              <li onClick={() => navigate('/ResetarSenha')}><img src={passWordIcon} alt="Página de Resetar a Senha" /><span>Resetar Senha</span></li>
-              <li><img src={nsaIcon} alt="Link de Acesso para o site do NSA" /><span>Acesso ao NSA</span></li>
-              <li><img src={controlAcessIcon} alt="Controle de Acesso de Professores" /><span>Controle de Acesso</span></li>
-              <li><img src={relatorioIcon} alt="Página de Relatórios" /><span>Relatório</span></li>
+              <li onClick={() => navigate('/')}>
+              <img src={homeIcon} alt="Página Home" />
+              <span>Home</span>
+              </li>
+              <li onClick={() => navigate('/Cadastro')}>
+              <img src={personIcon} alt="Página de Cadastro" />
+              <span>Cadastrar</span>
+              </li>
+              <li onClick={() => navigate('/ResetarSenha')}>
+              <img src={passWordIcon} alt="Página de Resetar a Senha" />
+              <span>Resetar Senha</span>
+              </li>
+              <li><img src={nsaIcon} alt="Link de Acesso para o site do NSA" />
+              <span>Acesso ao NSA</span>
+              </li>
+              <li>
+              <img src={controlAcessIcon} alt="Controle de Acesso de Professores" />
+              <span>Controle de Acesso</span></li>
+              <li>
+              <img src={relatorioIcon} alt="Página de Relatórios" />
+              <span>Relatório</span>
+              </li>
             </ul>
           </div>
         </div>
 
         {/* Logo */}
-        <div className="col text-center logo d-none d-md-block">
-          AnamTec <img src={logoAnamtec} alt="Logo AnamTec" />
+        <div className="col text-center">
+          <span className='d-md-inline fw-bold fs-4'>
+          AnamTec
+          </span> 
+          <img src={logoAnamtec} alt="Logo AnamTec" className='ms-2' height="60"/>
         </div>
 
-        {/* Saudação e engrenagem */}
-        <div className="col-auto d-flex align-items-center gap-5">
-          <span className="user-section">
+        {/* Mensagem de Saudação */}
+        <div className="col-auto d-flex align-items-center gap-3">
+           {/* Saudação só aparece em telas maiores */}
+          <span className="user-section d-none d-md-inline">
             Bem-vindo <strong>(Coordenador Pedagógico)</strong>
           </span>
 
-          <div className="col-auto position-relative justify-content-around ">
+          {/* Configurações (engrenagem) */} 
+          <div className="position-relative ">
           <div className="menu-toggle" onClick={toggleConfig}>⚙</div>
+
           <div className={`dropdown-config-custom ${configOpen ? 'show' : ''}`}>
             <ul className="list-unstyled m-0 p-2">
-              {/*NAVEGAÇÂO ENTRE AS PÁGINAS ==> */}
-              <li onClick={() => navigate('')}><img src={configIcon} alt="Página de Configurações" /><span>Configurações</span></li>
-              <li onClick={() => navigate('/login')}><img src={personIcon} alt="Sair do sistema" /><span>Sair</span></li>
+            
+              <li onClick={() => navigate('')}>
+                <img src={configIcon} alt="Configurações" />
+                <span>Configurações</span>
+              </li>
+              <li onClick={() => navigate('/login')}>
+              <img src={personIcon} alt="Sair do sistema" />
+              <span>Sair</span>
+              </li>
             </ul>
           </div>
           </div>
         </div>
       </div>
+    </div>
     </header>
   );
 };
