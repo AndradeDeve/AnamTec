@@ -1,6 +1,6 @@
 import express from 'express';
 import { validarCPF } from '../utils/cpfValidator.js';
-import { getConnection } from '../database/data-souce.js';
+import { getConnection } from '../database/data-source.js';
 
 const routes = express.Router();
 const connection = await getConnection();

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getConnection } from '../database/data-souce.js';
+import { getConnection } from '../database/data-source.js';
 
 const routes = express.Router();
 const connection = await getConnection();
@@ -68,7 +68,7 @@ routes.post("/", async (req, res) => {
       [tipoValidado]
     );
 
-    return res.status(201).json({ response: "Tipo cadastrado com sucesso.", id: result.insertId });
+    return res.status(201).json({ response: "Tipo cadastrado com sucesso." });
   } catch (err) {
     if (err.code === "ER_DUP_ENTRY") {
       return res.status(409).json({ err: "Tipo já cadastrado." });

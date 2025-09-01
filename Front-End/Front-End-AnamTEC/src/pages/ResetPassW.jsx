@@ -3,8 +3,9 @@ import "./ResetPassW.css";
 import logoAnamTec from "../assets/Anamtec-logo.png";
 import RedefineSenha from "../pages/components/EmailPassword/index"
 import { toast } from 'react-toastify';
-import { putFunctionResetSenha } from '../services/APISevice';
+import { putFunctionResetSenha } from '../services/APIService';
 import { useNavigate } from 'react-router-dom';
+
 export default function ResetPassW() {
 
     const [showModal, setShowModal] = useState(false)
@@ -20,7 +21,6 @@ export default function ResetPassW() {
         senha: "",
         senhaNova: "",
         confirmaSenha: "",
-        email: localStorage.getItem("email")
     });
 
     const  handleResetPassW = async (e) => {
@@ -117,8 +117,9 @@ export default function ResetPassW() {
                     show={showModal} 
                     onClose={() => setShowModal(false)} 
                     onEnviar={() => {
-                    console.log("Enviar lembrete para redefinição de senha");
+                        console.log("Enviar nova senha por email");
                     setShowModal(false);
+
                     }}
                 />
         </div>

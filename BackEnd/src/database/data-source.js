@@ -10,4 +10,5 @@ export async function getConnection() {
   });
 
   return connection;
+  
 }

@@ -1,9 +1,10 @@
 // Importa o React e o useState, que vamos usar para controlar os campos do formulário
+
 import React, { useState } from 'react';
 import {toast } from 'react-toastify';
 import "./Login.css";
 // Importa a função post para fazer o login do usuario 
-import { postFunctionUser } from '../services/APISevice';
+import { postFunctionLogin } from '../services/APIService';
 import logoAnamTec from "../assets/Anamtec-logo.png";
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ export default function Login() {
 
 // Cria o estado formData para armazenar email e senha digitados
 const [formData, setFormData] = useState({ email: "", senha: "" });
+
 const [esqueciSenha, setEsqueciSenha] = useState("");
 const navigate = useNavigate(); // Hook do React Router para navegar entre páginas
 const navResetSenha = () => {
@@ -19,7 +21,7 @@ const navResetSenha = () => {
 
 }
 const navCoord = () => {
-    navigate("/Coord", { replace: true}); // Redireciona para a página do coordenador pedagógico
+    navigate("/", { replace: true}); // Redireciona para a página do coordenador pedagógico
 }
 
   // Função executada quando o usuário clica no botão "ENTRAR"
@@ -28,7 +30,7 @@ const navCoord = () => {
     
      // Chama a função para enviar os dados do login
     try{
-        const data = await postFunctionUser(formData)
+        const data = await postFunctionLogin(formData)
         if(data.status === 200) {
           toast.success('Login efetuado com sucesso', {
           position: "top-center",
@@ -40,8 +42,6 @@ const navCoord = () => {
           progress: undefined,
           theme: "dark",
           });
-          
-          localStorage.setItem("email", data.data.email); // Armazena o e-mail no localStorage
           localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
           navCoord(); // Redireciona para a página do coordenador pedagógico
         }

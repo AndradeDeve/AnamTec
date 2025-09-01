@@ -28,6 +28,8 @@
         });
     }
 
+
+
     function authorizationRoles(...allowedRoles){
         return (request, response, next)=>{
             const userRole = request.user?.tipo;
@@ -49,4 +51,4 @@
         }
     }
 
-    export {genereteToken, authenticate, authorizationRoles, VerificarSenha};
+export {genereteToken, authenticate, authorizationRoles, VerificarSenha};
