@@ -1,112 +1,115 @@
-import React from "react";
-import { Container } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
-
+import ProgressBar from "../Components/ProgressBar/ProgressBar";
 
 function FormComportEmocio() {
   const navigate = useNavigate();
 
-  const handleVoltar = () => {
-    navigate("/FormSaude");
+  const [informacoes, setInformacoes] = useState ({
+    dificuldadesAprendizagem: "", comportamento:"", emocionais:"",
+  });
+
+  const [erros, setErros] = useState({});
+
+  const camposObrigatorios = ["dificuldadesAprendizagem"];
+
+  const handleChange = (field, value) => {
+    setInformacoes((prev) => ({ ...prev, [field]: value}));
+    setErros((prev) => ({ ...prev, [filed]: ""}));
   };
 
+  const validarFormulario = () => {
+    let valid = true;
+    let novosErros = {};
+
+    camposObrigatorios.forEach((campo) => {
+      if (!informacoes[campo]) {
+        valid = false;
+        novosErros[campo]  = "Campo obrigatório";
+      }
+    });
+
+    setErros(novosErros);
+    return valid;
+  }
+
   const handleProximo = () => {
+    if (!validarFormulario()) {
+      alert("Preencha todos os campos obrigatórios");
+      return;
+    
+    }
+
+    console.log("Enviando dados:", informacoes);
     navigate("/");
   };
 
+  const handleVoltar = () => navigate("/FormSaude");
+
+
   return (
-    <div className="form-container">
-      <header className="form-header">
-        <img src={Logo} alt="Logo" className="logo" />
-        <h2>Formulário Anamnese</h2>
-      </header>
+    <>
+      <Header />
 
-      <div className="progress-bar">
-        <span className="etapa ativa">Informações principais</span>
-        <div className="linha" />
-      </div>
+      <Container className="mt-4">
+        <ProgressBar 
+          etapas={[
+            "Informações principais",
+            "Dados do Responsável",
+            "Histórico de Saúde",
+            "Aspectos Comportamentais e Emocionais"
+          ]}
+          etapaAtual={3}
+        />
 
-      <form className="form-box">
-        <div className="linha-form">
-          <label>Nome:</label>
-          <input type="text" />
+        <Form className="form-box shadow rounded p-4">
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>O aluno apresenta dificuldades de aprendizagem:</Form.Label>
+                  <Form.Control type="text" placeholder="Digite aqui" value={informacoes.dificuldadesAprendizagem} isInvalid={!!erros.dificuldadesAprendizagem} onChange={(e) => handleChange("dificuldadesAprendizagem", e.target.value)}/>
+                <Form.Control.Feedback type="invalid">{erros.dificuldadesAprendizagem}</Form.Control.Feedback>    
+              </Form.Group>
+            </Col>
+          </Row>
 
-          <label>Curso:</label>
-          <select>
-            <option>Selecione o curso</option>
-          </select>
-        </div>
+          <Row className="mb-3">
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>Comportamento do aluno:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Digite aqui"
+                  value={informacoes.comportamento}
+                  onChange={(e) => handleChange("comportamento", e.target.value)}
+                />
+              </Form.Group>
+            </Col>
 
-        <div className="linha-form">
-          <label>Data de Nascimento:</label>
-          <input type="date" />
+            <Col xs={12} md={6} className="mt-3">
+              <Form.Group>
+                <Form.Label>Aspectos emocionais:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Digite aqui"
+                  value={informacoes.emocionais}
+                  onChange={(e) => handleChange("emocionais", e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
 
-          <label>Turno:</label>
-          <select>
-            <option>Turno</option>
-          </select>
 
-          <label>Semestre:</label>
-          <select>
-            <option>Semestre</option>
-          </select>
-        </div>
+        <NavButtons onVoltar={handleVoltar} onProximo={handleProximo} />
 
-        <div className="linha-form">
-          <label>Idade:</label>
-          <input type="number" />
-
-          <label>Gênero:</label>
-          <select>
-            <option>Selecione o Gênero</option>
-          </select>
-
-          <label>Reside com:</label>
-          <input type="text" />
-        </div>
-
-        <div className="linha-form">
-          <label>Email:</label>
-          <input type="email" />
-        </div>
-
-        <div className="linha-form">
-          <label>CEP:</label>
-          <input type="text" />
-
-          <label>Número:</label>
-          <input type="text" />
-
-          <label>Complemento:</label>
-          <input type="text" />
-        </div>
-
-        <div className="linha-form">
-          <label>Logradouro:</label>
-          <input type="text" />
-        </div>
-
-        <div className="linha-form">
-          <label>Bairro:</label>
-          <input type="text" />
-
-          <label>Cidade:</label>
-          <input type="text" />
-
-          <label>UF:</label>
-          <input type="text" />
-        </div>
-
-        <div className="botoes flex justify-between mt-6">
-          <button type="button" onClick={handleVoltar} className="bg-[#044654] hover:bg-[#033d47] text-white"> Voltar </button>
-          
-          <button type="button" onClick={handleProximo} className="bg-[#044654] hover:bg-[#033d47] text-white"> Próximo </button>
-        </div>
-      </form>
-    </div>
+        </Form>
+      </Container>
+    </>
   );
 }
 
 export default FormComportEmocio;
+               

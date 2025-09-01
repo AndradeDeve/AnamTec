@@ -1,0 +1,50 @@
+.progress-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.step-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex: 1;
+}
+
+.circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #e4edf1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #044654;
+    font-weight: bold;
+    z-index: 1;
+}
+
+.circle.active {
+    background-color: #044654;
+    color: #e4edf1;
+}
+
+.etapa-label {
+    margin-left: 8px;
+    font-size: 0.9rem;
+    color: #044654;
+}
+
+.etapa-label.ativa {
+    font-weight: bold;
+    color: #044654;
+}
+
+.line {
+    flex: 1;
+    height: 2px;
+    background-color: #;
+    margin: 0 10px;
+}

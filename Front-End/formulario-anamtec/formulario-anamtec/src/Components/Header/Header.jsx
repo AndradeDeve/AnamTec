@@ -7,7 +7,7 @@ function Header() {
     return (
         <Navbar expand="lg" className="custom-header">
             <Container className="justify-content-between align-items-center">
-                <img src= {Logo} alt="Logo" width="70" height="70" className="logo-left" />
+                <img src= {Logo} alt="Logo" className="logo-left" />
                 <Navbar.Brand className="navbar-title mx-auto">
                     Formulário Anamnese
                 </Navbar.Brand>

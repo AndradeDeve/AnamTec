@@ -1,89 +1,154 @@
-import React from "react";
-import { Container } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
+import ProgressBar from "../Components/ProgressBar/ProgressBar";
 
 
 function FormSaude() {
   const navigate = useNavigate();
 
   const [tipoSanguineo, setTipoSanguineo] = useState("");
-  const [sexo, setSexo] = useState("");
+  const [possuiLaudo, setPossuiLaudo] = useState("");
+  const [laudo,setLaudo] = useState(null);
 
-  const handleTipoSanguineoChange = (e) => {
-    setTipoSanguineo(e.target.value);
+  const handleTipoSanguineoChange = (e) => setTipoSanguineo(e.target.value);
+  const handleLaudoChange = (e) => {
+    const file = e.target.files[0];
+    setLaudo(file);
+    console.log("Arquivo selecionado:", file);
   };
 
-  const handleSexoChange = (e) => {
-    setSexo(e.target.value);
-  };
-
-  const handleVoltar = () => {
-    navigate("/FormResp");
-  };
-
+  const handleVoltar = () => navigate("/FormResp");
   const handleProximo = () => {
-        navigate("/FormComportEmocio");
+    console.log("Tipo sanguíneo:", tipoSanguineo);
+    console.log("Possui laudo:", possuiLaudo);
+    if (laudo) {
+      console.log("Laudo anexado:", laudo);
+    } else {
+      console.log("Nenhum laudo anexado.")
+    }
+    navigate("/FormComportEmocio");
   };
 
   return (
-    <div className="form-container">
-      <header className="form-header">
-        <img src={logo} alt="Logo" className="logo" />
-        <h2>Formulário Anamnese</h2>
-      </header>
+    <>
+    <Header />
+    
+    <Container className="mt-4">
+      <ProgressBar 
+        etapas={[
+        "Informações principais",
+        "Dados do Responsável",
+        "Histórico de Saúde",
+        "Aspectos Comportamentais e Emocionais"
+      ]}
+      etapaAtual={2}
+      />
 
-      <div className="progress-bar">
-        <span className="etapa ativa">Informações principais</span>
-        <span className="etapa ativa">Dados do Responsável</span>
-        <span className="etapa ativa">Histórico de Saúde</span>
-        <div className="linha" />
-      </div>
+      <Form className="form-box">
+          <Row className="mb-3">
+            <Col md={6}>
+            <Form.Group>
+              <Form.Label>Tipo Sanguíneo:</Form.Label>
+                <Form.Select value={tipoSanguineo} onChange={handleTipoSanguineoChange} className="border p-2 rounded">
+                  <option value="">Selecione</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </Form.Select>
+            </Form.Group>
+            </Col>
 
-      <form className="form-box">
-        <div className="linha-form">
-          <label>Tipo Sanguíneo:</label>
-          <select value={tipoSanguineo} onChange={handleTipoSanguineoChange} className="border p-2 rounded">
-            <option value="">Selecione</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-          </select>
-        </div>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Peso:</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+            </Col>
 
-        <div className="linha-form">
-          <label>Sexo:</label>
-          <select value={sexo} onChange={handleSexoChange} className="border p-2 rounded">
-            <option value="">Selecione</option>
-            <option value="Feminino">Feminino</option>
-            <option value="Masculino">Maculino</option>
-            <option value="Outros">Outros</option>
-          </select>
-        </div>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Gravidez:</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+            </Col>
+          </Row> 
 
-        <div className="linha-form">
-          <label>Peso:</label>
-          <input type="number" />
+          <Row className="mb-3">
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Fumante:</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+            </Col>
 
-          <label>Gravidez:</label>
-          <select>
-            <option>Selecione</option>
-          </select>
-        </div>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Consome álcool:</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+            </Col>
 
-        <div className="botoes flex justify-between mt-6">
-          <button type="button" onClick={handleVoltar} className="bg-[#044654] hover:bg-[#033d47] text-white"> Voltar </button>
-          
-          <button type="button" onClick={handleProximo} className="bg-[#044654] hover:bg-[#033d47] text-white"> Próximo </button>
-        </div>
-      </form>
-    </div>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Drogas ilícitas:</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Possui algum problema de saúde diagnosticado:</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+            </Col>
+
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Quais?</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+            </Col>
+
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Possui laudo:</Form.Label>
+                <Form.Select value={possuiLaudo} onChange={(e) => setPossuiLaudo(e.target.value)}>
+                  <option value="">Selecione</option>
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Row className="mb3">
+            <Col md={6}>
+            <Form.Group controlId="formfile">
+              <Form.Label>Laudo médico:</Form.Label>
+              <Form.Control type="file" accept=".pdf, .jpg, .jpe, .png" onChange={handleLaudoChange} />
+              {laudo && (
+                <p className="mt-2 text-success">
+                  Arquivo selecionado {laudo.name}
+                </p>
+              )}
+            </Form.Group>
+            </Col>
+          </Row>
+        
+          <NavButtons onVoltar={handleVoltar} onProximo={handleProximo} />
+        </Form>
+      </Container>
+    </>
   );
 }
 
