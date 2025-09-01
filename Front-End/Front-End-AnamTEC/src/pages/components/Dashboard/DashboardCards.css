@@ -1,5 +1,10 @@
 .dashboard-card {
   background-color: #044654; /* fallback padrão */
+  min-height: 150px; /* altura mínima para manter proporção */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .bg-cyan {
@@ -17,4 +22,26 @@
 .dashboard-card img {
   width: 50px;
   height: 50px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-card {
+    min-height: 120px;   /* mantém altura proporcional */
+    padding: 1rem;       /* reduz espaçamento interno */
+  }
+
+  .dashboard-card img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .dashboard-card p {
+    font-size: 1.2rem;   /* número menor */
+    margin: 0;
+  }
+
+  .dashboard-card h3 {
+    font-size: 0.9rem;   /* título menor */
+    margin: 0;
+  }
 }

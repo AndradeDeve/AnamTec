@@ -17,3 +17,14 @@
   transform: scale(1.02);    /* Leve crescimento no hover */
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  .custom-btn {
+    
+    flex-direction: row;
+
+  }
+  tbody {
+      font-size: 0.9rem;
+  }
+}

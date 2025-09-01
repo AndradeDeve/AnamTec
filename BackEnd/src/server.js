@@ -1,8 +1,9 @@
 import express from "express";
 import routes from "./routes.js";
-import {getConnection} from "./database/data-souce.js";
+import {getConnection} from "./database/data-source.js";
 import cors from 'cors';
 import dotenv from 'dotenv';
+
 
 dotenv.config();
 const server = express();

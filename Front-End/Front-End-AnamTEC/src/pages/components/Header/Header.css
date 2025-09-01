@@ -1,39 +1,75 @@
+/* ==== ESTILO GERAL DO HEADER ==== */
 .header {
-  display: flex;
-  background-color: #044654;
-  color: #E4EDF1;
-  
+  display: flex;                /* Flexbox para alinhar itens */
+  justify-content: space-between; /* Distribui espaço entre os elementos */
+  align-items: center;          /* Alinha no centro vertical */
+  background-color: #044654;    /* Cor de fundo */
+  color: #E4EDF1;               /* Cor do texto */
+  padding: 10px 20px;           /* Espaçamento interno */
+  flex-wrap: wrap;              /* Permite quebrar linha em telas menores */
 }
 
+/* ==== BOTÃO DO MENU (☰) ==== */
 .menu-toggle {
-  font-size: 40px;
+  font-size: 28px;              /* Tamanho menor que antes para caber em telas menores */
   cursor: pointer;
   color: #E4EDF1;
   border: none;
   background: none;
 }
 
-/* Dropdown personalizado */
+/* ==== LOGO ==== */
+.logo {
+  display: flex;                  /* Alinha logo + texto lado a lado */
+  align-items: center;            /* Centraliza verticalmente */
+  justify-content: center;        /* Centraliza horizontalmente */
+  font-size: 1.8rem;
+  font-weight: 600;
+  gap: 10px;                      /* Espaço entre texto e imagem */
+  text-align: center;
+  margin: 0 auto;
+  color: #E4EDF1;           /* Centraliza horizontalmente */
+}
+
+.logo img {
+  width: 60px;                  /* Tamanho padrão da logo */
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+/* Ajusta o tamanho da logo em telas muito pequenas */
+@media (max-width: 768px) {
+  .logo img {
+    width: 45px;
+  }
+  .logo {
+    font-size: 1.4rem;
+  }
+}
+
+/* ==== DROPDOWN MENU LATERAL (☰) ==== */
 .dropdown-menu-custom {
   position: absolute;
-  top: 80%;
-  left: 0;
+  top: 8%;                    /* Fica logo abaixo do botão */
+  left: 2%;
   background-color: #044654;
   border-radius: 8px;
-  padding: 0.5rem;
+  padding: 0.3rem;
   z-index: 1000;
-  display: none;
+  display: none;                /* Oculto por padrão */
+  min-width: 200px;             /* Tamanho mínimo */
 }
 
 .dropdown-menu-custom.show {
-  display: block;
+  display: block;               /* Mostra quando ativado */
 }
 
 .dropdown-menu-custom li {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 8px 12px;
+  margin-left: 12px;
+  gap: 2px;                    /* Espaço entre ícone e texto */
+  padding: 5px 2px;
   color: #fff;
   border-radius: 5px;
   transition: background 0.2s;
@@ -43,28 +79,49 @@
 .dropdown-menu-custom li:hover {
   background-color: #056172;
 }
-.logo{
-  position: relative;
-  left: 170px;
-  margin: 0px 220px;
-  font-size: 28pt;
-  font-weight: 600;
+
+/* ==== DROPDOWN DE CONFIGURAÇÕES (⚙) ==== */
+.dropdown-config-custom {
+  position: absolute;
+  top: 100%;                    /* Logo abaixo do ícone ⚙ */
+  right: 0;
+  background-color: #044654;
+  border-radius: 8px;
+  padding: 0.5rem;
+  z-index: 1000;
+  display: none;
+  min-width: 200px;
 }
 
-.logo img {
-  width: 80px;
-  margin-left: 10px;
+.dropdown-config-custom.show {
+  display: block;
 }
 
-.config-btn {
-  
-  font-size: 34px;
-  background: none;
-  border: none;
-  color: #E4EDF1;
+.dropdown-config-custom li {
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+  gap: 10px;
+  padding: 8px 10px;
+  color: #fff;
+  border-radius: 5px;
+  transition: background 0.2s;
   cursor: pointer;
 }
 
+.dropdown-config-custom li:hover {
+  background-color: #056172;
+}
+
+/* ==== TEXTO DO USUÁRIO ==== */
 .user-section {
-  font-size: 14pt;
+  font-size: 1rem;             /* Responsivo */
+  white-space: nowrap;         /* Impede quebra de linha */
+}
+
+/* Em telas pequenas, diminui tamanho da fonte */
+@media (max-width: 768px) {
+  .user-section {
+    font-size: 0.9rem;
+  }
 }

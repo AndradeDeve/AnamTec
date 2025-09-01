@@ -4,9 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+.env
 
-#paginas de teste
-src/pages/Sla.jsx
 
 # testing
 /coverage
