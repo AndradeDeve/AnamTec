@@ -39,7 +39,13 @@ export async function postFunctionLogin(dados) {
 }
 
 export async function putFunctionResetSenha(dados ) {
-  const response = await axios.put(`${apiUrl}/login/`, dados , { 
+  const response = await axios.put(`${apiUrl}/resetSenha/`, dados , { 
     headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
   return response;
 }
+
+export async function putFunctionEmailReset(dados ) {
+  const response = await axios.put(`${apiUrl}/login/emailReset`, dados);
+  return response;
+}
+

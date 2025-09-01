@@ -1,7 +1,7 @@
 
 // src/pages/Cadastro.jsx
 import React, { useState, useEffect } from "react";
-import { postFunctionUser } from "../services/APIService.js"; // seu serviço de API
+import { postFunctionUser } from "../services/APIService"; // seu serviço de API
 import logoAnamTec from "../assets/Anamtec-logo.png"; // Importa a logo 
 import "./Register.css";
 import { toast } from 'react-toastify';

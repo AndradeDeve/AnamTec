@@ -1,16 +1,10 @@
 // Importa o React e o useState, que vamos usar para controlar os campos do formulário
-import React, { useState, useEffect } from 'react';
 
-import { ToastContainer, toast } from 'react-toastify';
-
-// Importa o CSS específico da tela de login
+import React, { useState } from 'react';
+import {toast } from 'react-toastify';
 import "./Login.css";
-
 // Importa a função post para fazer o login do usuario 
-import { postFunctionLogin, postFunctionUser } from '../services/APIService.js';
-
-// Importa a imagem da logo
-
+import { postFunctionLogin } from '../services/APIService';
 import logoAnamTec from "../assets/Anamtec-logo.png";
 import { useNavigate } from 'react-router-dom';
 
@@ -19,17 +13,15 @@ export default function Login() {
 
 // Cria o estado formData para armazenar email e senha digitados
 const [formData, setFormData] = useState({ email: "", senha: "" });
-useEffect(() => {
-    if (formData.email) {
-      localStorage.setItem("email", formData.email);
-    }
-  }, [formData.email]);
 
-  const navigate = useNavigate(); // Hook do React Router para navegar entre páginas
+const [esqueciSenha, setEsqueciSenha] = useState("");
+const navigate = useNavigate(); // Hook do React Router para navegar entre páginas
+const navResetSenha = () => {
+  setEsqueciSenha(navigate("/ResetarSenha", {replace: true}));    
+
+}
 const navCoord = () => {
-  
-    navigate("/Coord", { replace: true}); // Redireciona para a página do coordenador pedagógico
-  
+    navigate("/", { replace: true}); // Redireciona para a página do coordenador pedagógico
 }
 
   // Função executada quando o usuário clica no botão "ENTRAR"
@@ -68,27 +60,26 @@ const navCoord = () => {
     }
   };
 
-  // Estrutura visual (HTML JSX) da tela de login
   return (
     <div className="login-container">
       {/* Cabeçalho com logo e nome do sistema */}
       <div className="aside-containerLogin">
       <div className="header-logo">
         <h1>AnamTec</h1>
-        <img src={logoAnamTec} alt="Logo" className="logo" />
+        <img src={logoAnamTec} alt="Logo" className="logoa"/>
       </div>
-       <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
+       <p>Dados que importam.<br/> Decisões que transformam </p>
       </div>
 
       {/* Cartão de login */}
       <div className="login-card">
-        <div className="login-card-header">
+        <div className="title-login">
           <h2>Acesso ao Sistema</h2>
         </div>
 
         {/* Formulário de login com os campos controlados */}
-        <form onSubmit={handleLogin} className="card-body">
-
+        <form onSubmit={handleLogin} className="login-form">
+          
           {/* Campo de e-mail */}
           <label htmlFor="email">Digite seu e-mail</label>
           <input
@@ -108,7 +99,10 @@ const navCoord = () => {
             value={formData.senha}
             onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
           />
-
+       
+          <p className="esqueciS"
+          onClick={navResetSenha}
+          >Redefinir senha</p>
           {/* Botão de envio do formulário */}
           <button type="submit">ENTRAR</button>
         </form>

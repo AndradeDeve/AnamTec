@@ -1,5 +1,5 @@
 import express, { request, response } from 'express';
-import { getConnection } from '../database/data-souce.js';
+import { getConnection } from '../database/data-source.js';
 import {validarCPF} from '../utils/cpfValidator.js';
 import { hash } from 'bcrypt';
 

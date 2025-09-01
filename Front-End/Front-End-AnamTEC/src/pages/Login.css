@@ -3,82 +3,78 @@ body, html {
   padding: 0;
   font-family: 'Roboto', sans-serif;
 }
-.aside-containerLogin{
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  bottom: 10%;
-}
-.aside-containerLogin p {
-  position: relative;
-  left: 24%;
-  font-size: 16pt;
-  font-weight: 600;
-  color:#E4EDF1
-}
 .login-container {
   display: flex;
   height: 100vh;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   background: linear-gradient(to left, #E4EDF1  50%, #044654 50%);
 }
-
 .header-logo{
   position: relative;
   bottom: 35%;
-  right: 8%;
+  left: 12%;
   display: flex;
   justify-content:space-around;
   align-items: center;  
 }
 .header-logo h1{
   position: relative;
-  left:32%;
+  right: 3%;
   font-weight: 800;
   font-size: 36pt;
   color: #E4EDF1;
 }
-
-
-
 .login-card { 
   position: relative;
-  right: 0%;
+  right: 2.5%;
   width: 45%;
   background-color:#E4EDF1;
   box-shadow: 6px 6px 10px #1E2019;
   border-radius: 14px 14px 14px 14px;
 }
-
-.login-card-header {
+.title-login {
   background-color: #044654;
   padding: 10px ;
   text-align: center;
   border-radius: 12px 12px 0px 0px;
 }
-
-.login-card-header h2 {
+.title-login h2{
   color: #E4EDF1;
   font-size: 16pt;
   margin: 0;
 }
-
-.card-body {
+.aside-containerLogin{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 10%;
+  bottom: 10%;
+}
+.aside-containerLogin p {
+  position: relative;
+  left: 10%;
+  font-size: 16pt;
+  font-weight: 600;
+  color:#E4EDF1
+}
+.login-form {
   display: flex;
   flex-direction: column;
   padding: 25px;
-  gap: 15px;
+  gap: 05px;
 }
 
-.card-body label {
+.login-form label {
+  display: block;
+  margin-top: 12px;
   color: #1E2019;
   font-size: 18px;
   font-weight: 700;
 }
 
-.card-body input {
+.login-form input {
   padding: 10px;
   border: none;
   border-radius: 3px;
@@ -86,13 +82,19 @@ body, html {
   box-shadow: 4px 4px 4px #1E2019;
 }
 
-.card-body input::placeholder {
+.login-form input:placeholder {
   color: #818181;
   font-family: monospace;
   font-size: 15px;
 }
-
-.card-body button {
+.esqueciS{
+  margin: 5px 5px;
+  font-size: 16px;
+  cursor: pointer;
+  color:rgb(24, 24, 153);
+  text-decoration: underline;
+}
+.login-form button {
   background-color: #044654;
   width: 25%;
   color: white;

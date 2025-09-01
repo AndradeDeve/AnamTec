@@ -14,6 +14,7 @@ import restricoesController from './controller/restricoesController.js'
 import registroAulasController from './controller/registroAulasController.js'
 import medicamentosController from './controller/medicamentosController.js'
 import dadosMedicosController from './controller/dadosMedicosController.js'
+import resetSenhaController from './controller/resetSenhaController.js'
 import { authenticate } from "./utils/jwt.js";
 import { authorizationRoles } from './utils/jwt.js';
 //  authorizationRoles("coordenador curso") Exemplo de como usar 
@@ -21,12 +22,13 @@ import { authorizationRoles } from './utils/jwt.js';
 const routes = express();   
 
 routes.use("/cirurgias", cirurgiasController);
+routes.use('/resetSenha', authenticate, resetSenhaController);
 routes.use("/deficiencia", deficienciaController);
 routes.use("/alergias", alergiaController);     
 routes.use("/responsavel", responsavelController);
 routes.use("/aluno", cadastroAlunoController);
 routes.use("/user", authenticate, usuarioController);
-routes.use("/login", authenticate, loginController);
+routes.use("/login", loginController);
 routes.use('/cursos', cursoController);
 routes.use("/type", typeController);
 routes.use("/endereco", enderecoController);
