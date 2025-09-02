@@ -104,9 +104,9 @@ export default function Cadastro() {
   }
 
   return (
-    <div className="cadastro-wrapper">
+    <div className="cadastro-wrapper col-12 col-md-6 col-lg-12">
             {/* TOPO - Logo e Título */}
-      <div className="asideContainerCadastro">
+      <div className="asideContainerCadastro d-flex-">
       <header className="header-Cadastro">
         <h1>AnamTec</h1>
         <img src={logoAnamTec} alt="Logo" className="logoa" />
