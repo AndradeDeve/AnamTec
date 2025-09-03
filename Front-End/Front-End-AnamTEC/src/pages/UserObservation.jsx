@@ -42,72 +42,68 @@ const ObservacoesProfessor = () => {
   return (
     <header>
          <Header />
-    <Container fluid className="container.custom">
-      <Row>
-        {/* Coluna lateral esquerda: Lista de professores */}
-        <Col md={2} className="column-professor">
-          <h5>Professores</h5>
-          <ul className="list-unstyled">
-            <li>Luiz Felipe</li>
-            <li>Marcos Costa</li> 
-            <li>Marcos Nogueira</li>
-            <li>Emerson Silva</li>
-            <li>Aline Francisca</li>
-            <li>Francisco Saiz</li>
-          </ul>
-        </Col>
-        {/* Coluna central: observações e comentários */}
-        <Col md={7} className="card">
-     
-          <h4 className="mb-3">Observação dos professores</h4>
+    <Container fluid className="observacoes-container">
+  <Row>
+    {/* Professores */}
+    <Col md={2} className="professores-lista">
+      <h5>Professores</h5>
+      <ul className="list-group">
+        <li className="list-group-item">Luiz Felipe</li>
+        <li className="list-group-item active">Marcos Costa</li>
+        <li className="list-group-item">Marcos Nogueira</li>
+      </ul>
+    </Col>
 
-          {/* Cartão que exibe todos os comentários já adicionados */}
-          <Card className="mb-3">
-            <Card.Body style={{ maxHeight: "300px", overflowY: "auto" }}>
-              {/* Mapeia e exibe cada comentário */}
-              {comentarios.map((comentario, index) => (
-                <div key={index} className="mb-3">
-                  {/* Nome do autor e data do comentário */}
-                  <strong>{comentario.autor}</strong>{" "}
-                  <span className="text-muted" style={{ fontSize: "0.9em" }}>
-                    ({comentario.data})
-                  </span>
-                  {/* Texto do comentário */}
-                  <p className="mb-0">{comentario.texto}</p>
-                  <hr />
-                </div>
-              ))}
+    {/* Comentários */}
+    <Col md={7} className="comentarios-area">
+      <h4 className="mb-3 text-center">Observações dos Professores</h4>
+
+      {/* Lista de comentários */}
+      <div className="comentarios-lista">
+        {comentarios.map((c, index) => (
+          <Card key={index} className="comentario-card mb-3">
+            <Card.Body>
+              <div className="comentario-header">
+                <strong>{c.autor}</strong>
+                <span className="text-muted">({c.data})</span>
+              </div>
+              <p>{c.texto}</p>
             </Card.Body>
           </Card>
+        ))}
+      </div>
 
-          {/* Campo de texto para digitar novo comentário */}
+      {/* Novo comentário */}
+      <Card className="novo-comentario mt-3">
+        <Card.Body>
           <Form.Control
-            type="text"
-            placeholder="Comentário"
+            as="textarea"
+            rows={3}
+            placeholder="Escreva sua observação..."
             value={novoComentario}
-            onChange={(e) => setNovoComentario(e.target.value)} // Atualiza estado ao digitar
-            className="input-custom"
+            onChange={(e) => setNovoComentario(e.target.value)}
           />
-
-          {/* Botão para enviar o comentário */}
-          <Button className="btn-enviar" variant="primary" onClick={handleEnviarComentario}>
+          <Button className="mt-2 w-100" onClick={handleEnviarComentario}>
             Enviar
           </Button>
-        </Col>
+        </Card.Body>
+      </Card>
+    </Col>
 
-        {/* Coluna direita: Dados do aluno (exibidos em um card) */}
-        <Col md={3}>
-          <Card className="card-aluno">
-            <Card.Body>
-              <h3>Dados do Aluno</h3>
-              <p><strong>Nome:</strong> Weslley Samuel Novaes Santana</p>
-              <p><strong>Curso:</strong> Desenvolvimento de Sistemas</p>
-              <p><strong>Turma:</strong> 3º Semestre</p>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+    {/* Dados do aluno */}
+    <Col md={3} className="dados-aluno">
+      <Card>
+        <Card.Body>
+          <h5 className="text-center">🎓 Dados do Aluno</h5>
+          <p><strong>Nome:</strong> Weslley Samuel</p>
+          <p><strong>Curso:</strong> Desenvolvimento de Sistemas</p>
+          <p><strong>Turma:</strong> 3º Semestre</p>
+        </Card.Body>
+      </Card>
+    </Col>
+  </Row>
+</Container>
+
             </header>
   );
 };

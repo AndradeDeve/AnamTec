@@ -87,6 +87,14 @@ body, html {
   margin-left: 1.5rem;
 }
 
+.tooltip-icon {
+  color: red;
+  font-weight: bold;
+  margin-left: 6px;
+  cursor: help;
+  font-size: 1.5rem;
+}
+
 .cadastro-form {
   display: flex;
   flex-direction: column;
@@ -107,7 +115,7 @@ body, html {
 .cadastro-form select hover{
   color: #818181;
   font-family: monospace;
-  font-size: 15px;
+  font-size: 1rem;
 }
 
 .actions { 
@@ -178,6 +186,7 @@ body, html {
   }
    .register-card{
     width: 100%;
-    margin-top:1rem;
+   
   }
+
 }
