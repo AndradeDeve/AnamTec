@@ -2,6 +2,7 @@ body, html {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
+  height: 100%;
 }
 
 .cadastro-wrapper {
@@ -27,14 +28,19 @@ body, html {
   font-size: 2.5rem;
   color: #E4EDF1;
 }
+.logoa{
+  width: 80px;
+  height: auto;
+}
 /*Card de cadastro*/
 .register-card{
   flex:1;
-  max-width: 500px;
+  width: 100%;
+  max-width: 420px;
   background-color:#E4EDF1;
   box-shadow: 6px 6px 10px #1E2019;
   border-radius: 14px;
-  margin: auto;
+  margin: auto 3rem;
 }
 
 .title{
@@ -57,13 +63,13 @@ body, html {
   align-items: center;
   color: #E4EDF1;
   padding: 2rem;
-  text-align: left;
+  text-align: center;
   
 }
 .asideContainerCadastro p {
   font-size: 1rem;
   font-weight: 600;
-  margin-right: 8rem;
+  margin: 0;
  
 }
 /*Campos*/
@@ -116,7 +122,7 @@ body, html {
   border:none;
   font-size:1rem;
   cursor:pointer;
-  width: 90%;
+  width: 35%;
   max-width: 250px;
 }
 .btn-submit:hover { 
@@ -174,6 +180,4 @@ body, html {
     width: 100%;
     margin-top:1rem;
   }
-
-
 }
