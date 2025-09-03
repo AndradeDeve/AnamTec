@@ -56,11 +56,11 @@ export default function ResetPassW() {
     };
 
     return (
-        <div className="reset-container">
-            <div className="aside-containerReset">
+        <div className="reset-container col-12 col-md-12 col-lg-12">
+            <div className="aside-containerReset d-flex">
             <div className="reset-header">
                 <h1>AnamTec</h1>
-                <img src={logoAnamTec} alt="Logo" className='reset-logo' />
+                <img src={logoAnamTec} alt="Logo" className='logoa' />
             </div>
                 <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
             </div>
@@ -110,7 +110,7 @@ export default function ResetPassW() {
                                 Enviar nova senha no email
                             </p>
                         </div>
-                    <button type="submit">Salvar</button>
+                    <button type="submit" className="btn-submit">Salvar</button>
                 </form>
             </div>
                 <RedefineSenha 
