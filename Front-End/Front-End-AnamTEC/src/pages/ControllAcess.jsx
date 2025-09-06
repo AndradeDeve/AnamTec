@@ -6,6 +6,7 @@ import "./ControllAcess.css";
 
 export default function ControleAcesso() {
   const [filtroStatus, setFiltroStatus] = useState("");   // "" | "ativo" | "inativo"
+  const [filtroAlunoProf, setFiltroAlunoProf] = useState("") // "" | "Aluno" | "Professor"
   const [tipoPesquisa, setTipoPesquisa] = useState("rm"); 
   const [valorPesquisa, setValorPesquisa] = useState("");
 
@@ -25,7 +26,7 @@ export default function ControleAcesso() {
   ];
 
   const handlePesquisar = () => {
-    console.log("🔍 Pesquisando por:", tipoPesquisa, valorPesquisa, filtroStatus);
+    console.log("🔍 Pesquisando por:", tipoPesquisa, valorPesquisa, filtroStatus, filtroAlunoProf);
     // Aqui no futuro vamos integrar com API
   };
 
@@ -34,49 +35,62 @@ export default function ControleAcesso() {
       <Header />
 
   <Container fluid className="controle-wrapper">
-  {/* Linha 1: Filtro de status */}
-  <Row className="mb-3 filtros-row">
-    <Col xs={12} md={3} className="filtro-container">
-      <Form.Select
-        value={filtroStatus}
-        onChange={(e) => setFiltroStatus(e.target.value)}
-      >
-        <option value="">Filtrar por</option>
-        <option value="ativo">Ativos</option>
-        <option value="inativo">Inativos</option>
-      </Form.Select>
-    </Col>
-  </Row>
-
-  {/* Linha 2: Tipo + Texto + Botão */}
-  <Row className="align-items-center mb-4 pesquisa-row">
-    <Col xs={12} md={3}>
+    {/* Linha 2: Pesquisa organizada */}
+<Row className="mb-4 pesquisa-row">
+  <Col xs={12} md={8}>
+    <div className="d-flex gap-2 controle">
+      {/* Dropdown tipo pesquisa */}
       <Form.Select
         value={tipoPesquisa}
         onChange={(e) => setTipoPesquisa(e.target.value)}
+        style={{ maxWidth: "150px" }}
       >
         <option value="rm">RM</option>
         <option value="nome">Nome</option>
         <option value="curso">Curso</option>
         <option value="coordenador">Coordenador</option>
       </Form.Select>
-    </Col>
 
-    <Col xs={12} md={6} className="mt-2 mt-md-0">
-
+      {/* Input */}
       <Form.Control
         type="text"
         placeholder={`Pesquisar por ${labelPorTipo[tipoPesquisa]}`}
         value={valorPesquisa}
         onChange={(e) => setValorPesquisa(e.target.value)}
       />
-    </Col>
-    <Col xs={12} md={3} className="mt-2 mt-md-0 text-md-start text-center">
-      <Button className="btn-pesquisar" onClick={handlePesquisar}>
+
+      {/* Botão + Filtros */}
+      <button className="btn-submit" onClick={handlePesquisar}>
         Pesquisar
-      </Button>
-    </Col>
-  </Row>
+      </button>
+
+      {/* Dropdowns de filtro ao lado do botão */}
+   
+      <Form.Select
+     
+        value={filtroStatus}
+        onChange={(e) => setFiltroStatus(e.target.value)}
+        style={{ maxWidth: "150px" }}
+      >
+        <option value="">Status</option>
+        <option value="ativo">Ativos</option>
+        <option value="inativo">Inativos</option>
+      </Form.Select>
+
+      <Form.Select
+        value={filtroAlunoProf}
+        onChange={(e) => setFiltroAlunoProf(e.target.value)}
+        style={{ maxWidth: "150px" }}
+      >
+        <option value="">Todos</option>
+        <option value="aluno">Aluno</option>
+        <option value="professor">Professor</option>
+      </Form.Select>
+ 
+    </div>
+  </Col>
+</Row>
+
 <Row className="justify-content-center">
           <Col xs={12} md={11}>
             <Card className="p-3">

@@ -75,17 +75,19 @@ export default function ObservacoesProfessor() {
             </Col>
 
             {/* Campo de novo comentário */}
-            <div className="novo-comentario">
-              <Form.Control
-                type="text"
-                placeholder="Comentário"
-                value={novoComentario}
-                onChange={(e) => setNovoComentario(e.target.value)}
-              />
-              <Button className="btn-enviar" onClick={handleEnviarComentario}>
-                Enviar
-              </Button>
-            </div>
+        <div className="novo-comentario">
+          <Form.Control
+            type="text"
+            placeholder="Digite seu comentário..."
+            value={novoComentario}
+            onChange={(e) => setNovoComentario(e.target.value)}
+            className="input-comentario"
+          />
+          <Button className="btn-enviar" onClick={handleEnviarComentario}>
+            Enviar
+          </Button>
+        </div>
+
           </Col>
 
           {/* Coluna Dados do Aluno */}

@@ -114,8 +114,19 @@ margin: auto 6rem;
   margin: auto;
   max-width: 250px
 }
-.btn-submit:hover{
-  opacity:0.9;
+.btn-submit {
+  background:#044654;
+  color:#E4EDF1;
+  padding:10px 28px;
+  border-radius:8px;
+  border:none;
+  font-size:1rem;
+  cursor:pointer;
+  width: 35%;
+  max-width: 250px;
+}
+.btn-submit:hover { 
+  opacity:0.9 
 };
 
 /* 📱 Responsividade*/
