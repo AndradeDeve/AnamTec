@@ -157,7 +157,18 @@ export default function Cadastro() {
         )}
 
         <div className="field">
-          <label htmlFor="rm">RM:</label>
+          <label htmlFor="rm">
+            RM:
+          {(formData.cargo === "Secretaria" || formData.cargo === "Coordenador Pedagógico") &&(
+            <span 
+              className="tooltip-icon"
+              title="O campo RM não é obrigatório para esse usuário"
+            >
+             *
+            </span>
+          )}
+
+          </label>
           <input
             type="text"
             id="rm"
@@ -165,6 +176,7 @@ export default function Cadastro() {
             placeholder="Informe o RM"
             value={formData.rm}
             onChange={handleChange}
+            required={!(formData.cargo === "Secretaria" || formData.cargo === "Coordenador Pedagógico")}
           />
         </div>
         <div className="field">
