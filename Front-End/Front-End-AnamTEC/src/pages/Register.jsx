@@ -104,9 +104,9 @@ export default function Cadastro() {
   }
 
   return (
-    <div className="cadastro-wrapper">
+    <div className="cadastro-wrapper col-12 col-md-6 col-lg-12">
             {/* TOPO - Logo e Título */}
-      <div className="asideContainerCadastro">
+      <div className="asideContainerCadastro d-flex-">
       <header className="header-Cadastro">
         <h1>AnamTec</h1>
         <img src={logoAnamTec} alt="Logo" className="logoa" />
@@ -157,7 +157,18 @@ export default function Cadastro() {
         )}
 
         <div className="field">
-          <label htmlFor="rm">RM:</label>
+          <label htmlFor="rm">
+            RM:
+          {(formData.cargo === "Secretaria" || formData.cargo === "Coordenador Pedagógico") &&(
+            <span 
+              className="tooltip-icon"
+              title="O campo RM não é obrigatório para esse usuário"
+            >
+             *
+            </span>
+          )}
+
+          </label>
           <input
             type="text"
             id="rm"
@@ -165,6 +176,7 @@ export default function Cadastro() {
             placeholder="Informe o RM"
             value={formData.rm}
             onChange={handleChange}
+            required={!(formData.cargo === "Secretaria" || formData.cargo === "Coordenador Pedagógico")}
           />
         </div>
         <div className="field">
