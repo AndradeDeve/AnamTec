@@ -50,7 +50,7 @@ routes.post('/', async (req, res) => {
     return res.status(400).json({ err: 'Valor de medicamento inválido. Use "sim" ou "não".' });
   }
 
-  if (!tp_medi || tp_medi.length > 200) {
+  if (!tp_medi.length > 200) {
     return res.status(400).json({ err: 'Tipo de medicamento inválido ou muito longo (máx 200 caracteres).' });
   }
 
@@ -60,7 +60,7 @@ routes.post('/', async (req, res) => {
       [medicamento.toLowerCase(), tp_medi.trim()]
     );
 
-    return res.status(201).json({ response: 'Medicamento cadastrado com sucesso.', id: result.insertId });
+    return res.status(201).json({ response: 'Medicamento cadastrado com sucesso.',});
   } catch (err) {
     console.error('Erro ao cadastrar medicamento:', err);
     return res.status(500).json({ err: 'Erro no servidor.' });

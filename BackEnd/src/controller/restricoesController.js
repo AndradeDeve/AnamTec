@@ -37,30 +37,21 @@ routes.get("/:id", async (req, res) => {
 });
 
 routes.post("/", async (req, res) => {
-  const { id, restri_alimentar, tp_restricao } = req.body;
-
-  if (!id || isNaN(id)) {
-    return res.status(400).json({ err: "ID inválido." });
-  }
-
-  const restricoesValidas = ["sim", "não"];
-  if (!restricoesValidas.includes(restri_alimentar?.toLowerCase())) {
-    return res.status(400).json({ err: "Opção de restrição alimentar inválida." });
-  }
-
-  if (tp_restricao?.length > 200) {
-    return res.status(400).json({ err: "Tipo de restrição inválido." });
-  }
+  const {restri_alimentar, tp_restricao } = req.body;
 
   try {
-    const [existing] = await connection.execute("SELECT id FROM tbl_restricoes WHERE id = ?", [id]);
-    if (existing.length > 0) {
-      return res.status(409).json({ err: "ID já cadastrado." });
+    const restricoesValidas = ["sim", "não"];
+    if (!restricoesValidas.includes(restri_alimentar?.toLowerCase())) {
+      return res.status(400).json({ err: "Opção de restrição alimentar inválida." });
+    }
+
+    if (tp_restricao?.length > 200) {
+      return res.status(400).json({ err: "Tipo de restrição inválido." });
     }
 
     await connection.execute(
-      "INSERT INTO tbl_restricoes (id, restri_alimentar, tp_restricao) VALUES (?, ?, ?)",
-      [id, restri_alimentar.toLowerCase(), tp_restricao]
+      "INSERT INTO tbl_restricoes (restri_alimentar, tp_restricao) VALUES (?, ?)",
+      [restri_alimentar.toLowerCase(), tp_restricao]
     );
     return res.status(201).json({ response: "Restrição cadastrada com sucesso." });
   } catch (err) {

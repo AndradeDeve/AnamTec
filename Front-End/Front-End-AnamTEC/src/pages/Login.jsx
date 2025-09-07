@@ -31,32 +31,32 @@ const navCoord = () => {
      // Chama a função para enviar os dados do login
     try{
         const data = await postFunctionLogin(formData)
-        if(data.status === 200) {
-          toast.success('Login efetuado com sucesso', {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
-          localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
-          navCoord(); // Redireciona para a página do coordenador pedagógico
-        }
+          if(data.status === 200) {
+            toast.success('Login efetuado com sucesso', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            });
+            localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
+            navCoord(); // Redireciona para a página do coordenador pedagógico
+          }
     }catch(error){
-      console.error("Erro ao efetuar o login, verifique se o e-mail e a senha estão corretos.", error);
-      toast.warn('Erro ao efetuar Login,', {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      });
+        console.error("Erro ao efetuar o login, verifique se o e-mail e a senha estão corretos.", error);
+        toast.warn('Erro ao efetuar Login,', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
     }
   };
 

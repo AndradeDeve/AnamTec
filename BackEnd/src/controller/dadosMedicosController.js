@@ -54,40 +54,45 @@ routes.post('/', async (req, res) => {
     id_medicamentos,
     id_aluno
   } = req.body;
-
-  if (!enumSexo.includes(sexo)) return res.status(400).json({ err: 'Sexo inválido.' });
-  if (!enumTpSangue.includes(tp_sangue)) return res.status(400).json({ err: 'Tipo sanguíneo inválido.' });
-  if (typeof peso !== 'number' || peso <= 0) return res.status(400).json({ err: 'Peso inválido.' });
-  if (typeof altura !== 'number' || altura <= 0) return res.status(400).json({ err: 'Altura inválida.' });
-  if (!enumSimNao.includes(gravidez)) return res.status(400).json({ err: 'Gravidez inválido.' });
-  if (!Number.isInteger(idade) || idade < 0) return res.status(400).json({ err: 'Idade inválida.' });
-  if (!enumSimNao.includes(alcool)) return res.status(400).json({ err: 'Álcool inválido.' });
-  if (!enumSimNao.includes(fumo)) return res.status(400).json({ err: 'Fumo inválido.' });
-  if (!enumSimNao.includes(drogas)) return res.status(400).json({ err: 'Drogas inválido.' });
-
-  if (
-    isNaN(id_alergias) ||
-    isNaN(id_diagnostico) ||
-    isNaN(id_deficiencias) ||
-    isNaN(id_restricoes) ||
-    isNaN(id_cirurgias) ||
-    isNaN(id_medicamentos)
-  ) {
-    return res.status(400).json({ err: 'IDs de chaves estrangeiras inválidos.' });
-  }
-
-  if (id_aluno !== undefined && isNaN(id_aluno)) {
-    return res.status(400).json({ err: 'ID do aluno inválido.' });
-  }
-
-  if (obs && typeof obs !== 'string') return res.status(400).json({ err: 'Obs deve ser string.' });
-  if (laudo && typeof laudo !== 'string') return res.status(400).json({ err: 'Laudo deve ser string.' });
-
   try {
+    if (!enumSexo.includes(sexo)) return res.status(400).json({ err: 'Sexo inválido.' });
+    if (!enumTpSangue.includes(tp_sangue)) return res.status(400).json({ err: 'Tipo sanguíneo inválido.' });
+    if (typeof !peso === 'number' || peso <= 0) return res.status(400).json({ err: 'Peso inválido.' });
+    if (typeof !altura === 'number' || altura <= 0) return res.status(400).json({ err: 'Altura inválida.' });
+    if (!enumSimNao.includes(gravidez)) return res.status(400).json({ err: 'Gravidez inválido.' });
+    if (!Number.isInteger(idade) || idade < 0) return res.status(400).json({ err: 'Idade inválida.' });
+    if (!enumSimNao.includes(alcool)) return res.status(400).json({ err: 'Álcool inválido.' });
+    if (!enumSimNao.includes(fumo)) return res.status(400).json({ err: 'Fumo inválido.' });
+    if (!enumSimNao.includes(drogas)) return res.status(400).json({ err: 'Drogas inválido.' });
+
+    if (
+      isNaN(id_alergias) ||
+      isNaN(id_diagnostico) ||
+      isNaN(id_deficiencias) ||
+      isNaN(id_restricoes) ||
+      isNaN(id_cirurgias) ||
+      isNaN(id_medicamentos)
+    ) {
+      return res.status(400).json({ err: 'IDs de chaves estrangeiras inválidos.' });
+    }
+
+      const [idExiste] =  await connection.execute(`SELECT * FROM tbl_cadastro_al WHERE id = ?`, [id_aluno]);
+      if(id_aluno !== undefined && idExiste.length === 0 ){
+          return res.status(400).json({ err: "Aluno não encontrado." });
+      }
+
+    if (isNaN(id_aluno)) {
+      return res.status(400).json({ err: 'ID do aluno inválido.' });
+    }
+
+    if (obs && typeof obs !== 'string') return res.status(400).json({ err: 'Obs deve ser string.' });
+    if (laudo && typeof laudo !== 'string') return res.status(400).json({ err: 'Laudo deve ser string.' });
+
+    
     const [result] = await connection.execute(
       `INSERT INTO tbl_dadosMedicos
       (sexo, tp_sangue, peso, altura, gravidez, idade, alcool, fumo, drogas, obs, laudo,
-       id_alergias, id_diagnostico, id_deficiencias, id_restricoes, id_cirurgias, id_medicamentos, id_aluno)
+      id_alergias, id_diagnostico, id_deficiencias, id_restricoes, id_cirurgias, id_medicamentos, id_aluno)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         sexo, tp_sangue, peso, altura, gravidez, idade, alcool, fumo, drogas,
