@@ -1,5 +1,6 @@
 import express from "express";
 import { getConnection } from "../database/data-source.js";
+import { enviarEmailAlunos } from "../helpers/emailAlunos.js";
 
 const routes = express.Router();
 const connection = await getConnection();
@@ -51,7 +52,7 @@ routes.get("/:id", async (req, res) => {
     if (!rows || rows.length === 0) {
       return res.status(404).json({ err: "Aluno não encontrado." });
     }
-
+    
     return res.status(200).json(rows[0]);
   } catch (err) {
     console.error("Erro ao buscar aluno:", err);
@@ -61,7 +62,7 @@ routes.get("/:id", async (req, res) => {
 
 routes.post("/", async (req, res) => {
   const { ra, nome, data_nasc, genero, email, telefone, cep } = req.body;
-
+  
   try {
     const [enderecoExistente] = await connection.execute(
       "SELECT * FROM tbl_endereco WHERE cep = ? AND deletedAt IS NULL",
@@ -95,7 +96,7 @@ routes.post("/", async (req, res) => {
     if (existeTel.length > 0) {
       return res.status(400).json({ err: "Este telefone já está em uso." });
     }
-
+    
     const raRegex = /^\d{1,15}$/;
     if (!ra || !raRegex.test(ra.trim())) {
       return res.status(400).json({ err: "RA inválido." });
@@ -130,11 +131,11 @@ routes.post("/", async (req, res) => {
     if (!telefone || !telefoneRegex.test(telefone.trim())) {
       return res.status(400).json({ err: "Telefone inválido." });
     }
-
+    
     await connection.execute(
       `INSERT INTO tbl_cadastro_al 
-       (ra, nome, data_nasc, genero, email, telefone, id_endereco) 
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      (ra, nome, data_nasc, genero, email, telefone, id_endereco) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [ra, nome, data_nasc, genero, email, telefone, id_endereco]
     );
 
@@ -145,10 +146,40 @@ routes.post("/", async (req, res) => {
   }
 });
 
+routes.post('/emailAluno', async (request, response) => {
+  try {
+    console.log("Olá: ");
+    const [pegaDados] = await connection.execute(
+      `SELECT a.id, a.nome, a.email
+       FROM tbl_cadastro_al a
+       LEFT JOIN tbl_dadosMedicos d ON a.id = d.id_aluno
+       WHERE a.deletedAt IS NULL
+       AND d.id_aluno IS NULL;`
+    );
+    if (pegaDados.length === 0) {
+      return response.status(404).json({ err: "Nenhum aluno encontrado." });
+    }
+    for(let i = 0; i < pegaDados.length; i++){
+      // console.log(`ID: Nome: ${pegaDados[i].nome}, Email: ${pegaDados[i].email}`);
+      let dados = {
+        emailAluno: pegaDados[i].email,
+        nomeAluno: pegaDados[i].nome
+      };
+      console.log(dados);
+      await enviarEmailAlunos(dados);
+    }
+    return response.status(200).json({response: "Emails processados com sucesso."});
+
+  } catch (err) {
+    console.log("Erro ao buscar alunos:", err);
+    return response.status(500).json({ err: "Erro no servidor." });
+  }
+}); 
+
 routes.put("/:RA", async (req, res) => {
   const { RA } = req.params;
   const { ra, nome, data_nasc, genero, email, telefone, cep } = req.body;
-
+  
   try {
     const [enderecoExistente] = await connection.execute(
       "SELECT * FROM tbl_endereco WHERE cep = ? AND deletedAt IS NULL",
@@ -211,6 +242,7 @@ routes.put("/:RA", async (req, res) => {
     return res.status(500).json({ err: "Erro no servidor." });
   }
 });
+
 
 routes.delete("/:RA", async (req, res) => {
   const { RA } = req.params;

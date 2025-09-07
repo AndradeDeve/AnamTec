@@ -40,41 +40,36 @@ routes.get("/:id", async (req, res) => {
 });
 
 routes.post("/", async (req, res) => {
-  const { id, diagnostico, tp_diag } = req.body;
-  if (!id || isNaN(id)) return res.status(400).json({ err: "Id inválido." });
-  if (!diagnostico || !opcoesValidas.includes(diagnostico.toLowerCase())) {
-    return res.status(400).json({ err: "Diagnóstico inválido." });
-  }
-  if (tp_diag && tp_diag.length > 200) {
-    return res.status(400).json({ err: "Tipo de diagnóstico inválido." });
-  }
+  const { diagnostico, tp_diag } = req.body;
   try {
-    const [exists] = await connection.execute(
-      `SELECT id FROM tbl_diagnostica WHERE id = ?`,
-      [id]
-    );
-    if (exists.length) return res.status(409).json({ err: "ID já cadastrado." });
+    if (!diagnostico || !opcoesValidas.includes(diagnostico.toLowerCase())) {
+      return res.status(400).json({ err: "Diagnóstico inválido." });
+    }
+    if (tp_diag && tp_diag.length > 200) {
+      return res.status(400).json({ err: "Tipo de diagnóstico inválido." });
+    }
     await connection.execute(
-      `INSERT INTO tbl_diagnostica (id, diagnostico, tp_diag) VALUES (?, ?, ?)`,
-      [id, diagnostico.toLowerCase(), tp_diag || null]
+      `INSERT INTO tbl_diagnostica (diagnostico, tp_diag) VALUES (?, ?)`,
+      [ diagnostico.toLowerCase(), tp_diag || null]
     );
     return res.status(201).json({ response: "Diagnóstico cadastrado com sucesso." });
-  } catch {
+  } catch(err) {
+    console.error("Erro: ", err);
     return res.status(500).json({ err: "Erro no servidor." });
   }
 });
 
 routes.put("/:id", async (req, res) => {
-  const { id } = req.params;
-  const { diagnostico, tp_diag } = req.body;
-  if (isNaN(id)) return res.status(400).json({ err: "Id inválido." });
-  if (!diagnostico || !opcoesValidas.includes(diagnostico.toLowerCase())) {
-    return res.status(400).json({ err: "Diagnóstico inválido." });
-  }
-  if (tp_diag && tp_diag.length > 200) {
-    return res.status(400).json({ err: "Tipo de diagnóstico inválido." });
-  }
   try {
+    const { id } = req.params;
+    const { diagnostico, tp_diag } = req.body;
+    if (isNaN(id)) return res.status(400).json({ err: "Id inválido." });
+    if (!diagnostico || !opcoesValidas.includes(diagnostico.toLowerCase())) {
+      return res.status(400).json({ err: "Diagnóstico inválido." });
+    }
+    if (tp_diag && tp_diag.length > 200) {
+      return res.status(400).json({ err: "Tipo de diagnóstico inválido." });
+    }
     const [result] = await connection.execute(
       `UPDATE tbl_diagnostica SET diagnostico = ?, tp_diag = ? WHERE id = ?`,
       [diagnostico.toLowerCase(), tp_diag || null, id]
@@ -83,7 +78,8 @@ routes.put("/:id", async (req, res) => {
       return res.status(404).json({ err: "Diagnóstico não encontrado." });
     }
     return res.status(200).json({ response: "Diagnóstico atualizado com sucesso." });
-  } catch {
+  } catch(err) {
+    console.error("Erro: ", err);
     return res.status(500).json({ err: "Erro no servidor." });
   }
 });

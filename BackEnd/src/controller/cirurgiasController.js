@@ -40,26 +40,22 @@ routes.get("/:id", async (req, res) => {
 });
 
 routes.post("/", async (req, res) => {
-  const { id, internacao_cirurgia, tp_cirurgia } = req.body;
-  if (!id || isNaN(id)) return res.status(400).json({ err: "Id inválido." });
-  if (!internacao_cirurgia || !ops.includes(internacao_cirurgia.toLowerCase())) {
-    return res.status(400).json({ err: "Internação inválida." });
-  }
-  if (tp_cirurgia && tp_cirurgia.length > 200) {
-    return res.status(400).json({ err: "Tipo de cirurgia inválido." });
-  }
+  const {internacao_cirurgia, tp_cirurgia } = req.body;
+
   try {
-    const [exists] = await connection.execute(
-      `SELECT id FROM tbl_cirurgias WHERE id = ?`,
-      [id]
-    );
-    if (exists.length) return res.status(409).json({ err: "ID já cadastrado." });
+    if (!internacao_cirurgia || !ops.includes(internacao_cirurgia.toLowerCase())) {
+      return res.status(400).json({ err: "Internação inválida." });
+    }
+    if (tp_cirurgia && tp_cirurgia.length > 200) {
+      return res.status(400).json({ err: "Tipo de cirurgia inválido." });
+    }
     await connection.execute(
-      `INSERT INTO tbl_cirurgias (id, internacao_cirurgia, tp_cirurgia) VALUES (?, ?, ?)`,
-      [id, internacao_cirurgia.toLowerCase(), tp_cirurgia || null]
+      `INSERT INTO tbl_cirurgias (internacao_cirurgia, tp_cirurgia) VALUES (?, ?)`,
+      [ internacao_cirurgia.toLowerCase(), tp_cirurgia || null]
     );
     return res.status(201).json({ response: "Cirurgia cadastrada com sucesso." });
-  } catch {
+  } catch(err) {
+    console.error("Erro: ", err)
     return res.status(500).json({ err: "Erro no servidor." });
   }
 });

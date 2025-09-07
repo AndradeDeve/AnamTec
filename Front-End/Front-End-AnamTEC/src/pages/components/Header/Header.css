@@ -50,7 +50,7 @@
 /* ==== DROPDOWN MENU LATERAL (☰) ==== */
 .dropdown-menu-custom {
   position: absolute;
-  top: 8%;                    /* Fica logo abaixo do botão */
+  top: 10%;                    /* Fica logo abaixo do botão */
   left: 2%;
   background-color: #044654;
   border-radius: 8px;

@@ -32,7 +32,7 @@ routes.use("/login", loginController);
 routes.use('/cursos', cursoController);
 routes.use("/type", typeController);
 routes.use("/endereco", enderecoController);
-routes.use("/diagnostica", diagnosticaController);
+routes.use("/diagnostico", diagnosticaController);
 routes.use("/restricoes", restricoesController);
 routes.use("/registroAulas", registroAulasController);
 routes.use("/medicamentos", medicamentosController);
