@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { FormProvider } from "./Context/FormContext";
 import Home from "./Pages/Home";
 import FormInform from "./Pages/FormInform";
 import FormResp from "./Pages/FormResp";
@@ -9,16 +10,19 @@ import FormComportEmocio from "./Pages/FormComportEmocio";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/FormInform" element={<FormInform />} />
-        <Route path="/FormResp" element={<FormResp />} />
-        <Route path="/FormSaude" element={<FormSaude />} />
-        <Route path="/FormComportEmocio" element={<FormComportEmocio />} />
-      </Routes>
-    </Router>
+    <FormProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/FormInform" element={<FormInform />} />
+          <Route path="/FormResp" element={<FormResp />} />
+          <Route path="/FormSaude" element={<FormSaude />} />
+          <Route path="/FormComportEmocio" element={<FormComportEmocio />} />
+        </Routes>
+      </Router>
+    </FormProvider>
   );
 }
+
 
 export default App;

@@ -57,7 +57,7 @@ function FormResp() {
                 <h3 className="font-semibold mb-2">Responsável {index + 1}</h3>
 
                 <Row className="mb-3">
-                    <Col md={6}>
+                    <Col XS={12} md={6}>
                       <Form.Group>
                           <Form.Label>Nome do Responsável:</Form.Label>
                           <Form.Control type="text" placeholder="Digite o nome" value={responsavel.nome} onChange={(e) => handleChange(index, "nome", e.target.value)} 
@@ -65,7 +65,7 @@ function FormResp() {
                       </Form.Group>
                     </Col>
                   
-                    <Col md={6}>
+                    <Col XS={12} md={6}>
                       <Form.Group>
                         <Form.Label>Parentesco:</Form.Label>
                           <Form.Select
@@ -83,7 +83,7 @@ function FormResp() {
                     </Row>
 
                     <Row className="mb-3">
-                        <Col md={4}>
+                        <Col XS={12} md={4}>
                           <Form.Group>
                             <Form.Label>Telefone:</Form.Label>
                             <Form.Control type="text" value={responsavel.telefone} onChange={(e) =>
@@ -92,7 +92,7 @@ function FormResp() {
                           </Form.Group>
                         </Col>
 
-                        <Col md={4}>
+                        <Col XS={12} md={4}>
                           <Form.Group>
                             <Form.Label>Estado Civil:</Form.Label>
                               <Form.Select
@@ -107,7 +107,7 @@ function FormResp() {
                           </Form.Group>
                         </Col>
                         
-                        <Col md={4}>
+                        <Col XS={12} md={4}>
                           <Form.Group>
                             <Form.Label>E-mail:</Form.Label>
                             <Form.Control type="email" placeholder="Digite o e-mail" value={responsavel.email} onChange={(e) =>

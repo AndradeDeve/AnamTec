@@ -2,8 +2,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
-    position: relative;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .step-container {
@@ -11,6 +12,7 @@
     align-items: center;
     position: relative;
     flex: 1;
+    min-width: 0;
 }
 
 .circle {
@@ -24,6 +26,7 @@
     color: #044654;
     font-weight: bold;
     z-index: 1;
+    flex-shrink: 0;
 }
 
 .circle.active {
@@ -32,9 +35,12 @@
 }
 
 .etapa-label {
-    margin-left: 8px;
-    font-size: 0.9rem;
+    margin-left: 6px;
+    font-size: 0.8rem;
     color: #044654;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .etapa-label.ativa {
@@ -42,9 +48,29 @@
     color: #044654;
 }
 
-.line {
-    flex: 1;
-    height: 2px;
-    background-color: #;
-    margin: 0 10px;
+
+@media (max-width: 768px) {
+    .circle {
+        width: 18px;
+        height: 18px;
+        font-size: 0.7rem;
+    }
+
+    .etapa-label {
+        font-size: 0.7rem;
+        margin-left: 4px;
+    }
+
+
+@media (max-width: 480px) {
+    .circle {
+        width: 15px;
+        height: 15px;
+        font-size: 0.6rem;
+    }
+
+    .etapa-label {
+        font-size: 0.6rem;
+    }
+}
 }

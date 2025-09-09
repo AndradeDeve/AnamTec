@@ -8,7 +8,7 @@ function Header() {
         <Navbar expand="lg" className="custom-header">
             <Container className="justify-content-between align-items-center">
                 <img src= {Logo} alt="Logo" className="logo-left" />
-                <Navbar.Brand className="navbar-title mx-auto">
+                <Navbar.Brand className="navbar-title">
                     Formulário Anamnese
                 </Navbar.Brand>
             </Container>
