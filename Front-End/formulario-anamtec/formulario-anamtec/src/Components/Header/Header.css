@@ -1,0 +1,32 @@
+.custom-header {
+    background-color: #044654 !important;
+    color: #E4EDF1 !important;
+}
+
+.logo-left {
+    width: 115px;
+    height: auto;
+}
+
+.navbar-title {
+    color: #e4e4e4;
+    font-weight: bold;
+    font-size: 1.5rem;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+.navbar-title:houver {
+    color: #E4EDF1 !important;
+}
+
+.custom-header .navbar-brand {
+    color: #e4e4e4;
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+.custom-header .navbar-brand:hover {
+    color: #E4EDF1 !important;
+}
+

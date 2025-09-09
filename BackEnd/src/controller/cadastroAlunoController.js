@@ -160,7 +160,6 @@ routes.post('/emailAluno', async (request, response) => {
       return response.status(404).json({ err: "Nenhum aluno encontrado." });
     }
     for(let i = 0; i < pegaDados.length; i++){
-      // console.log(`ID: Nome: ${pegaDados[i].nome}, Email: ${pegaDados[i].email}`);
       let dados = {
         emailAluno: pegaDados[i].email,
         nomeAluno: pegaDados[i].nome
