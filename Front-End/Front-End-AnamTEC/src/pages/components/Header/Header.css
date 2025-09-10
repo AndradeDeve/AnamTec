@@ -27,7 +27,7 @@
   font-weight: 600;
   gap: 10px;                      /* Espaço entre texto e imagem */
   text-align: center;
-  margin: 0 auto;
+  margin: 0  auto;
   color: #E4EDF1;           /* Centraliza horizontalmente */
 }
 

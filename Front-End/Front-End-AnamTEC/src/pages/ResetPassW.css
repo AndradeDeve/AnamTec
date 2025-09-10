@@ -2,37 +2,40 @@ body, html {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
+  height:100%
 }
 .reset-container {
   display: flex;
-  height: 100vh;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  height: 100vh;
+  align-items: stretch;
   background: linear-gradient(to left, #E4EDF1  50%, #044654 50%);
+  padding: 1rem;
 }
 .reset-header {
-  position: relative;
-  bottom: 35%;
-  left: 12%;
   display: flex;
-  justify-content: space-around;
+  flex-direction: row;
   align-items: center;  
+  gap:1rem; 
 }
 .reset-header h1{
-  position: relative;
-  right: 3%;
   font-weight: 800;
-  font-size: 36pt;
+  font-size: 2.5rem;
   color: #E4EDF1;
 }
+.logoa{
+  width: 80px;
+  height: auto;
+}
 .reset-card {
-  position: relative;
-  right: 2.5%;
-  width: 45%;
+  flex:1;
+  width: 100%;
+  max-width: 420px;
   background-color:#E4EDF1;
   box-shadow: 6px 6px 10px #1E2019;
-  border-radius: 14px 14px 14px 14px;
+  border-radius: 14px;
+  margin: auto 6rem;
 }
 .reset-card-header {
   background-color: #044654;
@@ -42,36 +45,38 @@ body, html {
 }
 .reset-card-header h2 {
   color: #E4EDF1;
-  font-size: 16pt;
+  font-size: 1.2rem;
   margin: 0;
 }
 .aside-containerReset{
+  flex:1;
   display: flex;
   flex-direction: column;
-  position: relative;
-  left: 10%;
-  bottom: 10%;
+  justify-content: center;
+  align-items: center;
+  color:#E4EDF1;
+  padding: 2rem;
+  text-align: center;
+ 
 }
 .aside-containerReset p{
-  position: relative;
-  left: 10%;
-  font-size: 16pt;
+  font-size: 1rem;
   font-weight: 600;
-  color:#E4EDF1
+  margin:0
 }
 .resetForm {
   display: flex;
   flex-direction: column;
-  padding: 25px;
-  gap: 05px;
+  gap: 0.1rem;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  width: 100%;
 }
 
 .resetForm label {
-  display: block;
-  margin-top:12px;
-  color: #1E2019;
-  font-size: 18px;
   font-weight: 700;
+  color: #1E2019;
+  font-size: 0.9rem;
 }
 
 .footer-modal{
@@ -80,38 +85,87 @@ body, html {
 }
 
 .footer-modal p {
-  margin: 5px 10px;
-  font-size: 16px;
+  margin: 0.4rem;
+  font-size: 0.9rem;
   cursor: pointer;
   color:rgb(24, 24, 153);
   text-decoration: underline;
+  text-align: left;
 }
 
 .resetForm input {
-  padding: 10px;
-  border: none;
-  border-radius: 3px;
-  font-size: 14px;
-  box-shadow: 4px 4px 4px #1E2019;
+  width: 100%;
+  padding: 5px;
+  margin: 0 auto;
+  border-radius: 8px;
+  border: 6px;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.12);
 }
 
 .resetForm input:placeholder {
   color: #818181;
   font-family: monospace;
-  font-size: 15px;
+  font-size: 1rem;
 }
 
 .resetForm button {
   background-color: #044654;
-  width: 25%;
   color: white;
-  border: none;
   padding: 12px;
-  margin-top: 10px;
-  margin-left: auto;
-  margin-right: auto;
-  font-weight: bold;
-  font-size: 14pt;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
   cursor: pointer;
-  border-radius: 6px;
+  width: 35%;
+  margin: auto;
+  max-width: 250px
+}
+.btn-submit:hover{
+  opacity:0.9;
+};
+@media (max-width: 768px) {
+  .reset-container{
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to top, #E4EDF1  75%, #044654 50%);
+  }
+  .reset-header h1 {
+    font-size: 2rem;
+  }
+  .logoa {
+    width: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .reset-container{
+    flex-direction: column; 
+    background: linear-gradient(to top, #E4EDF1  75%, #044654 50%);
+    align-items: center;
+    margin:  auto;
+  }
+  .reset-header h1{
+    font-size: 1.5rem;
+  }
+  .aside-containerReset p {
+  font-size: 0.8rem;
+  font-weight: 600;
+  }
+  .resetForm input {
+    width: 100%;
+    font-size:0.9rem;
+  }
+  .resetForm button{
+    font-size: 0.9rem;
+    padding: 0.7rem
+
+  }
+   .reset-card{
+    max-width: 100%;
+    margin: 8rem auto
+    ;
+  }
 }
