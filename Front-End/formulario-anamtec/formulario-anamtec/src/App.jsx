@@ -6,6 +6,7 @@ import FormInform from "./Pages/FormInform";
 import FormResp from "./Pages/FormResp";
 import FormSaude from "./Pages/FormSaude";
 import FormComportEmocio from "./Pages/FormComportEmocio";
+import FormRevisao from "./Pages/FormRevisao";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/FormResp" element={<FormResp />} />
           <Route path="/FormSaude" element={<FormSaude />} />
           <Route path="/FormComportEmocio" element={<FormComportEmocio />} />
+          <Route path="/FormRevisao" element={<FormRevisao/>} />
         </Routes>
       </Router>
     </FormProvider>

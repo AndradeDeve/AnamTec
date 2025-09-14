@@ -112,7 +112,8 @@ function FormInform() {
         "Informações principais",
         "Dados do Responsável",
         "Histórico de Saúde",
-        "Aspectos Comportamentais e Emocionais"
+        "Aspectos Comportamentais e Emocionais",
+        "Revisão"
       ]}
       etapaAtual={0}
       />
