@@ -1,0 +1,21 @@
+:root {
+  --preto: #1E2019;
+  --azul: #044654;
+  --branco: #E4EDF1;
+  --cinza-claro: #D9D9D9;
+}
+
+/* Caixa do toast */
+.custom-toast {
+  background-color: var(--azul) !important;
+  border-radius: 8px !important;
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Texto dentro do toast */
+.custom-toast-body {
+  font-family: "Roboto", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--branco);
+}

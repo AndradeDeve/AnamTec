@@ -1,30 +1,57 @@
+.button-row {
+  display: flex;
+  gap: 1rem;               /* Espaço entre botões */
+  justify-content: center; /* Centraliza horizontalmente */
+  flex-wrap: wrap;         /* Quebra linha se não couber */
+  margin: 1.2rem 0;        /* Margem vertical opcional */
+}
+
 .custom-btn {
-  background-color: #044654;      /* Azul escuro */
-  color: white;                   /* Texto branco */
-  padding: 12px 20px;             /* Espaçamento interno */
-  margin: 6px 0;                 /* Espaço entre os botões */
-        /* Borda preta */
-  border-radius: 10px;            /* Cantos arredondados */
-  width: 60%;                    /* Ocupa toda a largura da coluna */
+  background-color: #044654;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
   font-size: 16px;
   font-weight: 500;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 1.4); /* Sombra leve */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.14);
   transition: all 0.3s ease;
+  flex: 1 1 120px;         /* Cresce, encolhe, mínimo de 120px */
+  max-width: 180px;        /* Não fica maior que 180px */
 }
 
 .custom-btn:hover {
-  background-color: #033442; /* Cor um pouco mais escura ao passar o mouse */
-  transform: scale(1.02);    /* Leve crescimento no hover */
+  background-color: #033442;
+  transform: scale(1.02);
   cursor: pointer;
 }
 
 @media (max-width: 768px) {
-  .custom-btn {
-    
-    flex-direction: row;
-
+  .button-row {
+    display: inline-flex;
+    flex-wrap: wrap;       /* Quebra linha em telas muito estreitas */
+    justify-content: center;
+    margin-left: 8rem;
   }
-  tbody {
-      font-size: 0.9rem;
+
+  .custom-btn {
+    flex: 1 1 100px;       /* Ocupam no mínimo 100px cada */
+    max-width: none;       /* Desativa limite rígido no mobile */
+  }
+}
+
+
+/* Se quiser forçar no mobile que não enfileirem em coluna */
+
+@media (max-width: 480px) {
+  .button-row {
+    display: inline-flex;
+    flex-wrap: wrap;       /* Quebra linha em telas muito estreitas */
+    justify-content: center;
+    margin-left: 8rem;
+  }
+
+  .custom-btn {
+    flex: 1 1 100px;       /* Ocupam no mínimo 100px cada */
+    max-width: none;       /* Desativa limite rígido no mobile */
   }
 }

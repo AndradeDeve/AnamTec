@@ -3,10 +3,20 @@
 import React, { useState, useEffect } from "react";
 import { postFunctionUser } from "../services/APIService"; // seu serviço de API
 import logoAnamTec from "../assets/Anamtec-logo.png"; // Importa a logo 
-import "./Register.css";
 import { toast } from 'react-toastify';
+import { showToast } from "../Utils/toast.js"; // importamos o helper
+import { useNavigate } from 'react-router-dom';
+import "./Register.css";
 //ARQUIVO ATUALIZADO PEN
 export default function Cadastro() {
+  //Botão de voltar para a tela principal
+
+  const navegar = useNavigate()
+  
+  const navPrincipal = () => {
+    navegar("/Coord");
+  }
+
   // estado do formulário
   const [formData, setFormData] = useState({
     rm: "",
@@ -20,11 +30,18 @@ export default function Cadastro() {
 
   // lista de cursos (pode vir da API futuramente)
   const cursosDisponiveis = [
+    "Administração",
+    "Recursos Humanos",
+    "Contabilidade",
+    "Administração (Ensino médio)",
     "Desenvolvimento de Sistemas",
     "Redes de Computadores",
-    "Administração",
-    "Logística",
-    "Não se aplica"
+    "Redes de Computadores (Ensino médio)",
+    "Desenvolvimento de Sistemas (Ensino médio)",
+    "Informática",
+    "Eletroeletrônica",
+    "Automação Industrial (Ensino Médio)",
+    "Agenciamento de viagens",
   ];
 
   // cargos possíveis
@@ -53,53 +70,47 @@ export default function Cadastro() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
+  function isValidEmail(email) {
+  // Regex simples que cobre a maioria dos casos
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+
   // submit do formulário
   async function handleSubmit(e) {
     e.preventDefault();
 
     // validações simples
     if (!formData.cargo) {
-      alert("Selecione um cargo.");
+      showToast ("warn","Selecione um cargo.");
       return;
     }
     if (precisaCurso(formData.cargo) && !formData.curso) {
-      alert("Para esse cargo, selecione um curso.");
+      showToast("warn","Para esse cargo, selecione um curso.");
       return;
     }
     if (!formData.nome || !formData.email || !formData.senha) {
-      alert("Preencha os campos obrigatórios (nome, email, senha).");
+       showToast("warn","Preencha os campos obrigatórios (RM, CPF, nome, email, senha).");
       return;
     }
+    if (!isValidEmail(formData.email)) {
+    showToast("warn", "Digite um e-mail válido.");
+    return;
+}
 
     try {
       const data = await postFunctionUser(formData); // chama seu serviço
       // console.log("Resposta do servidor:", result);
       if(data.status === 201) {
-        toast.success('Login efetuado com sucesso', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
+        showToast("success", 'Login efetuado com sucesso')
+     
       }
       // opcional: limpar formulário
       // setFormData({ rm: "",cpf:"" ,nome: "", email: "", senha: "", cargo: "", curso: "" });
     } catch (error) {
       console.log("Erro ao cadastrar:", error);
-      toast.warn('Erro ao efetuar Login,', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-      });
+      showToast("error", "Erro ao efetuar cadastro. Tente novamente.");
     }
   }
 
@@ -125,7 +136,7 @@ export default function Cadastro() {
           name="cargo"
           value={formData.cargo}
           onChange={handleChange}
-          required
+         
         >
           {cargos.map((c) => (
             <option key={c.value} value={c.value}>
@@ -144,7 +155,7 @@ export default function Cadastro() {
               name="curso"
               value={formData.curso}
               onChange={handleChange}
-              required
+            
             >
               <option value="">Selecione o curso</option>
               {cursosDisponiveis.map((c) => (
@@ -176,7 +187,7 @@ export default function Cadastro() {
             placeholder="Informe o RM"
             value={formData.rm}
             onChange={handleChange}
-            required={!(formData.cargo === "Secretaria" || formData.cargo === "Coordenador Pedagógico")}
+            
           />
         </div>
         <div className="field">
@@ -200,7 +211,7 @@ export default function Cadastro() {
             placeholder="Nome"
             value={formData.nome}
             onChange={handleChange}
-            required
+          
           />
         </div>
 
@@ -213,7 +224,7 @@ export default function Cadastro() {
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            required
+            
           />
         </div>
 
@@ -226,17 +237,25 @@ export default function Cadastro() {
             placeholder="Senha"
             value={formData.senha}
             onChange={handleChange}
-            required
+            
           />
         </div>
+            <div className="voltar">
+              <a className="voltarPrincipal" onClick={navPrincipal}>
+              Voltar
+              </a>
+            </div>
 
-        <div className="actions">
-          <button type="submit" className="btn-submit">
+        <footer className="btns col-12 row col-md-12">
+          <div className="actionss">
+       
+            <button type="submit" className="btn-submit">
             Cadastrar
-          </button>
-        </div>
+            </button>
+          </div>
+        </footer>
       </form>
-      </div>
     </div>
+  </div>
   );
 }
