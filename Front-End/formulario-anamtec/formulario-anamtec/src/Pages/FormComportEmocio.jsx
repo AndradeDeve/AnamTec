@@ -18,7 +18,7 @@ function FormComportEmocio() {
 
   const handleChange = (field, value) => {
     setInformacoes((prev) => ({ ...prev, [field]: value}));
-    setErros((prev) => ({ ...prev, [filed]: ""}));
+    setErros((prev) => ({ ...prev, [field]: ""}));
   };
 
   const validarFormulario = () => {

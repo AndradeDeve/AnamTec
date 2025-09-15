@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import {toast } from 'react-toastify';
 import "./Login.css";
+import RedefineSenha from "../pages/components/EmailPassword/index"
 // Importa a função post para fazer o login do usuario 
 import { postFunctionLogin } from '../services/APIService';
 import logoAnamTec from "../assets/Anamtec-logo.png";
@@ -14,6 +15,7 @@ export default function Login() {
 // Cria o estado formData para armazenar email e senha digitados
 const [formData, setFormData] = useState({ email: "", senha: "" });
 
+ const [showModal, setShowModal] = useState(false)
 const [esqueciSenha, setEsqueciSenha] = useState("");
 const navigate = useNavigate(); // Hook do React Router para navegar entre páginas
 const navResetSenha = () => {
@@ -99,14 +101,26 @@ const navCoord = () => {
             value={formData.senha}
             onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
           />
-       
           <p className="esqueciS"
-          onClick={navResetSenha}
-          >Redefinir senha</p>
+              onClick={() => setShowModal(true)}>
+              Enviar nova senha no email
+          </p>
+       
+    
           {/* Botão de envio do formulário */}
           <button type="submit" className="btn-submit" >ENTRAR</button>
         </form>
       </div>
+        <RedefineSenha 
+        
+          show={showModal} 
+          onClose={() => setShowModal(false)} 
+          onEnviar={() => {
+              console.log("Enviar nova senha por email");
+          setShowModal(false);
+
+          }}
+        />
     </div>
   );
 }

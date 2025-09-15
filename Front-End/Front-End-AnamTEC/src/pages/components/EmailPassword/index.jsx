@@ -13,7 +13,7 @@ const RedefineSenha = ({ show, onClose,  onEnviar }) => {
     try{
       const data = await putFunctionEmailReset(formData);
       if(data.status === 200){
-        toast.success('E-mail enviado com sucesso.', {
+        toast.success('Senha enviada para o E-mail.', {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -27,7 +27,7 @@ const RedefineSenha = ({ show, onClose,  onEnviar }) => {
 
     }catch(erro){
       console.log("Erro: ", erro);
-      toast.warn('Erro ao enviar e-mail.', {
+      toast.warn('E-mail inválido.', {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,

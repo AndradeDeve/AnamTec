@@ -78,7 +78,12 @@ function FormInform() {
             <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label>Nome:<span style={{ color: "red"}}>*</span></Form.Label>
-              <Form.Control type="text" placeholder="Digite o nome" value={informacoes.nome} isInvalid={!!erros.nome} onChange={(e) => handleChange("nome", e.target.value)} />
+              <Form.Control
+              type="text"
+              placeholder="Digite o nome"
+              value={informacoes.nome}
+              isInvalid={!!erros.nome}
+              onChange={(e) => handleChange("nome", e.target.value)} />
               <Form.Control.Feedback type="invalid">{erros.nome}</Form.Control.Feedback>
             </Form.Group>
             </Col>
