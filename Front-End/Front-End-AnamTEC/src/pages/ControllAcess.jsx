@@ -37,8 +37,9 @@ export default function ControleAcesso() {
   <Container fluid className="controle-wrapper">
     {/* Linha 2: Pesquisa organizada */}
 <Row className="mb-4 pesquisa-row">
+    <h1 className="titulo-controle">Controle de Acesso</h1>
   <Col xs={12} md={8}>
-    <div className="d-flex gap-2 controle">
+    <div className="d-flex gap-2 filtros-container">
       {/* Dropdown tipo pesquisa */}
       <Form.Select
         value={tipoPesquisa}
@@ -67,7 +68,7 @@ export default function ControleAcesso() {
       {/* Dropdowns de filtro ao lado do botão */}
    
       <Form.Select
-     
+
         value={filtroStatus}
         onChange={(e) => setFiltroStatus(e.target.value)}
         style={{ maxWidth: "150px" }}

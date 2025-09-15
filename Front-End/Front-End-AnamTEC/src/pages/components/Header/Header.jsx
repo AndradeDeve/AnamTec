@@ -9,6 +9,7 @@ import relatorioIcon from '../../../assets/relatorio.png';
 import logoAnamtec from '../../../assets/Anamtec-logo.png';
 import configIcon from '../../../assets/config-icon.png'
 
+
 import './Header.css'; // mantém seu CSS personalizado
 
 const Header = () => {
@@ -47,14 +48,12 @@ const Header = () => {
               <img src={personIcon} alt="Página de Cadastro" />
               <span>Cadastrar</span>
               </li>
-              <li onClick={() => navigate('/ResetarSenha')}>
-              <img src={passWordIcon} alt="Página de Resetar a Senha" />
-              <span>Resetar Senha</span>
-              </li>
-              <li><img src={nsaIcon} alt="Link de Acesso para o site do NSA" />
+             
+              <li>
+                <img src={nsaIcon} alt="Link de Acesso para o site do NSA" />
               <span>Acesso ao NSA</span>
               </li>
-              <li>
+              <li onClick={() => navigate('/controle')}>
               <img src={controlAcessIcon} alt="Controle de Acesso de Professores" />
               <span>Controle de Acesso</span></li>
               <li>
@@ -87,7 +86,7 @@ const Header = () => {
           <div className={`dropdown-config-custom ${configOpen ? 'show' : ''}`}>
             <ul className="list-unstyled m-0 p-2">
             
-              <li onClick={() => navigate('')}>
+              <li onClick={() => navigate('/config')}>
                 <img src={configIcon} alt="Configurações" />
                 <span>Configurações</span>
               </li>

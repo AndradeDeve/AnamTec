@@ -8,22 +8,11 @@
 .titulo-controle {
   text-align: center;
   font-weight: bold;
-  color: #123c4a;
+  color:var(--preto);
 }
-
-.filtro{
-    flex-direction: column;
-}
-
-.filtro-card {
-  background: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
 
 .tabela-custom th {
-  background-color: #004d61;
+  background-color: var(--azul);
   color: #fff;
   text-align: center;
 }
@@ -44,7 +33,7 @@
 }
 
 .status-badge.ativo {
-  background-color: #00cc92 ; /* Verde */
+  background-color: #0E813E  ; /* Verde */
   color: #fff;
 }
 
@@ -56,22 +45,14 @@
 .filtros-row {
   display: flex;
   justify-content:flex-end;
- 
   gap: 10px;
 }
 
-/* Pesquisa alinhada */
-.pesquisa-row .d-flex {
-
-  width: 100%;
-  justify-content: center; /* centraliza no desktop */
-  gap: 10px;
-}
 
 
 /* Botão de pesquisa */
 .btn-submit {
-  background:#044654;
+  background: var(--azul);
   color:#E4EDF1;
   padding:10px 28px;
   border-radius:8px;
@@ -85,20 +66,31 @@
   opacity:0.9 
 };
 
-.filtros-row .filtro-container { display:flex; justify-content:flex-start; }
-
-.pesquisa-row { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
-
-.btn-pesquisar {
-  background:#007bff; border:none; padding:8px 20px; font-weight:700; border-radius:6px;
+.filtros-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
 }
+
+
+
+.pesquisa-row {  
+  display:flex; 
+  flex-wrap:wrap; 
+  justify-content:center; 
+  gap:10px; 
+}
+
 
 /* Mobile: tudo 100% e em coluna */
 /* Mobile - até 768px */
 @media (max-width: 768px) {
   .controle {
     flex-direction: column;   /* Quebra tudo em coluna */
-    align-items: stretch;  /* Cada item ocupa largura total */
+     /* Cada item ocupa largura total */
   }
 
   .pesquisa-item {
@@ -112,6 +104,16 @@
   .filtragem{
     flex-direction: row;
   }
+  
+  .filtros-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
 }
 
 
@@ -119,7 +121,7 @@
 @media (max-width: 480px) {
   .controle {
     flex-direction: column;   /* Quebra tudo em coluna */
-    align-items: stretch; /* Cada item ocupa largura total */
+    /* Cada item ocupa largura total */
   }
 
   .pesquisa-item {
@@ -133,6 +135,15 @@
   .filtragem{
     flex-direction: row;
   }
+.filtros-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
 }
 
 
