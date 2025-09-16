@@ -113,15 +113,15 @@ export default function ResetPassW() {
                     <button type="submit" className="btn-submit">Salvar</button>
                 </form>
             </div>
-                <RedefineSenha 
-                    show={showModal} 
-                    onClose={() => setShowModal(false)} 
-                    onEnviar={() => {
-                        console.log("Enviar nova senha por email");
-                    setShowModal(false);
+                    <RedefineSenha 
+                        show={showModal} 
+                        onClose={() => setShowModal(false)} 
+                        onEnviar={() => {
+                            console.log("Enviar nova senha por email");
+                        setShowModal(false);
 
-                    }}
-                />
+                        }}
+                    />
         </div>
     );
 }

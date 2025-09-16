@@ -6,7 +6,7 @@ import Register from "./Register.jsx";
 import Login from "./Login";
 
 function AuthPage() {
-  const [activeTab, setActiveTab] = useState("register");
+  const [activeTab, setActiveTab] = useState("login");
 
   return (
     <div className="register-container">

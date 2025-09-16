@@ -17,7 +17,7 @@ import dadosMedicosController from './controller/dadosMedicosController.js'
 import resetSenhaController from './controller/resetSenhaController.js'
 import { authenticate } from "./utils/jwt.js";
 import { authorizationRoles } from './utils/jwt.js';
-//  authorizationRoles("coordenador curso") Exemplo de como usar 
+//   Exemplo de como usar 
 
 const routes = express();   
 

@@ -4,13 +4,10 @@ import './ButtonGrid.css';
 
 const ButtonGrid = ({ onCadastrar, onEnviarEmail, showModal, setShowModal, alunosPendentes, onEnviar }) => {
   return (
-    <div className="d-flex container my-5">
-      <div className="row justify-content-center">
-        <div className="col-12">
+ 
+      <div className=" d-flex container my-5 row justify-content-center">
+        <div className="button-row">
           <button className="custom-btn" onClick={onCadastrar}>Cadastrar</button>
-        </div>
-
-        <div className="col-12">
           <button className="custom-btn" onClick={onEnviarEmail}>Enviar Email</button>
         </div>
 
@@ -21,7 +18,7 @@ const ButtonGrid = ({ onCadastrar, onEnviarEmail, showModal, setShowModal, aluno
           onEnviar={onEnviar}
         />
       </div>
-    </div>
+ 
   );
 };
 

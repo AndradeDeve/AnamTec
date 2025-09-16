@@ -117,25 +117,36 @@ body, html {
   font-family: monospace;
   font-size: 1rem;
 }
-
-.actions { 
-  text-align:center;
-  margin-top: 1rem 
+.voltarPrincipal {
+  margin: 0.4rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  color: rgb(24, 24, 153);
+  text-decoration: underline;
 }
-.btn-submit {
+
+.actionss { 
+  display: flex;
+  justify-content: center;
+  margin:auto;
+  gap: 1rem;
+}
+.actions .btn-submit {
+  flex: 1;
   background:#044654;
   color:#E4EDF1;
   padding:10px 28px;
+  
   border-radius:8px;
   border:none;
   font-size:1rem;
   cursor:pointer;
-  width: 35%;
   max-width: 250px;
 }
 .btn-submit:hover { 
   opacity:0.9 
 };
+
 
 /* 📱 Responsividade*/
 
@@ -156,6 +167,13 @@ body, html {
   .register-card{
     width: 100%;
     margin-top:1rem;
+  }
+   .actions {
+    flex-direction: column; /* empilha */
+    align-items: stretch;
+  }
+   .actions .btn-submit {
+    max-width: 100%; /* ocupa largura toda no mobile */
   }
 }
 
@@ -186,7 +204,13 @@ body, html {
   }
    .register-card{
     width: 100%;
-   
+  }
+   .actions {
+    flex-direction: column; /* empilha */
+    align-items: stretch;
+  }
+   .actions .btn-submit {
+    max-width: 100%; /* ocupa largura toda no mobile */
   }
 
 }

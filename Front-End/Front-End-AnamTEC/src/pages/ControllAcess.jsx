@@ -18,11 +18,11 @@ export default function ControleAcesso() {
   };
   // Exemplo de dados mockados
   const usuarios = [
-    { rm: "20100", nome: "Zorvanius Meteora", entidade: "Aluno", disciplina: "Não Aplica", curso: "Desenvolvimento de Sistemas", coordenador: "Marcos Costa", status: "Ativo" },
-    { rm: "18005", nome: "Bréfila Aurora", entidade: "Aluno", disciplina: "Não Aplica", curso: "Administração", coordenador: "Ricardo", status: "Ativo" },
-    { rm: "19045", nome: "Krumthor César", entidade: "Aluno", disciplina: "Não Aplica", curso: "Logística", coordenador: "Olivaldo", status: "Inativo" },
-    { rm: "19754", nome: "Lullabee Sofia", entidade: "Aluno", disciplina: "Não Aplica", curso: "Eletroeletrônica", coordenador: "Willian Martins", status: "Ativo" },
-    { rm: "21023", nome: "Xandrópico Dante", entidade: "Aluno", disciplina: "Não Aplica", curso: "Desenvolvimento de Sistemas", coordenador: "Marcos Costa", status: "Ativo" },
+      { rm: "20100", nome: "Zorvanius Meteora", entidade: "Aluno", disciplina: "Não Aplica", curso: "Desenvolvimento de Sistemas", coordenador: "Marcos Costa", status: "Ativo" },
+      { rm: "18005", nome: "Bréfila Aurora", entidade: "Aluno", disciplina: "Não Aplica", curso: "Administração", coordenador: "Ricardo", status: "Ativo" },
+      { rm: "19045", nome: "Krumthor César", entidade: "Aluno", disciplina: "Não Aplica", curso: "Logística", coordenador: "Olivaldo", status: "Inativo" },
+      { rm: "19754", nome: "Lullabee Sofia", entidade: "Aluno", disciplina: "Não Aplica", curso: "Eletroeletrônica", coordenador: "Willian Martins", status: "Ativo" },
+      { rm: "21023", nome: "Xandrópico Dante", entidade: "Aluno", disciplina: "Não Aplica", curso: "Desenvolvimento de Sistemas", coordenador: "Marcos Costa", status: "Ativo" },
   ];
 
   const handlePesquisar = () => {
@@ -37,8 +37,9 @@ export default function ControleAcesso() {
   <Container fluid className="controle-wrapper">
     {/* Linha 2: Pesquisa organizada */}
 <Row className="mb-4 pesquisa-row">
+    <h1 className="titulo-controle">Controle de Acesso</h1>
   <Col xs={12} md={8}>
-    <div className="d-flex gap-2 controle">
+    <div className="d-flex gap-2 filtros-container">
       {/* Dropdown tipo pesquisa */}
       <Form.Select
         value={tipoPesquisa}
@@ -67,7 +68,7 @@ export default function ControleAcesso() {
       {/* Dropdowns de filtro ao lado do botão */}
    
       <Form.Select
-     
+
         value={filtroStatus}
         onChange={(e) => setFiltroStatus(e.target.value)}
         style={{ maxWidth: "150px" }}

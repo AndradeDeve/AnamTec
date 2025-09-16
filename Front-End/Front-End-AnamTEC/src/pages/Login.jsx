@@ -7,17 +7,20 @@ import "./Login.css";
 import { postFunctionLogin } from '../services/APIService';
 import logoAnamTec from "../assets/Anamtec-logo.png";
 import { useNavigate } from 'react-router-dom';
+import RedefineSenha from "../pages/components/EmailPassword/index"
 
 // Componente funcional da tela de login
 export default function Login() {
 
+    const [showModal, setShowModal] = useState(false)
+
 // Cria o estado formData para armazenar email e senha digitados
 const [formData, setFormData] = useState({ email: "", senha: "" });
 
-const [esqueciSenha, setEsqueciSenha] = useState("");
+
 const navigate = useNavigate(); // Hook do React Router para navegar entre páginas
 const navResetSenha = () => {
-  setEsqueciSenha(navigate("/ResetarSenha", {replace: true}));    
+  (navigate("/ResetarSenha", {replace: true}));    
 
 }
 const navCoord = () => {
@@ -31,32 +34,32 @@ const navCoord = () => {
      // Chama a função para enviar os dados do login
     try{
         const data = await postFunctionLogin(formData)
-          if(data.status === 200) {
-            toast.success('Login efetuado com sucesso', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            });
-            localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
-            navCoord(); // Redireciona para a página do coordenador pedagógico
-          }
+        if(data.status === 200) {
+          toast.success('Login efetuado com sucesso', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          });
+          localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
+          navCoord(); // Redireciona para a página do coordenador pedagógico
+        }
     }catch(error){
-        console.error("Erro ao efetuar o login, verifique se o e-mail e a senha estão corretos.", error);
-        toast.warn('Erro ao efetuar Login,', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        });
+      console.error("Erro ao efetuar o login, verifique se o e-mail e a senha estão corretos.", error);
+      toast.warn('Erro ao efetuar Login,', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
     }
   };
 
@@ -100,13 +103,23 @@ const navCoord = () => {
             onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
           />
        
-          <p className="esqueciS"
-          onClick={navResetSenha}
-          >Redefinir senha</p>
+             <a className="redefineSenha"
+                onClick={() => setShowModal(true)}>
+                Esqueci minha Senha
+            </a>
           {/* Botão de envio do formulário */}
           <button type="submit" className="btn-submit" >ENTRAR</button>
         </form>
       </div>
+          <RedefineSenha 
+                    show={showModal} 
+                    onClose={() => setShowModal(false)} 
+                    onEnviar={() => {
+                        console.log("Enviar nova senha por email");
+                    setShowModal(false);
+
+                    }}
+                />
     </div>
   );
 }
