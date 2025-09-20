@@ -39,12 +39,12 @@ const handleAcess = () =>{
           value={termo}
           onChange={(e) => (e.target.value)} 
           />
-      </div>
-
-      <div className="col-12 col-sm-12-col-md-4 d-grid">
       <button className="custon-btn" onClick={handleAcess}>
         Pesquisar
       </button>
+      </div>
+
+      <div className="col-12 col-sm-12-col-md-4 d-grid">
       </div>
     </div>
     </div>
