@@ -1,11 +1,12 @@
 .form-select {
-  width: 100%;  
+  width: 100%;
+  height: auto;  
   max-width: 220px;  /* limite em telas grandes */
 }
 
 .form-control {
   width: 100%;
-  min-width: 400px;
+  min-width: 450px;
   max-width: 500px; /* em telas grandes ele não passa disso */
   background-color: white;
   border-radius: 10px;
@@ -20,24 +21,49 @@
 
 /* Botão */
 
-.custon-btn {
-  background-color: #044654;      
-  color: white;                   
-  padding: 8px;             
-  margin: 6px 0;                 
-  border-radius: 10px;           
-  width: 100%;   /* Agora respeita o grid */
-  font-size: 16px;
-  font-weight: 500;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 1.4);
+.search-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 370px;
+  margin: 0 auto; /* centraliza */
+  background-color: #ffffff;
+  margin:0.5rem;
+  border-radius: 6px;
+  box-shadow: 2px 2px 5px #1E2019;
+ 
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  min-width: 320px;
+  border-radius: 6px;
+  padding: 0.6rem;
   transition: all 0.3s ease;
 }
 
+.search-button { 
+  flex:1;    
+  display: flex;
+  align-items: center;
+  justify-content: center;
+   width: 100%;
+  height: auto;
+  border-radius: 0px 0.3rem 0.3rem 0rem;
+  background-color: #044654;
+  cursor: pointer;  
+  transition: background 0.3s ease;
+}
 
-.custon-btn:hover {
-  background-color: #033442;
-  transform: scale(1.02);
+.search-button:hover {
   cursor: pointer;
+  width: 100%;
+   background-color: #033442;
+}
+
+.search-button img {
+filter: brightness(0) invert(1); /* deixa a lupa branca */
 }
 
 /* 🔹 Ajustes para telas grandes */

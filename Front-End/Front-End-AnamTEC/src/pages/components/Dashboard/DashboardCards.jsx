@@ -13,9 +13,9 @@ const cards = [
 export default function DashboardCards() {
   return (
     <div className="container  my-1">
-      <div className="row g-3">
+      <div className="row g-4">
         {cards.map((card, index) => (
-          <div key={index} className="col-4 col-sm-6 col-md-4 mb-4" >
+          <div key={index} className="col-4 col-sm-6 col-md-4 mb-3" >
             <div className={`dashboard-card text-white text-center p-4 rounded shadow 
               ${card.color}`}>
               <img src={card.icon} alt={`ícone ${card.title}`} className="mb-2" />
