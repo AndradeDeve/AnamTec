@@ -1,12 +1,11 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 routes.get("/", async (req, res) => {
     try {
-        const [rows] = await connection.execute(`SELECT * FROM tbl_alergias`);
+        const [rows] = await pool.query(`SELECT * FROM tbl_alergias`);
         if (!Array.isArray(rows) || rows.length === 0) {
             return res.status(404).json({ err: "Nenhuma alergia encontrada." });
         }
@@ -20,7 +19,7 @@ routes.get("/", async (req, res) => {
 routes.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const [rows] = await connection.execute(`SELECT * FROM tbl_alergias WHERE id = ?`, [id]);
+        const [rows] = await pool.query(`SELECT * FROM tbl_alergias WHERE id = ?`, [id]);
         if (!rows || rows.length === 0) {
             return res.status(404).json({ err: "Alergia não encontrada." });
         }
@@ -44,7 +43,7 @@ routes.post("/", async (req, res) => {
             return res.status(400).json({ err: "Tipo de alergia inválido." });
         }
 
-        await connection.execute(
+        await pool.query(
             `INSERT INTO tbl_alergias (alergias, tp_alergia) VALUES (?, ?)`,
             [alergias, tp_alergia]
         );
@@ -71,7 +70,7 @@ routes.put("/:id", async (req, res) => {
             return res.status(400).json({ err: "Tipo de alergia inválido." });
         }
 
-        const [rows] = await connection.execute(
+        const [rows] = await pool.query(
             `UPDATE tbl_alergias SET alergias = ?, tp_alergia = ? WHERE id = ?`,
             [alergias, tp_alergia, id]
         );
@@ -91,7 +90,7 @@ routes.delete("/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-        const [rows] = await connection.execute(`DELETE FROM tbl_alergias WHERE id = ?`, [id]);
+        const [rows] = await pool.query(`DELETE FROM tbl_alergias WHERE id = ?`, [id]);
 
         if (rows.affectedRows === 0) {
             return res.status(404).json({ err: "Alergia não encontrada." });

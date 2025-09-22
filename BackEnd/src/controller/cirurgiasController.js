@@ -1,8 +1,7 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 const ops = ["sim", "não"];
 
@@ -16,7 +15,7 @@ routes.get("/", async (req, res) => {
       sql += ` WHERE id = ?`;
       params.push(id);
     }
-    const [rows] = await connection.execute(sql, params);
+    const [rows] = await pool.query(sql, params);
     if (!rows.length) return res.status(404).json({ err: "Cirurgia não encontrada." });
     return res.status(200).json({ response: rows });
   } catch {
@@ -28,7 +27,7 @@ routes.get("/:id", async (req, res) => {
   const { id } = req.params;
   if (isNaN(id)) return res.status(400).json({ err: "Id inválido." });
   try {
-    const [rows] = await connection.execute(
+    const [rows] = await pool.query(
       `SELECT * FROM tbl_cirurgias WHERE id = ?`,
       [id]
     );
@@ -49,7 +48,7 @@ routes.post("/", async (req, res) => {
     if (tp_cirurgia && tp_cirurgia.length > 200) {
       return res.status(400).json({ err: "Tipo de cirurgia inválido." });
     }
-    await connection.execute(
+    await pool.query(
       `INSERT INTO tbl_cirurgias (internacao_cirurgia, tp_cirurgia) VALUES (?, ?)`,
       [ internacao_cirurgia.toLowerCase(), tp_cirurgia || null]
     );
@@ -71,7 +70,7 @@ routes.put("/:id", async (req, res) => {
     return res.status(400).json({ err: "Tipo de cirurgia inválido." });
   }
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       `UPDATE tbl_cirurgias SET internacao_cirurgia = ?, tp_cirurgia = ? WHERE id = ?`,
       [internacao_cirurgia.toLowerCase(), tp_cirurgia || null, id]
     );

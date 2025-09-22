@@ -1,5 +1,5 @@
 
-import  React,{ useState } from 'react';
+import React,{ useState } from 'react';
 import BtnSearch from '../../../assets/search-icon.png';
 import './FilterBar.css';
 

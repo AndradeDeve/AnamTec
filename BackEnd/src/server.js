@@ -1,6 +1,6 @@
 import express from "express";
 import routes from "./routes.js";
-import {getConnection} from "./database/data-source.js";
+import pool from "./database/data-source.js";
 import cors from 'cors';
 import dotenv from 'dotenv';
 
@@ -13,12 +13,13 @@ server.use("/", routes);
 
 async function startServer() {
     try{
-        await getConnection();
+        const connection = await pool.getConnection();
         console.log("Banco conectado com sucesso!");
 
         server.listen(3332, ()=>{
             console.log("O servidor está funcionando 😎");
         })
+        connection.release()
     }catch (error){
         console.log("Erro ao se conextar com o banco de dados! 🤨", error);
     };

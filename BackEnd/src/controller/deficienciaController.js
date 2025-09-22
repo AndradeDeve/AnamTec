@@ -1,12 +1,11 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 routes.get("/", async (req, res) => {
   try {
-    const [rows] = await connection.execute(`SELECT * FROM tbl_deficiencias`);
+    const [rows] = await pool.query(`SELECT * FROM tbl_deficiencias`);
     if (!Array.isArray(rows) || rows.length === 0) {
       return res.status(404).json({ err: "Deficiência não encontrada." });
     }
@@ -23,7 +22,7 @@ routes.get("/:id", async (req, res) => {
     return res.status(400).json({ err: "Id inválido." });
   }
   try {
-    const [rows] = await connection.execute(
+    const [rows] = await pool.query(
       "SELECT * FROM tbl_deficiencias WHERE id = ?",
       [id]
     );
@@ -47,7 +46,7 @@ routes.post("/", async (req, res) => {
     if (tp_defi && tp_defi.length > 200) {
       return res.status(400).json({ err: "Tipo de deficiência inválido." });
     }
-    await connection.execute(
+    await pool.query(
       `INSERT INTO tbl_deficiencias (deficiencia, tp_defi) VALUES (?, ?)`,
       [deficiencia, tp_defi]
     );
@@ -72,7 +71,7 @@ routes.put("/:id", async (req, res) => {
     if (tp_defi && tp_defi.length > 200) {
       return res.status(400).json({ err: "Tipo de deficiência inválido." });
     }
-    const [rows] = await connection.execute(
+    const [rows] = await pool.query(
       `UPDATE tbl_deficiencias SET deficiencia = ?, tp_defi = ? WHERE id = ?`,
       [deficiencia, tp_defi, id]
     );

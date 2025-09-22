@@ -1,17 +1,15 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 import { hash } from 'bcrypt';
 import { VerificarSenha } from '../utils/jwt.js';
 
 const routes = express.Router();
-const connection = await getConnection();
-
 
 routes.put("/", async(request, response) => {
     const email = request.user.email;
     const {senha, senhaNova, confirmaSenha} = request.body;
     try{
-        const [results] = await connection.execute(`select * from tbl_usuario where email = ? and deletedAt is null`, [email]);
+        const [results] = await pool.query(`select * from tbl_usuario where email = ? and deletedAt is null`, [email]);
         if(results.length === 0){
             return response.status(404).json({err: "Usuário não encontrado. Tente fazer o login novamente."});
         }
@@ -31,7 +29,7 @@ routes.put("/", async(request, response) => {
         }
 
         const hashedSenha = await hash(senhaNova, 10);
-        const [updateResult] = await connection.execute(`UPDATE tbl_usuario SET senha = ? WHERE email = ? and deletedAt is null`, [hashedSenha, email]);
+        const [updateResult] = await pool.query(`UPDATE tbl_usuario SET senha = ? WHERE email = ? and deletedAt is null`, [hashedSenha, email]);
         if(updateResult.length === 0){
             return response.status(400).json({err: "Erro ao atualizar a senha. Tente novamente."});
         }

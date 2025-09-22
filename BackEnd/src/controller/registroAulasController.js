@@ -1,12 +1,11 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 routes.get('/', async (req, res) => {
   try {
-    const [rows] = await connection.execute('SELECT * FROM registros_aulas WHERE deletedAt IS NULL');
+    const [rows] = await pool.query('SELECT * FROM registros_aulas WHERE deletedAt IS NULL');
     if (!rows.length) {
       return res.status(404).json({ err: 'Nenhum registro de aula encontrado.' });
     }
@@ -23,7 +22,7 @@ routes.get('/:id', async (req, res) => {
     return res.status(400).json({ err: 'ID inválido.' });
   }
   try {
-    const [rows] = await connection.execute('SELECT * FROM registros_aulas WHERE id = ? AND deletedAt IS NULL', [id]);
+    const [rows] = await pool.query('SELECT * FROM registros_aulas WHERE id = ? AND deletedAt IS NULL', [id]);
     if (!rows.length) {
       return res.status(404).json({ err: 'Registro de aula não encontrado.' });
     }
@@ -46,7 +45,7 @@ routes.post('/', async (req, res) => {
   }
 
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       'INSERT INTO registros_aulas (comentario, id_professor) VALUES (?, ?)',
       [comentario.trim(), id_professor]
     );
@@ -74,7 +73,7 @@ routes.put('/:id', async (req, res) => {
   }
 
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       'UPDATE registros_aulas SET comentario = ?, id_professor = ? WHERE id = ? AND deletedAt IS NULL',
       [comentario.trim(), id_professor, id]
     );
@@ -99,7 +98,7 @@ routes.delete('/:id', async (req, res) => {
 
   try {
     const now = new Date();
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       'UPDATE registros_aulas SET deletedAt = ? WHERE id = ? AND deletedAt IS NULL',
       [now, id]
     );

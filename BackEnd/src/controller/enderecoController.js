@@ -1,8 +1,7 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 const estadosValidos = [
   "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA",
@@ -12,7 +11,7 @@ const estadosValidos = [
 
 routes.get("/", async (req, res) => {
   try {
-    const [rows] = await connection.execute(
+    const [rows] = await pool.query(
       `SELECT * FROM tbl_endereco WHERE deletedAt IS NULL`
     );
     if (!rows.length) {
@@ -33,7 +32,7 @@ routes.get("/:id", async (req, res) => {
   }
 
   try {
-    const [rows] = await connection.execute(
+    const [rows] = await pool.query(
       `SELECT * FROM tbl_endereco WHERE id = ? AND deletedAt IS NULL`,
       [id]
     );
@@ -72,7 +71,7 @@ routes.post("/", async (req, res) => {
   }
 
   try {
-    await connection.execute(
+    await pool.query(
       `INSERT INTO tbl_endereco (CEP, logradouro, bairro, cidade, numero, UF) VALUES (?, ?, ?, ?, ?, ?)`,
       [CEP, logradouro, bairro, cidade, numero, UF]
     );
@@ -111,7 +110,7 @@ routes.put("/:id", async (req, res) => {
   }
 
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       `UPDATE tbl_endereco SET CEP = ?, logradouro = ?, bairro = ?, cidade = ?, numero = ?, UF = ? WHERE id = ? AND deletedAt IS NULL`,
       [CEP, logradouro, bairro, cidade, numero, UF, id]
     );
@@ -136,7 +135,7 @@ routes.delete("/:id", async (req, res) => {
 
   try {
     const now = new Date();
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       `UPDATE tbl_endereco SET deletedAt = ? WHERE id = ? AND deletedAt IS NULL`,
       [now, id]
     );

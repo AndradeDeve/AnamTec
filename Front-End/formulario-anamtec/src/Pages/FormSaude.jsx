@@ -1,49 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
 import ProgressBar from "../Components/ProgressBar/ProgressBar";
 import SelectYesNo from "../Components/SelectYesNo/SelectYesNo";
-import "./FormSaude.css";
+import { FormContext } from "../Context/FormContext";
+import "../Styles/FormSaude.css";
 
 
 function FormSaude() {
   const navigate = useNavigate();
 
-  const [tipoSanguineo, setTipoSanguineo] = useState("");
-  const [possuiLaudo, setPossuiLaudo] = useState("");
-  const [possuiAlergia, setPossuiAlegria] = useState("");
-  const [fumante, setFumante] = useState("");
-  const [alcool, setAlcool] = useState("");
-  const [drogas, setDrogas] = useState("");
-  const [medicamentos, setMedicamentos] = useState("");
-  const [gravidez, setGravidez] = useState("");
-  const [restricaoAlimentar, setRestricaoAlimentar] = useState(""); 
-  const [cirurgia, setCirurgia] = useState("");
-  const [laudo,setLaudo] = useState(null);
+  const { dadosFormulario, setDadosFormulario } = useContext(FormContext);
 
-  const handleTipoSanguineoChange = (e) => setTipoSanguineo(e.target.value);
+  const saude = dadosFormulario.saude;
+
+  const handleChange = (field, value) => {
+    setDadosFormulario((prev) => ({
+      ...prev,
+      saude: {
+        ...prev.saude,
+        [field]: value,
+      },
+    }));
+  };
+  
   const handleLaudoChange = (e) => {
     const file = e.target.files[0];
-    setLaudo(file);
-    console.log("Arquivo selecionado:", file);
-  };
+    setDadosFormulario((prev) => ({
+      ...prev, 
+      saude: {
+        ...prev.saude,
+        laudo:file,
+   },
+  }));
+
+  console.log("Arquivo selecionado:", file);
+};
 
   const handleVoltar = () => navigate("/FormResp");
-  const handleProximo = () => {
-    console.log("Tipo sanguíneo:", tipoSanguineo);
-    console.log("Possui laudo:", possuiLaudo);
-    console.log("Fuamante:", fumante);
-    console.log("Consome álcool:", alcool);
-    console.log("Drogas:", drogas);
-    console.log("Alergia:", possuiAlergia);
-    console.log("Medicamentos:", medicamentos);
-    console.log("Gravidez:", gravidez);
-    console.log("Restrição Alimentar:", restricaoAlimentar);
-    console.log("Cirurgia:", cirurgia);
 
-    if (laudo) {
+  const handleProximo = () => {
+    console.log("Dados de saúde:", saude);
+    
+    if (saude.laudo) {
       console.log("Laudo anexado:", laudo);
     } else {
       console.log("Nenhum laudo anexado.")
@@ -72,7 +73,11 @@ function FormSaude() {
             <Col xs={12} md={3}>
             <Form.Group>
               <Form.Label>Tipo Sanguíneo:</Form.Label>
-                <Form.Select value={tipoSanguineo} onChange={handleTipoSanguineoChange} className="border p-2 rounded">
+                <Form.Select 
+                value={saude.tipoSanguineo} 
+                onChange={(e) => handleChange("tipoSanguineo", e.target.value)} 
+                className="border p-2 rounded"
+              >
                   <option value="">Selecione</option>
                   <option value="A+">A+</option>
                   <option value="A-">A-</option>
@@ -89,23 +94,32 @@ function FormSaude() {
             <Col xs={12} md={3}>
               <Form.Group>
                 <Form.Label>Peso:</Form.Label>
-                <Form.Control type="text" />
+                <Form.Control 
+                type="text"
+                value={saude.peso || ""}
+                onChange={(e) => handleChange("peso", e.target.value)}
+              />
               </Form.Group>
             </Col>
 
             <Col xs={12} md={3}>
               <Form.Group>
                 <Form.Label>Altura:</Form.Label>
-                <Form.Control type="text" />
+                <Form.Control 
+                type="text"
+                value={saude.altura || ""}
+                onChange={(e) => handleChange("altura", e.target.value)} 
+              />
               </Form.Group>
             </Col>
 
             <Col xs={12} md={3}>
               <SelectYesNo
               label="Fumante:"
-              value={fumante}
-              onChange={(e) => setFumante(e.target.value)}
-              controlId="fumante"/>
+              value={saude.fumante}
+              onChange={(e) => handleChange(e.target.value)}
+              controlId="fumante"
+            />
             </Col>
           </Row> 
 
@@ -113,42 +127,49 @@ function FormSaude() {
             <Col xs={12} md={3}>
               <SelectYesNo
               label="Consome álcool:"
-              value={alcool}
-              onChange={(e) => setAlcool(e.target.value)}
-              controlId="alcool"/>
+              value={saude.alcool}
+              onChange={(e) => handleChange(e.target.value)}
+              controlId="alcool"
+            />
             </Col>
 
             <Col xs={12} md={3}>
               <SelectYesNo
               label="Drogas ilícitas:"
-              value={drogas}
-              onChange={(e) => setDrogas(e.target.value)}
+              value={saude.drogas}
+              onChange={(e) => handleChange(e.target.value)}
               controlId="drogas"/>
             </Col>
 
             <Col xs={12} md={3}>
               <SelectYesNo
               label="Gravidez:"
-              value={gravidez}
-              onChange={(e) => setGravidez(e.target.value)}
+              value={saude.gravidez}
+              onChange={(e) => handleChange(e.target.value)}
               controlId="gravidez"/>
             </Col>
 
             <Col xs={12} md={3}>
               <Form.Group>
                 <Form.Label>Se sim quantas?</Form.Label>
-                <Form.Control type="text" />
+                <Form.Control 
+                type="text"
+                value={saude.quantidadegravidezes || ""}
+                onChange={(e) => handleChange("quantidadeGravidezes", e.target.value)} 
+              />
               </Form.Group>
             </Col>
           </Row>
 
           <Row className="mb-3">
-             
-
             <Col xs={12} md={12}>
               <Form.Group>
                 <Form.Label>Histórico de Saúde Familiar:</Form.Label>
-                <Form.Control type="text" />
+                <Form.Control 
+                type="text"
+                value={saude.historicoFamiliar || ""}
+                onChange={(e) => handleChange("historicoFamiliar", e.target.value)}
+              />
               </Form.Group>
             </Col>
           </Row>
@@ -157,15 +178,20 @@ function FormSaude() {
             <Col xs={12} md={4}>
               <SelectYesNo
               label="Possui alguma alergia:"
-              value={possuiAlergia}
-              onChange={(e) => setPossuiAlegria(e.target.value)}
-              controlId="possuiAlergia"/>
+              value={saude.possuiAlergia}
+              onChange={(e) => handleChange("possuiAlergia", e.target.value)}
+              controlId="possuiAlergia"
+              />
             </Col>
 
             <Col xs={12} md={8}>
               <Form.Group>
                 <Form.Label>Se sim quais?</Form.Label>
-                <Form.Control type="text" />
+                <Form.Control 
+                type="text"
+                value={saude.quaisAlergias || ""}
+                onChange={(e) => handleChange("quaisAlergias", e.target.value)}
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -174,15 +200,20 @@ function FormSaude() {
             <Col xs={12} md={4}>
               <SelectYesNo
               label="Faz uso continuo de medicamentos:"
-              value={medicamentos}
-              onChange={(e) => setMedicamentos(e.target.value)}
-              controlId="medicamentos"/>
+              value={saude.medicamentos}
+              onChange={(e) => handleChange("medicamnetos", e.target.value)}
+              controlId="medicamentos"
+              />
             </Col>
 
             <Col xs={12} md={8}>
               <Form.Group>
                 <Form.Label>Se sim quais?</Form.Label>
-                <Form.Control type="text" />
+                <Form.Control 
+                type="text" 
+                value={saude.quaisMedicamentos || ""}
+                onChange={(e) => handleChange("quaisMedicamentos", e.target.value)}
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -191,15 +222,20 @@ function FormSaude() {
             <Col xs={12} md={4}>
               <SelectYesNo
               label="Possui alguma restrição alimentar:"
-              value={restricaoAlimentar}
-              onChange={(e) => setRestricaoAlimentar(e.target.value)}
-              controlId="restricaoAlimentar"/>
+              value={saude.restricaoAlimentar}
+              onChange={(e) => handleChange("restricaoAlimentar", e.target.value)}
+              controlId="restricaoAlimentar"
+              />
             </Col>
 
             <Col xs={12} md={8}>
               <Form.Group>
                 <Form.Label>Se sim quais?</Form.Label>
-                <Form.Control type="text" />
+                <Form.Control 
+                type="text"
+                value={saude.quaisRestricoes || ""}
+                onChange={(e) => handleChange("quaisRestricoes", e.target.value)}
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -208,15 +244,20 @@ function FormSaude() {
             <Col xs={12} md={4}>
               <SelectYesNo
               label="Já realizou alguma cirgurgia:"
-              value={cirurgia}
-              onChange={(e) => setCirurgia(e.target.value)}
-              controlId="cirurgia"/>
+              value={saude.cirurgia}
+              onChange={(e) => handleChange("cirurgia", e.target.value)}
+              controlId="cirurgia"
+              />
             </Col>
 
             <Col xs={12} md={8}>
               <Form.Group>
                 <Form.Label>Se sim quais?</Form.Label>
-                <Form.Control type="text" />
+                <Form.Control 
+                type="text"
+                value={saude.quaisCirurgias || ""}
+                onChange={(e) => handleChange("quaisCirurgias", e.target.value)} 
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -225,16 +266,21 @@ function FormSaude() {
             <Col xs={12} md={4}>
               <SelectYesNo
               label="Possui laudo:"
-              value={possuiLaudo}
-              onChange={(e) => setPossuiLaudo(e.target.value)}
-              controlId="possuiLaudo"/>
+              value={saude.possuiLaudo}
+              onChange={(e) => handleChange("possuiLaudo", e.target.value)}
+              controlId="possuiLaudo"
+              />
             </Col>
 
             <Col xs={12} md={8}>
             <Form.Group controlId="formfile">
               <Form.Label>Se sim realize o upload:</Form.Label>
-              <Form.Control type="file" accept=".pdf, .jpg, .jpe, .png" onChange={handleLaudoChange} />
-              {laudo && (
+              <Form.Control 
+              type="file" 
+              accept=".pdf, .jpg, .jpe, .png" 
+              onChange={handleLaudoChange} 
+            />
+              {saude.laudo && (
                 <p className="mt-2 text-success">
                   Arquivo selecionado {laudo.name}
                 </p>
@@ -243,9 +289,6 @@ function FormSaude() {
             </Col>
           </Row>
         
-
-
-
           <NavButtons onVoltar={handleVoltar} onProximo={handleProximo} />
         </Form>
       </Container>

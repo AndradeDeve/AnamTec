@@ -1,7 +1,7 @@
 import React, { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../IMG/AnamTecCompleto.png";
-import "./Home.css";
+import "../Styles/Home.css";
 
 function Home() {
   const navigate = useNavigate(); 
@@ -23,12 +23,12 @@ function Home() {
       </div>
 
       <div className="home-right">
-        <h1>Bem-vindo ao AnamTec</h1>
+        <h1>Bem-vindo!</h1>
 
         <h2>Termo de Consentimento</h2>
         <p>
           O <strong>AnamTec</strong> é um formulário de anamnese que tem como objetivo colaborar com o processo de ensino e aprendizagem dos alunos da {""} <strong>ETEC Embu das Artes</strong>.
-          O preenchimento deste formulário é importante para que os professores, coordenadores e gestores possam comprrender melhor o contexto dos estudantes e oferecer suporte adequado.
+          O preenchimento deste formulário é importante para que os professores, coordenadores e gestores possam compreender melhor o contexto dos estudantes e oferecer suporte adequado.
         </p>
 
         <p>

@@ -1,24 +1,36 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
 import ProgressBar from "../Components/ProgressBar/ProgressBar";
+import { FormContext } from "../Context/FormContext";
+import "../Styles/FormComportEmocio.css";
 
 function FormComportEmocio() {
   const navigate = useNavigate();
 
-  const [informacoes, setInformacoes] = useState ({
-    dificuldadesAprendizagem: "", comportamento:"", emocionais:"",
-  });
-
+  const { dadosFormulario, setDadosFormulario } = useContext(FormContext);
+    
   const [erros, setErros] = useState({});
 
   const camposObrigatorios = ["dificuldadesAprendizagem"];
 
+  const comportEmocio = dadosFormulario.comportamento || {
+    dificuldadesAprendizagem: "",
+    comportamento: "",
+    emocionais: "",
+  };
+
   const handleChange = (field, value) => {
-    setInformacoes((prev) => ({ ...prev, [field]: value}));
-    setErros((prev) => ({ ...prev, [field]: ""}));
+    setDadosFormulario((prev) => ({ 
+    ...prev, 
+    comportamento: {
+      ...prev.comportEmocio,
+      [field]: value,
+    },
+  }));
+  setErros((prev) => ({ ...prev, [field]: ""}));
   };
 
   const validarFormulario = () => {
@@ -26,7 +38,7 @@ function FormComportEmocio() {
     let novosErros = {};
 
     camposObrigatorios.forEach((campo) => {
-      if (!informacoes[campo]) {
+      if (!comportEmocio[campo] || comportEmocio[campo].trim() === "") {
         valid = false;
         novosErros[campo]  = "Campo obrigatório";
       }
@@ -40,15 +52,13 @@ function FormComportEmocio() {
     if (!validarFormulario()) {
       alert("Preencha todos os campos obrigatórios");
       return;
-    
     }
 
-    console.log("Enviando dados:", informacoes);
+    console.log("Enviando dados:", comportEmocio);
     navigate("/FormRevisao");
   };
 
   const handleVoltar = () => navigate("/FormSaude");
-
 
   return (
     <>
@@ -61,7 +71,7 @@ function FormComportEmocio() {
             "Dados do Responsável",
             "Histórico de Saúde",
             "Aspectos Comportamentais e Emocionais",
-            "Revisão"
+            "Revisão",
           ]}
           etapaAtual={3}
         />
@@ -70,8 +80,14 @@ function FormComportEmocio() {
           <Row className="mb-3">
             <Col md={6}>
               <Form.Group>
-                <Form.Label>O aluno apresenta dificuldades de aprendizagem:</Form.Label>
-                  <Form.Control type="text" placeholder="Digite aqui" value={informacoes.dificuldadesAprendizagem} isInvalid={!!erros.dificuldadesAprendizagem} onChange={(e) => handleChange("dificuldadesAprendizagem", e.target.value)}/>
+                <Form.Label>O aluno apresenta dificuldades de aprendizagem:<span style={{ color: "red" }}>*</span></Form.Label>
+                  <Form.Control 
+                  type="text" 
+                  placeholder="Digite aqui" 
+                  value={comportEmocio.dificuldadesAprendizagem} 
+                  isInvalid={!!erros.dificuldadesAprendizagem} 
+                  onChange={(e) => handleChange("dificuldadesAprendizagem", e.target.value)}
+                  />
                 <Form.Control.Feedback type="invalid">{erros.dificuldadesAprendizagem}</Form.Control.Feedback>    
               </Form.Group>
             </Col>
@@ -84,7 +100,7 @@ function FormComportEmocio() {
                 <Form.Control
                   type="text"
                   placeholder="Digite aqui"
-                  value={informacoes.comportamento}
+                  value={comportEmocio.comportamento}
                   onChange={(e) => handleChange("comportamento", e.target.value)}
                 />
               </Form.Group>
@@ -96,16 +112,14 @@ function FormComportEmocio() {
                 <Form.Control
                   type="text"
                   placeholder="Digite aqui"
-                  value={informacoes.emocionais}
+                  value={comportEmocio.emocionais}
                   onChange={(e) => handleChange("emocionais", e.target.value)}
                 />
               </Form.Group>
             </Col>
           </Row>
 
-
         <NavButtons onVoltar={handleVoltar} onProximo={handleProximo} />
-
         </Form>
       </Container>
     </>
