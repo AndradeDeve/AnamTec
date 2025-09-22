@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Form, Toast, ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import {FormContext} from "../Context/FormContext";
@@ -6,39 +6,53 @@ import { useContext } from "react";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
 import ProgressBar from "../Components/ProgressBar/ProgressBar";
-import "./FormInform.css";
+import "../Styles/FormInform.css";
 
 function FormInform() {
   const navigate = useNavigate();
 
-  const {informacoes, setInformacoes} = useContext(FormContext);
+  const { dadosFormulario, setDadosFormulario } = useContext(FormContext);
 
   const [erros, setErros] = useState({});
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-  const camposObrigatorios = ["nome", "curso", "dataNascimento", "turno", "modulo", "email", "cep",];
+  const camposObrigatorios = [
+    "nome",
+    "rm", 
+    "curso", 
+    "dataNascimento", 
+    "turno", 
+    "modulo", 
+    "email", 
+    "cep",];
+  
+    const informacoes = dadosFormulario.informacoesPrincipais;
 
-  const handleChange = (field, value) => {
+    const handleChange = (field, value) => {
     let novosDados = { ...informacoes, [field]: value };
-
-    if (field === "dataNascimento" && value) {
-      const hoje = new Date();
-      const nascimento = new Date(value);
-      let idade = hoje.getFullYear() - nascimento.getFullYear();
-      const mes = hoje.getMonth() - nascimento.getMonth();
-
-      if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-        idade--;
-      }
-
-      novosDados.idade = idade >= 0 ? idade.toString(): "";
-    }
-
-    setInformacoes(novosDados);
+    setDadosFormulario((prev) => ({
+      ...prev, 
+      informacoesPrincipais: novosDados
+    }));
     setErros((prev) => ({ ...prev, [field]: ""}));
     setShowToast(false);
   };
+    
+ /* useEffect(() => {
+    fetch("http://localhost:5000/api/form")
+    .then((res) => res.json())
+    .then((data) => setDadosFormulario(data || {}))
+    .catch((err) => console.error("Error ao carregar dados:", err)); 
+  }, [setDadosFormulario]);
+
+  const salvarNoBackend = (dados) => {
+    fetch("http://localhost:4000/form/123", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({data: dados }),
+    }).catch((err) => console.error("Erro ao salvar:", err));
+  };*/
 
   const buscarCEP = async (cep) => {
     const cepLimpo = cep.replace(/\D/g, "");
@@ -48,12 +62,15 @@ function FormInform() {
         const data = await response.json();
 
         if (!data.erro) {
-          setInformacoes((prev) => ({
+          setDadosFormulario((prev) => ({
             ...prev,
+            informacoesPrincipais: {
+              ...prev.informacoesPrincipais,
             logradouro: data.logradouro || "",
             bairro: data.bairro || "",
             cidade: data.localidade || "",
             uf: data.uf || ""
+            },
           }));
         } else {
           alert("CEP não encontrado!");
@@ -118,39 +135,75 @@ function FormInform() {
       etapaAtual={0}
       />
 
-      <Form className="form-box p-4 shadow rounded" onSubmit={(e) => { e.preventDefault(); handleProximo();}}>
+      <Form className="form-box p-4 shadow rounded" 
+      onSubmit={(e) => { 
+        e.preventDefault(); 
+        handleProximo();
+        }}
+      >
+
         <ToastContainer className="p-3" position="top-center">
-          <Toast onClose={() => setShowToast(false)} show={showToast} delay={4000} autohide bg="danger">
+          <Toast 
+          onClose={() => setShowToast(false)} 
+          show={showToast} 
+          delay={4000} 
+          autohide 
+          bg="danger"
+        >
+        
             <Toast.Body className="text-white">{toastMessage}</Toast.Body>
           </Toast>
         </ToastContainer>
 
+          <h5 className="mb-3">Dados Pessoais</h5>
+
           <Row className="mb-3">
-            <Col xs={12} md={6}>
+          <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label>Nome:<span style={{ color: "red"}}>*</span></Form.Label>
-              <Form.Control type="text" placeholder="Digite o nome" value={informacoes.nome} isInvalid={!!erros.nome} onChange={(e) => handleChange("nome", e.target.value)} />
+              <Form.Control 
+              type="text" 
+              placeholder="Digite o nome" 
+              value={informacoes.nome} 
+              isInvalid={!!erros.nome} 
+              onChange={(e) => handleChange("nome", e.target.value)} 
+            />
               <Form.Control.Feedback type="invalid">{erros.nome}</Form.Control.Feedback>
             </Form.Group>
             </Col>
+          
+            <Col xs={12} md={3}>
+              <Form.Group>
+                <Form.Label>RM:<span style={{ color: "red" }}>*</span></Form.Label>
+                <Form.Control
+                type="text"
+                placeholder="Digite o RM"
+                value={informacoes.rm || ""}
+                isInvalid={!!erros.rm}
+                onChange={(e) => handleChange("rm", e.target.value)}
+              />
+                <Form.Control.Feedback type="invalid">{erros.rm}</Form.Control.Feedback>
+              </Form.Group>
+            </Col>
 
-            <Col xs={12} md={4}>
+            <Col xs={12} md={3}>
              <Form.Group>
               <Form.Label>Data de Nascimento:<span style={{ color: "red" }}>*</span></Form.Label>
               <Form.Control type="date" value={informacoes.dataNascimento} isInvalid={!!erros.dataNascimento} onChange={(e) => handleChange("dataNascimento", e.target.value)}/>
               <Form.Control.Feedback type="invalid">{erros.dataNascimento}</Form.Control.Feedback>
             </Form.Group>
             </Col>
-
-            <Col xs={12} md={2}>
-            <Form.Group>
-              <Form.Label>Idade:</Form.Label>
-              <Form.Control type="text" value={informacoes.idade} readOnly />
-            </Form.Group>
-            </Col>
           </Row>
 
           <Row className="mb-3">
+            <Col xs={12} md={6}>
+            <Form.Group>
+              <Form.Label>Email:<span style={{ color: "red" }}>*</span></Form.Label>
+              <Form.Control type="email" placeholder="Digite o e-mail" value={informacoes.email} isInvalid={!!erros.email} onChange={(e) => handleChange("email", e.target.value)} />
+              <Form.Control.Feedback type="invalid"> {erros.email} </Form.Control.Feedback>
+            </Form.Group>
+            </Col>
+
             <Col xs={12} md={3}>
             <Form.Group>
               <Form.Label>Gênero:</Form.Label>
@@ -164,14 +217,6 @@ function FormInform() {
             </Form.Group>
             </Col>
 
-            <Col xs={12} md={6}>
-            <Form.Group>
-              <Form.Label>Email:<span style={{ color: "red" }}>*</span></Form.Label>
-              <Form.Control type="email" placeholder="Digite o e-mail" value={informacoes.email} isInvalid={!!erros.email} onChange={(e) => handleChange("email", e.target.value)} />
-              <Form.Control.Feedback type="invalid"> {erros.email} </Form.Control.Feedback>
-            </Form.Group>
-            </Col>
-
             <Col xs={12} md={3}>
             <Form.Group>
               <Form.Label>Reside com:</Form.Label>
@@ -181,7 +226,7 @@ function FormInform() {
           </Row>
 
           <Row className="mb-3">
-            <Col xs={12} md={4}>
+            <Col xs={12} md={6}>
               <Form.Group>
               <Form.Label>Curso:<span style={{ color: "red" }}>*</span></Form.Label>
               <Form.Select value={informacoes.curso}  isInvalid={!!erros.curso} onChange={(e) => handleChange("curso", e.target.value)}>
@@ -200,7 +245,7 @@ function FormInform() {
             </Form.Group>
             </Col>
 
-            <Col xs={12} md={4}>
+            <Col xs={12} md={3}>
             <Form.Group>
               <Form.Label>Turno:<span style={{ color: "red" }}>*</span></Form.Label>
               <Form.Select value={informacoes.turno} isInvalid={!!erros.turno} onChange={(e) => handleChange("turno", e.target.value)}>
@@ -213,7 +258,7 @@ function FormInform() {
             </Form.Group>
             </Col>
 
-            <Col xs={12} md={4}>
+            <Col xs={12} md={3}>
             <Form.Group>
               <Form.Label>Módulo:<span style={{ color: "red" }}>*</span></Form.Label>
               <Form.Select value={informacoes.modulo} isInvalid={!!erros.modulo} onChange={(e) => handleChange("modulo", e.target.value)}>
@@ -227,6 +272,8 @@ function FormInform() {
             </Form.Group>
             </Col>
           </Row>
+
+          <h5 className="mt-5 mb-3">Endereço Residencial</h5>
 
           <Row className="mb-3">
             <Col xs={12} md={3}>

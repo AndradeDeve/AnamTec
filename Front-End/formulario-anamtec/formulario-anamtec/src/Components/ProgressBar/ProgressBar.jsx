@@ -4,18 +4,29 @@ import "./ProgressBar.css";
 function ProgressBar({ etapas, etapaAtual }) {
     return (
         <div className="progress-bar-container">
-            {etapas.map((etapa, index) => (
-               <div key={index} className="step-container">
-                <div className={`circle ${index === etapaAtual ? "active" : ""}`}>
+            {etapas.map((etapa, index) => {
+                const isActive = index === etapaAtual;
+                const isCompleted = index < etapaAtual;
+
+                return (
+                    <div key={index} className="step-container">
+                <div className={`circle 
+                    ${isActive ? "active" : ""}
+                    ${isCompleted ? "completed" : ""}`}
+                    aria-current={isActive ? "step" : undefined}>
                     {index + 1}
                 </div> 
-                <span className={`etapa-label ${index === etapaAtual ? "active" : ""}`}>
+                <span 
+                className={`etapa-label 
+                ${isActive ? "active" : ""}
+                ${isCompleted ? "completed" : ""}`}>
                     {etapa}
                 </span>
-                {index < etapas.length -1 && <div className="line" />}
             </div>
-        ))}
-        </div>
+        );
+    })}
+               
+    </div>
     );
 }
 
