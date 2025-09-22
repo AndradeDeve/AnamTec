@@ -31,25 +31,29 @@ export default function MasterDashboard() {
     <header>
       <Header />
       <main>
-        <aside className="container my-2">
-          <div className="row">
-            <div className="col-12 col-md-9">
-          <DashboardCards />
+          <div className="row my-3 justify-content-center">
+            <div className="col-12 col-md-12">
+              <DashboardCards />
+            </div>
           </div>
-          <div className="d-flex col-9 col-md-3">
-            <ButtonGrid
-              onCadastrar={() => console.log("Cadastrar")}
-              onPesquisar={() => console.log("Pesquisar")}
-              onEnviarEmail={abrirModal}
-              showModal={showModal}
-              setShowModal={setShowModal}
-              alunosPendentes={alunosPendentes}
-              onEnviar={enviarLembretes}
-            />
+          <div className="container my-3">
+            <div className="row">
+              <div className="col-12 col-md-6">
+                <ButtonGrid
+                  onCadastrar={() => console.log("Cadastrar")}
+                  onPesquisar={() => console.log("Pesquisar")}
+                  onEnviarEmail={abrirModal}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  alunosPendentes={alunosPendentes}
+                  onEnviar={enviarLembretes}
+                />
+              </div>
+              <div className="col-12 col-md-6">
+              <FilterBar />
+              </div>
+            </div>
           </div>
-          </div>
-        </aside>
-        <FilterBar />
         <StudentTable />
       </main>
     </header>

@@ -1,10 +1,9 @@
 import express, { request, response } from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 import {validarCPF} from '../utils/cpfValidator.js';
 import { hash } from 'bcrypt';
 
 const routes = express.Router();
-const connection = await getConnection()
 
 routes.get("/", async (request, response) => {
     const {nome, cpf} = request.query;
@@ -23,7 +22,7 @@ routes.get("/", async (request, response) => {
             params.push(cpf);
         }
 
-        const [rows] = await connection.execute(sql, params);
+        const [rows] = await pool.query(sql, params);
 
         if (!Array.isArray(rows) || rows.length === 0) {
             return response.status(404).json({ err: "Usuário não encontrado." });
@@ -53,7 +52,7 @@ routes.post("/", async (request, response) => {
         let id_curso; 
 
         if (curso) {
-            const [cursoExiste] = await connection.execute(
+            const [cursoExiste] = await pool.query(
                 `SELECT * FROM tbl_curso WHERE curso = ?`, 
                 [curso]
             );
@@ -71,7 +70,7 @@ routes.post("/", async (request, response) => {
             return response.status(400).json({err: "Cpf inválido."});
         }
         cargo = cargo.toLowerCase()
-        const [tipoExiste] =  await connection.execute(`SELECT * FROM tbl_type WHERE tipo = ?`, [cargo]);
+        const [tipoExiste] =  await pool.query(`SELECT * FROM tbl_type WHERE tipo = ?`, [cargo]);
         
         const id_tipo = tipoExiste[0]?.id;
 
@@ -95,10 +94,10 @@ routes.post("/", async (request, response) => {
 
         const hashedSenha = await hash(senha, 10);
 
-        await connection.execute(`INSERT INTO tbl_usuario (RM, CPF, nome, email, senha) VALUES(?, ?, ?, ?, ?)`,
+        await pool.query(`INSERT INTO tbl_usuario (RM, CPF, nome, email, senha) VALUES(?, ?, ?, ?, ?)`,
             [rm, cpf, nome, email, hashedSenha]
         );
-        const [idUserExiste] = await connection.execute(`SELECT * FROM tbl_usuario WHERE CPF = ?`, [cpf])
+        const [idUserExiste] = await pool.query(`SELECT * FROM tbl_usuario WHERE CPF = ?`, [cpf])
 
         if(idUserExiste.length === 0){
             return response.status(400).json({response: "Erro ao cadastrar usuário."})
@@ -106,13 +105,13 @@ routes.post("/", async (request, response) => {
         const id_user = idUserExiste[idUserExiste.length - 1];
 
         if (id_curso) {
-            await connection.execute(
+            await pool.query(
                 `INSERT INTO juncao_curso_user (id_curso, id_user) VALUES(?, ?)`,
                 [id_curso, id_user.id]
       );
     }
 
-        await connection.execute(`INSERT INTO juncao_type_user (id_type, id_user) VALUES(?, ?)`, [id_tipo, id_user.id])
+        await pool.query(`INSERT INTO juncao_type_user (id_type, id_user) VALUES(?, ?)`, [id_tipo, id_user.id])
 
         return response.status(201).json({response: "Cadastro efetuado com sucesso."});  
     }catch(err){
@@ -131,13 +130,13 @@ routes.put("/:id", async (request, response) => {
             return response.status(400).json({err: "Cpf inválido."});
         }
 
-         const [cursoExiste] = await connection.execute(`SELECT * FROM tbl_curso WHERE id = ?`, [id_curso]);
+         const [cursoExiste] = await pool.query(`SELECT * FROM tbl_curso WHERE id = ?`, [id_curso]);
 
         if(cursoExiste.length === 0){
             return response.status(400).json({err: "Curso inválido"});
         }
 
-        const [tipoExiste] =  await connection.execute(`SELECT * FROM tbl_type WHERE id = ?`, [id_type]);
+        const [tipoExiste] =  await pool.query(`SELECT * FROM tbl_type WHERE id = ?`, [id_type]);
 
         if (tipoExiste.length === 0) {
             return res.status(400).json({ erro: "Tipo de usuário inválido." });
@@ -158,7 +157,7 @@ routes.put("/:id", async (request, response) => {
         }
 
 
-        const [rows] = await connection.execute(
+        const [rows] = await pool.query(
             `UPDATE tbl_usuario SET CPF = ?, nome = ?, email = ?, senha = ?, id_type = ?, id_curso = ? WHERE deletedAt IS NULL AND id = ?`,
             [cpf, nome, email, senha, id_type, id_curso, id]
         );
@@ -183,7 +182,7 @@ routes.delete("/:cpf", async(request, response) => {
         }
     try{
         const dataDelet = new Date();
-        const [rows] = await connection.execute(
+        const [rows] = await pool.query(
             `UPDATE tbl_usuario SET deletedAt = ? WHERE CPF = ?`,
              [dataDelet, cpf]);
 

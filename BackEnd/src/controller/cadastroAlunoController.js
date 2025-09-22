@@ -1,20 +1,42 @@
 import express from "express";
-import { getConnection } from "../database/data-source.js";
+import pool from "../database/data-source.js";
 import { enviarEmailAlunos } from "../helpers/emailAlunos.js";
 
 const routes = express.Router();
-const connection = await getConnection();
 
-routes.get("/", async (req, res) => {
-  const { id, ra, nome } = req.query;
+// Buscar aluno(s) com filtros
+routes.get("/specific", async (req, res) => {
+  const { curso, ra, nome, coordenador, status } = req.query;
 
   try {
-    let sql = `SELECT * FROM tbl_cadastro_al WHERE deletedAt IS NULL`;
+    let sql =`SELECT 
+              al.id AS id_aluno,  
+              al.nome AS nome_aluno,
+              al.ra AS ra,
+              c.curso AS nome_curso,
+              c.semestre AS semestre,
+              c.turno AS turno,
+              c.coordenador as coordenador,
+              CASE 
+              WHEN dm.id IS NOT NULL THEN 'Concluída' 
+              ELSE 'Não' 
+              END AS status
+              FROM tbl_cadastro_al al
+              INNER JOIN juncao_al_curso jac ON al.id = jac.id_aluno
+              INNER JOIN tbl_curso c ON jac.id_curso = c.id
+              LEFT JOIN tbl_dadosMedicos dm ON al.id = dm.id_aluno
+              WHERE al.deletedAt IS NULL  
+              AND c.deletedAt IS NULL`;
     const params = [];
 
-    if (id) {
-      sql += ` AND id = ?`;
-      params.push(id);
+    if (curso) {
+      sql += ` AND c.curso = ?`;
+      params.push(curso);
+    }
+
+    if (coordenador) {
+      sql += ` AND c.coordenador = ?`;
+      params.push(coordenador);
     }
 
     if (ra) {
@@ -22,12 +44,17 @@ routes.get("/", async (req, res) => {
       params.push(ra);
     }
 
+    if (status) {
+      sql += ` AND dm.status = ?`;
+      params.push(status);
+    }
+
     if (nome) {
       sql += ` AND nome LIKE ?`;
       params.push(`%${nome}%`);
     }
 
-    const [rows] = await connection.execute(sql, params);
+    const [rows] = await pool.query(sql, params);
 
     if (!rows || rows.length === 0) {
       return res.status(404).json({ err: "Aluno não encontrado." });
@@ -40,31 +67,47 @@ routes.get("/", async (req, res) => {
   }
 });
 
-routes.get("/:id", async (req, res) => {
-  const { id } = req.params;
-
+// Buscar todos
+routes.get("/curso", async (req, res) => {
   try {
-    const [rows] = await connection.execute(
-      `SELECT * FROM tbl_cadastro_al WHERE id = ? AND deletedAt IS NULL`,
-      [id]
+    const [rows] = await pool.query(
+        `SELECT 
+          al.id AS id_aluno,  
+          al.nome AS nome_aluno,
+          al.ra AS ra,
+          c.curso AS nome_curso,
+          c.semestre AS semestre,
+          c.turno AS turno,
+          c.coordenador as coordenador,
+          CASE 
+          WHEN dm.id IS NOT NULL THEN 'Concluída' 
+          ELSE 'Não' 
+          END AS status
+          FROM tbl_cadastro_al al
+          INNER JOIN juncao_al_curso jac ON al.id = jac.id_aluno
+          INNER JOIN tbl_curso c ON jac.id_curso = c.id
+          LEFT JOIN tbl_dadosMedicos dm ON al.id = dm.id_aluno
+          WHERE al.deletedAt IS NULL  
+          AND c.deletedAt IS NULL;`
     );
 
     if (!rows || rows.length === 0) {
       return res.status(404).json({ err: "Aluno não encontrado." });
     }
-    
-    return res.status(200).json(rows[0]);
+
+    return res.status(200).json(rows);
   } catch (err) {
     console.error("Erro ao buscar aluno:", err);
     return res.status(500).json({ err: "Erro no servidor." });
   }
 });
 
+// Cadastro de aluno
 routes.post("/", async (req, res) => {
-  const { ra, nome, data_nasc, genero, email, telefone, cep } = req.body;
-  
+  const { ra, nome, data_nasc, genero, email, telefone, cep, curso } = req.body;
+
   try {
-    const [enderecoExistente] = await connection.execute(
+    const [enderecoExistente] = await pool.query(
       "SELECT * FROM tbl_endereco WHERE cep = ? AND deletedAt IS NULL",
       [cep]
     );
@@ -73,7 +116,7 @@ routes.post("/", async (req, res) => {
       return res.status(400).json({ err: "Endereço não encontrado." });
     }
 
-    const [existeRa] = await connection.execute(
+    const [existeRa] = await pool.query(
       "SELECT * FROM tbl_cadastro_al WHERE ra = ? AND deletedAt IS NULL",
       [ra]
     );
@@ -81,7 +124,7 @@ routes.post("/", async (req, res) => {
       return res.status(400).json({ err: "Este RA já está em uso." });
     }
 
-    const [existeEmail] = await connection.execute(
+    const [existeEmail] = await pool.query(
       "SELECT * FROM tbl_cadastro_al WHERE email = ? AND deletedAt IS NULL",
       [email]
     );
@@ -89,14 +132,23 @@ routes.post("/", async (req, res) => {
       return res.status(400).json({ err: "Este e-mail já está em uso." });
     }
 
-    const [existeTel] = await connection.execute(
+    const [existeTel] = await pool.query(
       "SELECT * FROM tbl_cadastro_al WHERE telefone = ? AND deletedAt IS NULL",
       [telefone]
     );
     if (existeTel.length > 0) {
       return res.status(400).json({ err: "Este telefone já está em uso." });
     }
-    
+
+    const [existeCurso] = await pool.query(
+      "SELECT * FROM tbl_curso WHERE curso = ? AND deletedAt IS NULL",
+      [curso]
+    );
+    if (existeCurso.length === 0) {
+      return res.status(400).json({ err: "Curso inválido." });
+    }
+
+    // Validações básicas
     const raRegex = /^\d{1,15}$/;
     if (!ra || !raRegex.test(ra.trim())) {
       return res.status(400).json({ err: "RA inválido." });
@@ -131,12 +183,27 @@ routes.post("/", async (req, res) => {
     if (!telefone || !telefoneRegex.test(telefone.trim())) {
       return res.status(400).json({ err: "Telefone inválido." });
     }
-    
-    await connection.execute(
+
+    await pool.query(
       `INSERT INTO tbl_cadastro_al 
-      (ra, nome, data_nasc, genero, email, telefone, id_endereco) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        (ra, nome, data_nasc, genero, email, telefone, id_endereco) 
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [ra, nome, data_nasc, genero, email, telefone, id_endereco]
+    );
+
+    const [alunoCadastrado] = await pool.query(
+      `SELECT id FROM tbl_cadastro_al WHERE ra = ? AND deletedAt IS NULL`,
+      [ra]
+    );
+    const id_aluno = alunoCadastrado[0]?.id;
+
+    if (!id_aluno) {
+      return res.status(400).json({ err: "Erro no id do aluno." });
+    }
+
+    await pool.query(
+      `INSERT INTO juncao_al_curso (id_curso, id_aluno) VALUES(?, ?)`,
+      [existeCurso[0].id, id_aluno]
     );
 
     return res.status(201).json({ msg: "Aluno cadastrado com sucesso." });
@@ -146,41 +213,43 @@ routes.post("/", async (req, res) => {
   }
 });
 
-routes.post('/emailAluno', async (request, response) => {
+// Envio de e-mails
+routes.post("/emailAluno", async (req, res) => {
   try {
-    console.log("Olá: ");
-    const [pegaDados] = await connection.execute(
+    const [pegaDados] = await pool.query(
       `SELECT a.id, a.nome, a.email
        FROM tbl_cadastro_al a
        LEFT JOIN tbl_dadosMedicos d ON a.id = d.id_aluno
        WHERE a.deletedAt IS NULL
        AND d.id_aluno IS NULL;`
     );
+
     if (pegaDados.length === 0) {
-      return response.status(404).json({ err: "Nenhum aluno encontrado." });
+      return res.status(404).json({ err: "Nenhum aluno encontrado." });
     }
-    for(let i = 0; i < pegaDados.length; i++){
+
+    for (let i = 0; i < pegaDados.length; i++) {
       let dados = {
         emailAluno: pegaDados[i].email,
-        nomeAluno: pegaDados[i].nome
+        nomeAluno: pegaDados[i].nome,
       };
-      console.log(dados);
       await enviarEmailAlunos(dados);
     }
-    return response.status(200).json({response: "Emails processados com sucesso."});
 
+    return res.status(200).json({ response: "Emails processados com sucesso." });
   } catch (err) {
-    console.log("Erro ao buscar alunos:", err);
-    return response.status(500).json({ err: "Erro no servidor." });
+    console.error("Erro ao buscar alunos:", err);
+    return res.status(500).json({ err: "Erro no servidor." });
   }
-}); 
+});
 
+// Atualizar aluno
 routes.put("/:RA", async (req, res) => {
   const { RA } = req.params;
   const { ra, nome, data_nasc, genero, email, telefone, cep } = req.body;
-  
+
   try {
-    const [enderecoExistente] = await connection.execute(
+    const [enderecoExistente] = await pool.query(
       "SELECT * FROM tbl_endereco WHERE cep = ? AND deletedAt IS NULL",
       [cep]
     );
@@ -189,6 +258,7 @@ routes.put("/:RA", async (req, res) => {
       return res.status(400).json({ err: "Endereço não encontrado." });
     }
 
+    // Validações
     const raRegex = /^\d{1,15}$/;
     if (!ra || !raRegex.test(ra.trim())) {
       return res.status(400).json({ err: "RA inválido." });
@@ -224,7 +294,7 @@ routes.put("/:RA", async (req, res) => {
       return res.status(400).json({ err: "Telefone inválido." });
     }
 
-    const [rows] = await connection.execute(
+    const [rows] = await pool.query(
       `UPDATE tbl_cadastro_al 
        SET ra = ?, nome = ?, data_nasc = ?, genero = ?, email = ?, telefone = ?, id_endereco = ?
        WHERE deletedAt IS NULL AND ra = ?`,
@@ -242,7 +312,7 @@ routes.put("/:RA", async (req, res) => {
   }
 });
 
-
+// Deletar aluno
 routes.delete("/:RA", async (req, res) => {
   const { RA } = req.params;
 
@@ -253,7 +323,7 @@ routes.delete("/:RA", async (req, res) => {
   try {
     const dataDelete = new Date();
 
-    const [rows] = await connection.execute(
+    const [rows] = await pool.query(
       `UPDATE tbl_cadastro_al 
        SET deletedAt = ? 
        WHERE ra = ? AND deletedAt IS NULL`,

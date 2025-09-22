@@ -1,5 +1,5 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 import { genereteToken } from '../utils/jwt.js';
 import {generateNewPassword} from '../utils/geradorSenha.js'; 
 import { sendEmail } from '../helpers/nodemailer.js'; 
@@ -7,7 +7,6 @@ import { hash } from 'bcrypt';
 import { VerificarSenha } from '../utils/jwt.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 routes.post("/", async(request, response) => {
     const {email, senha} = request.body;
@@ -18,7 +17,7 @@ routes.post("/", async(request, response) => {
             return response.status(401).json({err: "E-mail inválido"});
         }
 
-        const [rows] = await connection.execute(`SELECT * FROM tbl_usuario WHERE email = ? AND deletedAt IS NULL`, [email]);
+        const [rows] = await pool.query(`SELECT * FROM tbl_usuario WHERE email = ? AND deletedAt IS NULL`, [email]);
 
         if(rows.length === 0){
             return response.status(401).json({err: "Usuário não encontrado."});
@@ -43,7 +42,7 @@ routes.put("/emailReset", async(request, response) => {
     const {email} = request.body;
 
     try{
-        const [rows] = await connection.execute(
+        const [rows] = await pool.query(
             `SELECT * FROM tbl_usuario WHERE deletedAt IS NULL AND email = ?`,[email]
         );
 
@@ -53,7 +52,7 @@ routes.put("/emailReset", async(request, response) => {
 
         const newPassword = generateNewPassword();
         const hashedSenha = await hash(newPassword, 10);
-        const [results] = await connection.execute(
+        const [results] = await pool.query(
             `UPDATE tbl_usuario SET senha = ? WHERE email = ?`, [hashedSenha, email]
         );
         sendEmail(newPassword, rows[0].email);

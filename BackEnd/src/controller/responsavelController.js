@@ -1,9 +1,8 @@
 import express from 'express';
 import { validarCPF } from '../utils/cpfValidator.js';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 routes.get("/", async (request, response) => {
     const { id, cpf, nome } = request.query;
@@ -26,7 +25,7 @@ routes.get("/", async (request, response) => {
             params.push(`%${nome}%`);
         }
 
-        const [rows] = await connection.execute(sql, params);
+        const [rows] = await pool.query(sql, params);
 
         if (!Array.isArray(rows) || rows.length === 0) {
             return response.status(404).json({ err: "Responsável não encontrado." });
@@ -69,7 +68,7 @@ routes.post("/", async (request, response) => {
             return response.status(400).json({ err: "Telefone inválido." });
         }
 
-        await connection.execute(
+        await pool.query(
             `INSERT INTO tbl_responsavel (CPF, nome, data_nasc, estado_civil, email, telefone) VALUES (?, ?, ?, ?, ?, ?)`,
             [cpf, nome.trim(), data_nasc, estado_civil.toLowerCase(), email.trim(), telefone.trim()]
         );
@@ -123,7 +122,7 @@ routes.put("/:cpf", async (request, response) => {
             return response.status(400).json({ err: "Telefone inválido." });
         }
 
-        const [rows] = await connection.execute(
+        const [rows] = await pool.query(
             `UPDATE tbl_responsavel SET CPF = ?, nome = ?, data_nasc = ?, estado_civil = ?, email = ?, telefone = ? WHERE deletedAt IS NULL AND CPF = ?`,
             [cpf, nome.trim(), data_nasc, estado_civil.toLowerCase(), email.trim(), telefone.trim(), cpfParam]
         );

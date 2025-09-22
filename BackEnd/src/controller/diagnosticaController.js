@@ -1,8 +1,7 @@
-import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import express, { response } from 'express';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 const opcoesValidas = ['sim', 'não'];
 
@@ -16,7 +15,7 @@ routes.get("/", async (req, res) => {
       sql += ` WHERE id = ?`;
       params.push(id);
     }
-    const [rows] = await connection.execute(sql, params);
+    const [rows] = await pool.query(sql, params);
     if (!rows.length) return res.status(404).json({ err: "Diagnóstico não encontrado." });
     return res.status(200).json({ response: rows });
   } catch {
@@ -28,7 +27,7 @@ routes.get("/:id", async (req, res) => {
   const { id } = req.params;
   if (isNaN(id)) return res.status(400).json({ err: "Id inválido." });
   try {
-    const [rows] = await connection.execute(
+    const [rows] = await pool.query(
       `SELECT * FROM tbl_diagnostica WHERE id = ?`,
       [id]
     );
@@ -48,8 +47,8 @@ routes.post("/", async (req, res) => {
     if (tp_diag && tp_diag.length > 200) {
       return res.status(400).json({ err: "Tipo de diagnóstico inválido." });
     }
-    await connection.execute(
-      `INSERT INTO tbl_diagnostica (diagnostico, tp_diag) VALUES (?, ?)`,
+    await pool.query(
+      `INSERT INTO tbl_diagnostica ( diagnostico, tp_diag) VALUES (?, ?)`,
       [ diagnostico.toLowerCase(), tp_diag || null]
     );
     return res.status(201).json({ response: "Diagnóstico cadastrado com sucesso." });
@@ -70,7 +69,7 @@ routes.put("/:id", async (req, res) => {
     if (tp_diag && tp_diag.length > 200) {
       return res.status(400).json({ err: "Tipo de diagnóstico inválido." });
     }
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       `UPDATE tbl_diagnostica SET diagnostico = ?, tp_diag = ? WHERE id = ?`,
       [diagnostico.toLowerCase(), tp_diag || null, id]
     );

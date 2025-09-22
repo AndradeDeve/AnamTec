@@ -1,14 +1,13 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 const medicamentosValidos = ['sim', 'não'];
 
 routes.get('/', async (req, res) => {
   try {
-    const [rows] = await connection.execute('SELECT * FROM tbl_medicamentos');
+    const [rows] = await pool.query('SELECT * FROM tbl_medicamentos');
     if (!rows.length) {
       return res.status(404).json({ err: 'Nenhum medicamento encontrado.' });
     }
@@ -27,7 +26,7 @@ routes.get('/:id', async (req, res) => {
   }
 
   try {
-    const [rows] = await connection.execute(
+    const [rows] = await pool.query(
       'SELECT * FROM tbl_medicamentos WHERE id = ?',
       [id]
     );
@@ -55,7 +54,7 @@ routes.post('/', async (req, res) => {
   }
 
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       'INSERT INTO tbl_medicamentos (medicamento, tp_medi) VALUES (?, ?)',
       [medicamento.toLowerCase(), tp_medi.trim()]
     );
@@ -84,7 +83,7 @@ routes.put('/:id', async (req, res) => {
   }
 
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       'UPDATE tbl_medicamentos SET medicamento = ?, tp_medi = ? WHERE id = ?',
       [medicamento.toLowerCase(), tp_medi.trim(), id]
     );

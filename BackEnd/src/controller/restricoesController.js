@@ -1,12 +1,11 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 routes.get("/", async (req, res) => {
   try {
-    const [rows] = await connection.execute("SELECT * FROM tbl_restricoes");
+    const [rows] = await pool.query("SELECT * FROM tbl_restricoes");
     if (!rows.length) {
       return res.status(404).json({ err: "Nenhuma restrição encontrada." });
     }
@@ -25,7 +24,7 @@ routes.get("/:id", async (req, res) => {
   }
 
   try {
-    const [rows] = await connection.execute("SELECT * FROM tbl_restricoes WHERE id = ?", [id]);
+    const [rows] = await pool.query("SELECT * FROM tbl_restricoes WHERE id = ?", [id]);
     if (!rows.length) {
       return res.status(404).json({ err: "Restrição não encontrada." });
     }
@@ -49,8 +48,8 @@ routes.post("/", async (req, res) => {
       return res.status(400).json({ err: "Tipo de restrição inválido." });
     }
 
-    await connection.execute(
-      "INSERT INTO tbl_restricoes (restri_alimentar, tp_restricao) VALUES (?, ?)",
+    await pool.query(
+      "INSERT INTO tbl_restricoes (restri_alimentar, tp_restricao) VALUES ( ?, ?)",
       [restri_alimentar.toLowerCase(), tp_restricao]
     );
     return res.status(201).json({ response: "Restrição cadastrada com sucesso." });
@@ -78,7 +77,7 @@ routes.put("/:id", async (req, res) => {
   }
 
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       "UPDATE tbl_restricoes SET restri_alimentar = ?, tp_restricao = ? WHERE id = ?",
       [restri_alimentar.toLowerCase(), tp_restricao, id]
     );

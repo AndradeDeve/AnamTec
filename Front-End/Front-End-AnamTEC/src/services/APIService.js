@@ -6,24 +6,28 @@ const apiUrl = process.env.REACT_APP_API_URL;
 
 
 // Função assíncrona que faz uma requisição GET para buscar dados dos alunos
-export async function getFunctionaluno() {
+export async function getFunctionAluno() {
   // Faz uma requisição GET para: http://localhost:3332/aluno (ou URL definida no .env)
-  const response = await axios.get(`${apiUrl}/aluno`);
+  const response = await axios.get(`${apiUrl}/aluno/curso`);
   
   // Retorna apenas os dados da resposta (sem cabeçalhos e outras informações do axios)
   return response.data;
 }
 
+// export async function getFunctionCursos(dados) {
+//   const query = dados.join(',');
+//   console.log("query: ", query);
+//   const response = await axios.get(`${apiUrl}/cursos?ids=${query}`);
+//   return response.data;
+// }
+
 // Função assíncrona que envia dados para a API usando o método POST
 export async function postFunctionaluno(dados) {
-  // Mostra no console os dados que serão enviados — útil para depuração
-  console.log(dados);
-
   // Faz a requisição POST para http://localhost:3332/aluno com os dados fornecidos
   const response = await axios.post(`${apiUrl}/aluno`, dados);
 
   // Retorna os dados da resposta (ex: mensagem de sucesso, objeto salvo, etc.)
-  return response.data;
+  return response;
 }
 
 export async function postFunctionUser(dados) {

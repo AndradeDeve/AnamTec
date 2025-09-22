@@ -1,8 +1,7 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 const enumSexo = ['feminino', 'masculino'];
 const enumTpSangue = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -10,7 +9,7 @@ const enumSimNao = ['sim', 'não'];
 
 routes.get('/', async (req, res) => {
   try {
-    const [rows] = await connection.execute('SELECT * FROM tbl_dadosMedicos');
+    const [rows] = await pool.query('SELECT * FROM tbl_dadosMedicos');
     if (!rows.length) return res.status(404).json({ err: 'Nenhum dado médico encontrado.' });
     return res.status(200).json({ response: rows });
   } catch (err) {
@@ -24,7 +23,7 @@ routes.get('/:id', async (req, res) => {
   if (isNaN(id)) return res.status(400).json({ err: 'ID inválido.' });
 
   try {
-    const [rows] = await connection.execute('SELECT * FROM tbl_dadosMedicos WHERE id = ?', [id]);
+    const [rows] = await pool.query('SELECT * FROM tbl_dadosMedicos WHERE id = ?', [id]);
     if (!rows.length) return res.status(404).json({ err: 'Dado médico não encontrado.' });
     return res.status(200).json({ response: rows[0] });
   } catch (err) {
@@ -76,7 +75,7 @@ routes.post('/', async (req, res) => {
       return res.status(400).json({ err: 'IDs de chaves estrangeiras inválidos.' });
     }
 
-      const [idExiste] =  await connection.execute(`SELECT * FROM tbl_cadastro_al WHERE id = ?`, [id_aluno]);
+      const [idExiste] =  await pool.query(`SELECT * FROM tbl_cadastro_al WHERE id = ?`, [id_aluno]);
       if(id_aluno !== undefined && idExiste.length === 0 ){
           return res.status(400).json({ err: "Aluno não encontrado." });
       }
@@ -89,7 +88,7 @@ routes.post('/', async (req, res) => {
     if (laudo && typeof laudo !== 'string') return res.status(400).json({ err: 'Laudo deve ser string.' });
 
     
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       `INSERT INTO tbl_dadosMedicos
       (sexo, tp_sangue, peso, altura, gravidez, idade, alcool, fumo, drogas, obs, laudo,
       id_alergias, id_diagnostico, id_deficiencias, id_restricoes, id_cirurgias, id_medicamentos, id_aluno)
@@ -101,7 +100,7 @@ routes.post('/', async (req, res) => {
         id_cirurgias, id_medicamentos, id_aluno || null
       ]
     );
-    return res.status(201).json({ response: 'Dados médicos cadastrados com sucesso.', id: result.insertId });
+    return res.status(201).json({ response: 'Dados médicos cadastrados com sucesso.'});
   } catch (err) {
     console.error(err);
     return res.status(500).json({ err: 'Erro no servidor.' });
@@ -184,7 +183,7 @@ routes.put('/:id', async (req, res) => {
   values.push(id);
 
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       `UPDATE tbl_dadosMedicos SET ${setClause} WHERE id = ?`,
       values
     );

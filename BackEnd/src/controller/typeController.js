@@ -1,8 +1,7 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
 const tiposValidos = [
   "coordenador pedagógico",
@@ -20,7 +19,7 @@ function validarTipo(tipo) {
 
 routes.get("/", async (req, res) => {
   try {
-    const [rows] = await connection.execute(`SELECT * FROM tbl_type`);
+    const [rows] = await pool.query(`SELECT * FROM tbl_type`);
     if (!rows.length) {
       return res.status(404).json({ err: "Nenhum tipo encontrado." });
     }
@@ -39,7 +38,7 @@ routes.get("/:id", async (req, res) => {
   }
 
   try {
-    const [rows] = await connection.execute(
+    const [rows] = await pool.query(
       `SELECT * FROM tbl_type WHERE id = ?`,
       [id]
     );
@@ -63,7 +62,7 @@ routes.post("/", async (req, res) => {
   }
 
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       `INSERT INTO tbl_type (tipo) VALUES (?)`,
       [tipoValidado]
     );
@@ -91,7 +90,7 @@ routes.put("/:id", async (req, res) => {
   }
 
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       `UPDATE tbl_type SET tipo = ? WHERE id = ?`,
       [tipoValidado, id]
     );

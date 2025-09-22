@@ -1,35 +1,46 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
 import ProgressBar from "../Components/ProgressBar/ProgressBar";
-import "./FormResp.css"
+import { FormContext } from "../Context/FormContext";
+import "../Styles/FormResp.css"
 
 
 function FormResp() {
   const navigate = useNavigate();
 
-  const [responsaveis, setResponsaveis] = useState([
-    { nome: "", parentesco: "", telefone: "", estadoCivil: "", email: ""},
-  ]);
+  const { dadosFormulario, setDadosFormulario } = useContext(FormContext);
+
+  const responsaveis = dadosFormulario.responsaveis;
 
   const handleAddResponsaveis = () => {
-    setResponsaveis((prev) => [
+    setDadosFormulario((prev) => ({
       ...prev,
-      { nome:"", parentesco:"", telefone:"", estadoCivil: "", email:""},
-    ]);
+      responsaveis: [
+        ...responsaveis,
+        { nome: "", parentesco: "", telefone: "", estadoCivil: "", email: ""},
+      ],
+    }));
   };
 
   const handleChange = (index, field, value) => {
     const novosResponsaveis = [...responsaveis];
     novosResponsaveis[index][field] = value;
-    setResponsaveis(novosResponsaveis);
+
+    setDadosFormulario(prev => ({
+      ...prev,
+      responsaveis: novosResponsaveis
+    }));
   };
 
   const handleRemove = (index) => {
     const novosResponsaveis = responsaveis.filter((_, i) => i !== index);
-    setResponsaveis(novosResponsaveis);
+    setDadosFormulario(prev => ({
+      ...prev,
+      responsaveis: novosResponsaveis
+    }));
   };
 
   const handleVoltar = () => navigate("/FormInform");
@@ -58,7 +69,7 @@ function FormResp() {
                 <h3 className="font-semibold mb-2">Responsável {index + 1}</h3>
 
                 <Row className="mb-3">
-                    <Col XS={12} md={6}>
+                    <Col xs={12} md={6}>
                       <Form.Group>
                           <Form.Label>Nome do Responsável:</Form.Label>
                           <Form.Control type="text" placeholder="Digite o nome" value={responsavel.nome} onChange={(e) => handleChange(index, "nome", e.target.value)} 
@@ -66,7 +77,7 @@ function FormResp() {
                       </Form.Group>
                     </Col>
                   
-                    <Col XS={12} md={6}>
+                    <Col xs={12} md={6}>
                       <Form.Group>
                         <Form.Label>Parentesco:</Form.Label>
                           <Form.Select
@@ -84,7 +95,7 @@ function FormResp() {
                     </Row>
 
                     <Row className="mb-3">
-                        <Col XS={12} md={4}>
+                        <Col xs={12} md={4}>
                           <Form.Group>
                             <Form.Label>Telefone:</Form.Label>
                             <Form.Control type="text" value={responsavel.telefone} onChange={(e) =>
@@ -93,7 +104,7 @@ function FormResp() {
                           </Form.Group>
                         </Col>
 
-                        <Col XS={12} md={4}>
+                        <Col xs={12} md={4}>
                           <Form.Group>
                             <Form.Label>Estado Civil:</Form.Label>
                               <Form.Select
@@ -108,7 +119,7 @@ function FormResp() {
                           </Form.Group>
                         </Col>
                         
-                        <Col XS={12} md={4}>
+                        <Col xs={12} md={4}>
                           <Form.Group>
                             <Form.Label>E-mail:</Form.Label>
                             <Form.Control type="email" placeholder="Digite o e-mail" value={responsavel.email} onChange={(e) =>

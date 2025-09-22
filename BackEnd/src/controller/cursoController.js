@@ -1,10 +1,9 @@
 import express from 'express';
-import { getConnection } from '../database/data-source.js';
+import pool from '../database/data-source.js';
 
 const routes = express.Router();
-const connection = await getConnection();
 
-routes.get("/", async (req, res) => {
+routes.get("/curso", async (req, res) => {
   const { id, curso, turno, semestre, modalidade } = req.query;
 
   try {
@@ -32,7 +31,7 @@ routes.get("/", async (req, res) => {
       params.push(modalidade.toLowerCase());
     }
 
-    const [rows] = await connection.execute(sql, params);
+    const [rows] = await pool.query(sql, params);
 
     if (!rows || rows.length === 0) {
       return res.status(404).json({ err: "Nenhum curso encontrado." });
@@ -45,20 +44,35 @@ routes.get("/", async (req, res) => {
   }
 });
 
-routes.get("/:id", async (req, res) => {
-  const { id } = req.params;
-
+routes.get("/", async (req, res) => {
+  const { ids } = req.body;
   try {
-    const [rows] = await connection.execute(
-      `SELECT * FROM tbl_curso WHERE id = ? AND deletedAt IS NULL`,
-      [id]
-    );
-
-    if (!rows || rows.length === 0) {
-      return res.status(404).json({ err: "Curso não encontrado." });
+    if(!ids){
+      return res.status(400).json({ err: "ID do aluno é obrigatório." });
     }
 
-    return res.status(200).json(rows[0]);
+    const [rows_curso] = await pool.query(
+      `SELECT id_curso FROM juncao_al_curso WHERE id_aluno = ?`,
+      [ids]
+    );
+    for (let i = 0; i < rows_curso.length; i++) {
+      console.log(rows_curso[i]);
+    }
+    console.log(rows_curso)
+    const idsArray = ids.split(",").map(id => parseInt(id));
+
+    const [rows] = await connection.query(
+      `SELECT a.id AS id_aluno, c.*
+       FROM juncao_al_curso a
+       JOIN tbl_curso c ON a.id_curso = c.id
+       WHERE a.id_aluno IN (?) AND c.deletedAt IS NULL`,
+      [idsArray]
+    );
+
+    if (!rows_curso || rows_curso.length === 0) {
+      return res.status(404).json({ err: "Curso não encontrado." });
+    }
+    return res.status(200).json(rows);
   } catch (err) {
     console.error("Erro ao buscar curso:", err);
     return res.status(500).json({ err: "Erro no servidor." });
@@ -66,11 +80,16 @@ routes.get("/:id", async (req, res) => {
 });
 
 routes.post("/", async (req, res) => {
-  let { curso, turno, semestre, modalidade } = req.body;
+  let { curso, turno, semestre, modalidade, coordenador } = req.body;
 
   try {
     if (!curso || curso.trim().length < 2 || curso.trim().length > 35) {
       return res.status(400).json({ err: "Nome do curso inválido." });
+    }
+
+    const coordenadorRegex = /^[\p{L}\s\-']{2,45}$/u;
+    if (!coordenador || !coordenadorRegex.test(coordenador.trim())) {
+      return res.status(400).json({ err: "Nome inválido." });
     }
 
     const turnosValidos = ["manhã", "tarde", "noite"];
@@ -88,10 +107,10 @@ routes.post("/", async (req, res) => {
       return res.status(400).json({ err: "Semestre inválido (1 a 20)." });
     }
 
-    await connection.execute(
-      `INSERT INTO tbl_curso (curso, turno, semestre, modalidade)
-       VALUES (?, ?, ?, ?)`,
-      [curso.trim(), turno.toLowerCase(), semestre, modalidade.toLowerCase()]
+    await pool.query(
+      `INSERT INTO tbl_curso (curso, turno, semestre, modalidade, coordenador)
+       VALUES (?, ?, ?, ?, ?)`,
+      [curso, turno, semestre, modalidade, coordenador]
     );
 
     return res.status(201).json({ msg: "Curso cadastrado com sucesso." });
@@ -103,10 +122,15 @@ routes.post("/", async (req, res) => {
 
 routes.put("/:id", async (req, res) => {
   const { id } = req.params;
-  let { curso, turno, semestre, modalidade } = req.body;
+  let { curso, turno, semestre, modalidade, coordenador } = req.body;
 
   if (isNaN(id)) {
     return res.status(400).json({ err: "ID inválido." });
+  }
+
+  const coordenadorRegex = /^[\p{L}\s\-']{2,45}$/u;
+  if (!coordenador || !coordenadorRegex.test(coordenador.trim())) {
+    return res.status(400).json({ err: "Nome inválido." });
   }
 
   try {
@@ -129,11 +153,11 @@ routes.put("/:id", async (req, res) => {
       return res.status(400).json({ err: "Semestre inválido (1 a 20)." });
     }
 
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       `UPDATE tbl_curso 
-       SET curso = ?, turno = ?, semestre = ?, modalidade = ?
+       SET curso = ?, turno = ?, semestre = ?, modalidade = ?, coordenador = ?
        WHERE id = ? AND deletedAt IS NULL`,
-      [curso.trim(), turno.toLowerCase(), semestre, modalidade.toLowerCase(), id]
+      [curso, turno, semestre, modalidade,coordenador,  id]
     );
 
     if (result.affectedRows === 0) {
@@ -155,7 +179,7 @@ routes.delete("/:id", async (req, res) => {
   }
 
   try {
-    const [result] = await connection.execute(
+    const [result] = await pool.query(
       `UPDATE tbl_curso SET deletedAt = ? WHERE id = ? AND deletedAt IS NULL`,
       [new Date(), id]
     );

@@ -1,7 +1,7 @@
 .dashboard-card {
+  display: flex;
   background-color: #044654; /* fallback padrão */
   min-height: 150px; /* altura mínima para manter proporção */
-  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
