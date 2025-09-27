@@ -10,10 +10,24 @@ export default function StudentTable({alunosFiltrados = []}) {
   if (!alunosFiltrados || alunosFiltrados.length === 0) {
     return (
       <div className="tabela-container col-12 col-md-12">
-        <div className="text-center p-4">
-          <p className="text-muted">Nenhum aluno encontrado.</p>
-        </div>
+      <div className="tabela-scroll-horizontal">
+        <table className="table table-hover table-bordered table-striped align-middle text-center">
+          <thead className="thead-dark sticky-top">
+            <tr className=''>
+              <th className="p-4">RM</th>
+              <th className="p-4">Nome do Aluno</th>
+              <th className="p-4">Curso</th>
+              <th className="p-4">Semestre</th>
+              <th className="p-4">Turno</th>
+              <th className="p-4">Coordenador</th>
+              <th className="p-4">Status</th>
+              <th className="p-4">Anamnese</th>
+              <th className="p-4">Observações</th>
+            </tr>
+          </thead>
+        </table>
       </div>
+    </div>
     );
   }
 
