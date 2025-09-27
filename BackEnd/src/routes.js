@@ -22,12 +22,12 @@ import { authorizationRoles } from './utils/jwt.js';
 const routes = express();   
 
 routes.use("/cirurgias", cirurgiasController);
-routes.use('/resetSenha',  resetSenhaController);
+routes.use('/resetSenha', authenticate, resetSenhaController);
 routes.use("/deficiencia", deficienciaController);
 routes.use("/alergias", alergiaController);     
 routes.use("/responsavel", responsavelController);
 routes.use("/aluno", alunoController);
-routes.use("/user", usuarioController);
+routes.use("/user", authenticate,usuarioController);
 routes.use("/login", loginController);
 routes.use('/cursos', cursoController);
 routes.use("/type", typeController);

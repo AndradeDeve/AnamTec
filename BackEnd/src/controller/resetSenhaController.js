@@ -7,28 +7,28 @@ const routes = express.Router();
 
 routes.put("/", async(request, response) => {
     const email = request.user.email;
-    const {senha, senhaNova, confirmaSenha} = request.body;
+    const {senhaAtual, novaSenha, confirmarSenha} = request.body;
     try{
         const [results] = await pool.query(`select * from tbl_usuario where email = ? and deletedAt is null`, [email]);
         if(results.length === 0){
             return response.status(404).json({err: "Usuário não encontrado. Tente fazer o login novamente."});
         }
 
-        if(senhaNova !== confirmaSenha){
+        if(novaSenha !== confirmarSenha){
             return response.status(400).json({err: "As senhas não conferem."});
         }
 
-        if(!senha || senha.length < 6){
+        if(!senhaAtual || senhaAtual.length < 6){
             return response.status(400).json({err: "A senha deve conter no mínimo 6 caracteres."});
         }
 
         const user = results[0];
-        const senhaValida = await VerificarSenha(senha, user.senha);
+        const senhaValida = await VerificarSenha(senhaAtual, user.senha);
         if(!senhaValida){
             return response.status(401).json({err: "Senha inválida."});
         }
 
-        const hashedSenha = await hash(senhaNova, 10);
+        const hashedSenha = await hash(novaSenha, 10);
         const [updateResult] = await pool.query(`UPDATE tbl_usuario SET senha = ? WHERE email = ? and deletedAt is null`, [hashedSenha, email]);
         if(updateResult.length === 0){
             return response.status(400).json({err: "Erro ao atualizar a senha. Tente novamente."});

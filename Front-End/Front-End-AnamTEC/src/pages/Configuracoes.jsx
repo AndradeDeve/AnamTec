@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
+import { putFunctionResetSenha } from "../services/APIService";
 import "./Config.css";
 
 export default function Configuracoes() {
@@ -53,26 +55,26 @@ function handleChange(e){
 }
 
 //Validação e envio
-function handleSubmit(e) {
+async function handleSubmit(e) {
   e.preventDefault();
-
-  if (formSeg.novaSenha !== formSeg.confirmarSenha) {
-    alert ("A nova senha e a confirmação não coincidem.");
-    return;
+  try{
+    console.log(formSeg)
+      if (formSeg.novaSenha !== formSeg.confirmarSenha) {
+      toast.error("A nova senha e a confirmação não coincidem.");
+      return;
+    }
+    const data = await putFunctionResetSenha(formSeg);
+    console.log(data)
+    if(data.status === 200) {
+        toast.success("Senha atualizada com sucesso!");
+    }
+    console.log("Nova senha salva:", formSeg);
+  }catch(err){
+    console.error("Erro: ", err)
   }
-
-  console.log("Nova senha salva:", formSeg);
-  alert("Senha atualizada com sucesso!");
   // Guilherme você chama a API aqui!!!
+  // Não querrroooooooo !!!!!!!!!
 }
-
-
-  // Envia os dados
-  function handleSubmit(e) {
-    e.preventDefault();
-    console.log("Configurações salvas:", formData);
-    alert("Configurações atualizadas!");
-  }
 
   return (
     <div className="config-wrapper">
@@ -146,7 +148,7 @@ function handleSubmit(e) {
                 >
                   <option value="claro">Claro</option>
                   <option value="escuro">Escuro</option>
-                </select>
+                </select>aler
 
                 <label className="checkbox-label">
                   <input 
@@ -175,8 +177,8 @@ function handleSubmit(e) {
                 <label>Nova senha:</label>
                 <input 
                   type="password" 
-                  name="senha" 
-                  value={formSeg.senha} 
+                  name="novaSenha" 
+                  value={formSeg.novaSenha} 
                   onChange={handleChange} 
                 />
 
