@@ -5,6 +5,16 @@ import axios from "axios";
 const apiUrl = process.env.REACT_APP_API_URL;
 
 
+export async function getFunctionAlunoSpecific(specific, value){
+  const response = await axios.get(`${apiUrl}/aluno/specific?${specific}=${value}`);
+  return response;
+}
+
+export async function  getFunctionAlunoCards() {
+  const response = await axios.get(`${apiUrl}/aluno/card`)
+  return response;
+}
+
 // Função assíncrona que faz uma requisição GET para buscar dados dos alunos
 export async function getFunctionAluno() {
   // Faz uma requisição GET para: http://localhost:3332/aluno (ou URL definida no .env)
@@ -14,12 +24,6 @@ export async function getFunctionAluno() {
   return response.data;
 }
 
-// export async function getFunctionCursos(dados) {
-//   const query = dados.join(',');
-//   console.log("query: ", query);
-//   const response = await axios.get(`${apiUrl}/cursos?ids=${query}`);
-//   return response.data;
-// }
 
 // Função assíncrona que envia dados para a API usando o método POST
 export async function postFunctionaluno(dados) {

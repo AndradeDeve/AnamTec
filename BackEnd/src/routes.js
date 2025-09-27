@@ -1,5 +1,5 @@
 import express from 'express';
-import cadastroAlunoController from './controller/cadastroAlunoController.js';
+import alunoController from './controller/alunoController.js';
 import usuarioController from './controller/usuarioController.js';
 import responsavelController from './controller/responsavelController.js';
 import alergiaController from './controller/alergiaController.js';
@@ -26,7 +26,7 @@ routes.use('/resetSenha',  resetSenhaController);
 routes.use("/deficiencia", deficienciaController);
 routes.use("/alergias", alergiaController);     
 routes.use("/responsavel", responsavelController);
-routes.use("/aluno", cadastroAlunoController);
+routes.use("/aluno", alunoController);
 routes.use("/user", usuarioController);
 routes.use("/login", loginController);
 routes.use('/cursos', cursoController);

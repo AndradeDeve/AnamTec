@@ -23,7 +23,7 @@ routes.get("/:id", async (req, res) => {
         if (!rows || rows.length === 0) {
             return res.status(404).json({ err: "Alergia não encontrada." });
         }
-        return res.status(200).json(rows[0]);
+        return res.status(200).json(rows);
     } catch (err) {
         console.log("Erro ao buscar alergia:", err);
         return res.status(500).json({ err: "Erro no servidor." });

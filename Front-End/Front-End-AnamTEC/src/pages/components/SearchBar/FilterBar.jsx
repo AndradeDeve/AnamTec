@@ -1,21 +1,32 @@
 
 import React,{ useState } from 'react';
 import BtnSearch from '../../../assets/search-icon.png';
+import { getFunctionAlunoSpecific } from '../../../services/APIService.js';
+import {toast } from 'react-toastify';
 import './FilterBar.css';
 
 
 function FilterBar({onSearch}) {
   const [termo, setTermo] = useState(""); 
-  const [filtro, setFiltro] = useState("");
+  const [filtro, setFiltro] = useState("ra");
 
- const handleAcess = () => {
-  if (!termo.trim()) {
-    alert("Digite algo para pesquisar");
-    return;
+
+ const  handleAcess = async (e) => {
+  e.preventDefault();
+  try{
+    console.log(filtro);
+    if(termo.length <3 ){
+      toast.error(`O ${filtro.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
+    }
+    const data = await getFunctionAlunoSpecific(filtro, termo+(filtro!="ra"?"%":""));
+    if(data.status === 200){
+      onSearch(data)
+    } 
+  }catch(error){
+    console.log("Erro: ", error);
+    toast.error('Erro ao buscar dados')
   }
-
-  // Chama a função de busca recebida via props
-  onSearch(filtro, termo);
+  
 };
 
 
@@ -30,7 +41,7 @@ function FilterBar({onSearch}) {
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           >
-            <option value="rm">RM</option>
+            <option value="ra">RM</option>
             <option value="nome">Nome do Aluno</option>
             <option value="curso">Curso</option>
             <option value="turno">Turno</option>

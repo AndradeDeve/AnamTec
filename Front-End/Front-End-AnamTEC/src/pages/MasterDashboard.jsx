@@ -1,13 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header/Header';
 import DashboardCards from './components/Dashboard/DashboardCards';
+import  { getFunctionAluno } from './../services/APIService.js';
 import FilterBar from './components/SearchBar/FilterBar';
 import StudentTable from './components/StudantTable/StudantTable';
 import ButtonGrid from './components/ButtonGrid/ButtonGrid';
 
 export default function MasterDashboard() {
   const [showModal, setShowModal] = useState(false);
+  const [alunosFiltrados, setAlunosFiltrados] = useState(null);
   const [alunosPendentes, setAlunosPendentes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAlunos = async () => {
+      try {
+        
+        const dados = await getFunctionAluno();
+        setAlunosFiltrados(dados);
+        setLoading(true);
+        setAlunosFiltrados(dados || []);
+      } catch (error) {
+        setAlunosFiltrados([]);
+        console.error('Erro ao buscar dados dos alunos:', error);
+      }finally {
+        setLoading(false); 
+      };
+    };
+    fetchAlunos();
+  }, []);
 
   const carregarAlunosPendentes = () => {
     const mock = [
@@ -20,6 +41,10 @@ export default function MasterDashboard() {
   const abrirModal = () => {
     carregarAlunosPendentes();
     setShowModal(true);
+  };
+
+  const handleSearch = (dados) => {
+    setAlunosFiltrados(dados);
   };
 
   const enviarLembretes = () => {
@@ -50,11 +75,11 @@ export default function MasterDashboard() {
                 />
               </div>
               <div className="col-12 col-md-6">
-              <FilterBar />
+              <FilterBar onSearch={handleSearch} />
               </div>
             </div>
           </div>
-        <StudentTable />
+        <StudentTable alunosFiltrados={alunosFiltrados}/>
       </main>
     </header>
   );

@@ -1,14 +1,43 @@
-import express from "express";
+import express, { response } from "express";
 import pool from "../database/data-source.js";
 import { enviarEmailAlunos } from "../helpers/emailAlunos.js";
 
 const routes = express.Router();
 
+routes.get("/card", async (req, res) => {
+  try {
+    const [result] = await pool.query(`
+      SELECT 
+        COUNT(DISTINCT a.id) as total_alunos,
+        COUNT(DISTINCT CASE WHEN d.id_aluno IS NULL THEN a.id END) as anaminese_pendente,
+        COUNT(DISTINCT d.id_aluno) as anaminese_concluida
+      FROM tbl_cadastro_al a
+      LEFT JOIN tbl_dadosMedicos d ON a.id = d.id_aluno
+      WHERE a.deletedAt IS NULL
+    `);
+
+    if (!result || result.length === 0) {
+      return res.status(200).json({
+        totalAlunos: 0,
+        anaminesePendente: 0,
+        anamineseConcluida: 0
+      });
+    }
+    const stats = result[0];
+    return res.status(200).json(stats);
+    
+  } catch(err) {
+    console.error("Erro:", err);
+    return res.status(500).json({err: "Erro no servidor."});
+  }
+});
+
 // Buscar aluno(s) com filtros
 routes.get("/specific", async (req, res) => {
-  const { curso, ra, nome, coordenador, status } = req.query;
+  const { curso, ra, nome, coordenador, turno,  status } = req.query;
 
   try {
+    console.log(turno)
     let sql =`SELECT 
               al.id AS id_aluno,  
               al.nome AS nome_aluno,
@@ -29,13 +58,18 @@ routes.get("/specific", async (req, res) => {
               AND c.deletedAt IS NULL`;
     const params = [];
 
+    if (turno) {
+      sql += ` AND c.turno LIKE ?`;
+      params.push(turno);
+    }
+
     if (curso) {
-      sql += ` AND c.curso = ?`;
+      sql += ` AND c.curso LIKE ?`;
       params.push(curso);
     }
 
     if (coordenador) {
-      sql += ` AND c.coordenador = ?`;
+      sql += ` AND c.coordenador LIKE ?`;
       params.push(coordenador);
     }
 
@@ -51,7 +85,7 @@ routes.get("/specific", async (req, res) => {
 
     if (nome) {
       sql += ` AND nome LIKE ?`;
-      params.push(`%${nome}%`);
+      params.push(nome);
     }
 
     const [rows] = await pool.query(sql, params);

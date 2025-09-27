@@ -1,26 +1,23 @@
-import React, { useEffect, useState }from 'react';
-import axios from 'axios';
+import React, { useState }from 'react';
 import { data, useNavigate } from 'react-router-dom';
+
 import './StudantTable.css';
-import  { getFunctionAluno } from '../../../services/APIService';
-// import { getFunctionCursos } from '../../../services/APIService';
 
-export default function StudentTable() {
-  const [alunos, setAlunos] = useState([]);
-    useEffect(() => {
-    // Função para buscar os dados dos alunos
-    const fetchAlunos = async () => {
-      try {
-        const dados = await getFunctionAluno();
-        setAlunos(dados);
-      } catch (error) {
-        console.error('Erro ao buscar dados dos alunos:', error);
-      };
-    };
-    fetchAlunos();
-  }, []);
+export default function StudentTable({alunosFiltrados = []}) {
+    
+  const navigate = useNavigate();
+  // Se não há alunos, mostrar mensagem
+  if (!alunosFiltrados || alunosFiltrados.length === 0) {
+    return (
+      <div className="tabela-container col-12 col-md-12">
+        <div className="text-center p-4">
+          <p className="text-muted">Nenhum aluno encontrado.</p>
+        </div>
+      </div>
+    );
+  }
 
-   const navigate = useNavigate();
+
   return (
     <div className="tabela-container col-12 col-md-12">
       <div className="tabela-scroll-horizontal">
@@ -39,7 +36,7 @@ export default function StudentTable() {
             </tr>
           </thead>
           <tbody className=''>
-             {alunos.map((aluno, index) => (
+             {alunosFiltrados.map((aluno, index) => (
               <tr key={index}>
                 <td className="p-3">{aluno.ra}</td>
                 <td className="p-3">{aluno.nome_aluno}</td>
