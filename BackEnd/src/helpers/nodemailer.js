@@ -28,8 +28,12 @@ function sendEmail(newPassword, userEmail){
 }
 
 const getEmailTemplate = (newPassword) => {
+    const today = new Date();
+    const yaer = today.getFullYear();
     const htmlTemplate = fs.readFileSync("./src/template/senha.html", "utf-8");
-    return htmlTemplate.replace('{{newPassword}}',  newPassword);
+    htmlTemplate.replace('{{newPassword}}',  newPassword);
+    htmlTemplate.replace('{{yaer}}', yaer );
+    return htmlTemplate;
 };
 
 export {sendEmail};

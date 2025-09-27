@@ -1,7 +1,7 @@
 // Importa o React e o useState, que vamos usar para controlar os campos do formulário
 
 import React, { useState } from 'react';
-import {toast } from 'react-toastify';
+  import {toast } from 'react-toastify';
 import "./Login.css";
 // Importa a função post para fazer o login do usuario 
 import { postFunctionLogin } from '../services/APIService';
@@ -36,29 +36,29 @@ const navCoord = () => {
         const data = await postFunctionLogin(formData)
         if(data.status === 200) {
           toast.success('Login efetuado com sucesso', {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
           });
           localStorage.setItem("token", data.data.token); // Armazena o token de autenticação no localStorage
-          navCoord(); // Redireciona para a página do coordenador pedagógico
+          navCoord(); // Redireciona para a página do coordenador pedagógico  
         }
     }catch(error){
       console.error("Erro ao efetuar o login, verifique se o e-mail e a senha estão corretos.", error);
       toast.warn('Erro ao efetuar Login,', {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
     }
   };

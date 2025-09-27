@@ -6,12 +6,13 @@ import './FilterAcess.css'
 
 function FilterAcess({onSearch}) {
   const [termo, setTermo] = useState("");
-  const [pesquisa, setPesquisa] = useState("");
+  const [pesquisa, setPesquisa] = useState("RM");
 
 
 const handleAcess = () =>{
   if (!termo){
-    alert("Digite algo para pesquisar")
+    alert(setPesquisa)
+    alert(`Digite algo para pesquisar ${pesquisa}`)
     return;
   }
   onSearch(pesquisa,termo)
@@ -37,7 +38,7 @@ const handleAcess = () =>{
           className="form-control"
           placeholder={`Pesquisar por ${pesquisa.toLocaleLowerCase()}`}
           value={termo}
-          onChange={(e) => (e.target.value)} 
+          onChange={(e) => setTermo(e.target.value)} 
           />
       </div>
 

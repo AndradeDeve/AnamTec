@@ -1,16 +1,55 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './DashboardCards.css';
 import formIcon from '../../../assets/forms-icon.png';
 import ConfirmedIcon from '../../../assets/confirmedCheck.png';
 import ErrorIcon from '../../../assets/errorIcon.png';
+import {getFunctionAlunoCards} from '../../../services/APIService'
 
-const cards = [
-  { title: 'Alunos Cadastrados', value: 17, color: 'bg-cyan', icon:formIcon },
-  { title: 'Anamneses Concluídas', value: 9, color: 'bg-green', icon: ConfirmedIcon },
-  { title: 'Anamneses Pendentes', value: 8, color: 'bg-red', icon:ErrorIcon },
-];
+
+
+
 
 export default function DashboardCards() {
+  const [numerosAl, setNumerosAl] = useState({
+    totalAlunos: 0,
+    anamineseConcluida: 0,
+    anaminesePendente: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const fetchNumerosAl = async () => {
+      try {
+        const response = await getFunctionAlunoCards();
+        console.log(response.data)
+        setNumerosAl({
+          totalAlunos: response.data.total_alunos,
+          anamineseConcluida: response.data.anaminese_concluida,
+          anaminesePendente: response.data.anaminese_pendente
+        });
+        console.log("Resposta completa:",numerosAl);
+      } catch(err) {
+        console.log("Erro: ", err);
+        setNumerosAl({
+          totalAlunos: 0,
+          anamineseConcluida: 0,
+          anaminesePendente: 0
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchNumerosAl();
+  }, []);
+
+  const cards = [
+  { title: 'Alunos Cadastrados', value: numerosAl.totalAlunos, color: 'bg-cyan', icon:formIcon },
+  { title: 'Anamneses Concluídas', value: numerosAl.anamineseConcluida, color: 'bg-green', icon: ConfirmedIcon },
+  { title: 'Anamneses Pendentes', value: numerosAl.anaminesePendente, color: 'bg-red', icon:ErrorIcon },
+];
+
   return (
     <div className="container  my-1">
       <div className="row g-4">

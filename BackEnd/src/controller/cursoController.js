@@ -45,34 +45,17 @@ routes.get("/curso", async (req, res) => {
 });
 
 routes.get("/", async (req, res) => {
-  const { ids } = req.body;
+
   try {
-    if(!ids){
-      return res.status(400).json({ err: "ID do aluno é obrigatório." });
-    }
-
     const [rows_curso] = await pool.query(
-      `SELECT id_curso FROM juncao_al_curso WHERE id_aluno = ?`,
-      [ids]
-    );
-    for (let i = 0; i < rows_curso.length; i++) {
-      console.log(rows_curso[i]);
-    }
-    console.log(rows_curso)
-    const idsArray = ids.split(",").map(id => parseInt(id));
-
-    const [rows] = await connection.query(
-      `SELECT a.id AS id_aluno, c.*
-       FROM juncao_al_curso a
-       JOIN tbl_curso c ON a.id_curso = c.id
-       WHERE a.id_aluno IN (?) AND c.deletedAt IS NULL`,
-      [idsArray]
+      `SELECT * FROM tbl_curso `
     );
 
+    
     if (!rows_curso || rows_curso.length === 0) {
       return res.status(404).json({ err: "Curso não encontrado." });
     }
-    return res.status(200).json(rows);
+    return res.status(200).json(rows_curso);
   } catch (err) {
     console.error("Erro ao buscar curso:", err);
     return res.status(500).json({ err: "Erro no servidor." });
