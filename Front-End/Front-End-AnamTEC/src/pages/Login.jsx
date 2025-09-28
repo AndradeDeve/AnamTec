@@ -1,18 +1,14 @@
-// Importa o React e o useState, que vamos usar para controlar os campos do formulário
-
 import React, { useState } from 'react';
-  import {toast } from 'react-toastify';
+import {toast } from 'react-toastify';
 import "./Login.css";
-// Importa a função post para fazer o login do usuario 
 import { postFunctionLogin } from '../services/APIService';
 import logoAnamTec from "../assets/Anamtec-logo.png";
 import { useNavigate } from 'react-router-dom';
 import RedefineSenha from "../pages/components/EmailPassword/index"
 
-// Componente funcional da tela de login
 export default function Login() {
 
-    const [showModal, setShowModal] = useState(false)
+const [showModal, setShowModal] = useState(false)
 
 // Cria o estado formData para armazenar email e senha digitados
 const [formData, setFormData] = useState({ email: "", senha: "" });
@@ -27,10 +23,56 @@ const navCoord = () => {
     navigate("/", { replace: true}); // Redireciona para a página do coordenador pedagógico
 }
 
+function isValidEmail(email){ 
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
   // Função executada quando o usuário clica no botão "ENTRAR"
   const handleLogin = async (e) => {
     e.preventDefault(); // Evita o recarregamento da página
-    
+
+  // [Validação 1] - Verifica se o email está vazio
+  if (!formData.email) {
+      toast.warn('O campo e-mail é obrigatório.', {  
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark" });
+      return;
+  }
+
+   // [Validação 2] - Verifica o formato do e-mail
+  if (!isValidEmail(formData.email)) {
+      toast.warn('Digite um e-mail válido.', { 
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark" });
+      return;
+  }
+  
+  // [Validação 3] - Verifica se a senha está vazia
+  if (!formData.senha) {
+      toast.warn('O campo senha é obrigatório.', { 
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined, theme: "dark" });
+      return;
+  }
+  
      // Chama a função para enviar os dados do login
     try{
         const data = await postFunctionLogin(formData)
@@ -58,7 +100,7 @@ const navCoord = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "dark",
       });
     }
   };
