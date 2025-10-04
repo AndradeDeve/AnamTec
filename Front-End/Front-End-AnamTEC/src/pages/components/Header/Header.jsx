@@ -9,7 +9,6 @@ import relatorioIcon from '../../../assets/relatorio.png';
 import logoAnamtec from '../../../assets/Anamtec-logo.png';
 import configIcon from '../../../assets/config-icon.png'
 
-
 import './Header.css'; // mantém seu CSS personalizado
 
 const Header = () => {
@@ -63,10 +62,11 @@ const Header = () => {
               <li onClick={() => navigate('/controle')}>
               <img src={controlAcessIcon} alt="Controle de Acesso de Professores" />
               <span>Controle de Acesso</span></li>
-              <li>
+              
+               <li onClick={() => navigate('/relatorios')}>
               <img src={relatorioIcon} alt="Página de Relatórios" />
               <span>Relatório</span>
-              </li>
+            </li>
             </ul>
           </div>
         </div>

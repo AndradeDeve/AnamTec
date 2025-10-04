@@ -94,8 +94,8 @@ export default function ControleAcesso() {
 
 <Row className="justify-content-center">
           <Col xs={12} md={11}>
-            <Card className="p-3">
-              <Table striped bordered hover responsive className="tabela-custom">
+            <Card className="tabela p-3">
+              <Table striped bordered hover responsive className=" tabela-custom">
                 <thead>
                   <tr>
                     <th>RM</th>
@@ -107,7 +107,7 @@ export default function ControleAcesso() {
                     <th>Status</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="table">
                   {usuarios.map((user, index) => (
                     <tr key={index}>
                       <td>{user.rm}</td>

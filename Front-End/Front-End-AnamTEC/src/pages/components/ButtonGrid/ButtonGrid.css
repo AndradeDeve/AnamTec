@@ -6,8 +6,8 @@
 }
 
 .custom-btn {
-  background-color: #044654;
-  color: white;
+  background-color: var(--cor-destaque);
+  color: var(--branco);
   padding: 12px 20px;
   border-radius: 10px;
   font-size: 16px;
@@ -19,7 +19,7 @@
 }
 
 .custom-btn:hover {
-  background-color: #033442;
+  background-color: var(--azulHover);
   transform: scale(1.02);
   cursor: pointer;
 }

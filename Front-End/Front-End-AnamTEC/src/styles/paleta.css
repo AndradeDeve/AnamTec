@@ -1,10 +1,40 @@
 :root {
-    --preto: #1E2019;
-    --azul: #044654;
-    --branco: #E4EDF1;
-    --cinza-claro: #D9D9D9;
-    --laranja: #E67E22;
-  
-    --fonte-principal: 'Roboto', sans-serif;
-  }
-  
+  /* Tema Claro (PADRÃO - será o tema-claro) */
+  --cor-fundo-principal: #E4EDF1; /* Branco, ou a sua variável --branco */
+  --cor-texto-principal: #1E2019; /* Preto, ou a sua variável --preto */
+  --cor-fundo-secundario: #D9D9D9; /* Seu --cinza-claro, para cards/headers */
+  --cor-destaque: #044654; /* Seu --azul  */
+  --cor-link: #0012D5;
+  --cor-title-config: #044654; 
+
+
+  /* Mantendo suas variáveis originais por segurança */
+  --preto: #1E2019;
+  --azul: #044654;
+  --azulHover: #056172;
+  --branco: #E4EDF1;
+  --verdeDashBoard: #0E813E;
+  --vermelhoDashBoard: #Fe4120;
+  --cinza-claro: #D9D9D9;
+  --laranja: #E67E22;
+  --fonte-principal: 'Roboto', sans-serif;
+}
+
+.tema-escuro {
+  /* Tema Escuro - Sobrescreve as variáveis do :root */
+  --cor-fundo-principal: #2C2A26; /* Cinza Escuro */
+  --cor-texto-principal: #f3f4f6; /* Cinza Claro */
+  --cor-fundo-secundario: #494B44; /* Cinza Médio */
+  --cor-destaque: #26788A; /* Azul Claro */
+  --cor-link:#E4EDF1;
+  --cor-title-config: #E4EDF1; 
+}
+
+/* Estilos gerais que usam as variáveis */
+body {
+  /* O tema inicial será o definido em :root */
+  background-color: var(--cor-fundo-principal);
+  color: var(--cor-texto-principal);
+  transition: background-color 0.3s, color 0.3s; 
+}
+/* ... outros estilos que usam var(--cor-...) */

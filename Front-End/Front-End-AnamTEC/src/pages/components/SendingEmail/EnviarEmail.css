@@ -6,37 +6,36 @@
 }
 
 .modalheader{
-    background-color: #044654;   
-    color:#E4EDF1;
+    background-color: var(--azul);   
+    color:var(--cor-texto-principal);
    
 }
 
 .modalTitle{
     font-size: 18pt;
     font-weight: 600;
-    color:#E4EDF1;
+    color:(--branco);
 }
 
 .modalbody{
-    background-color: #044654;
-     border: 2px solid #044654;
+    background-color: var(--azul);
 }
 
 .modalbody p{
     font-size: 16pt;
-    color:#E4EDF1;
+    color:var(--branco);
 }
 
 .modalbody ul{
     font-size: 14pt;
-    color: #E4EDF1;
+    color: (--branco);
 }
 
 .modalfooter{
-    background-color: #044654;
-    border: 2px solid #044654;
+    background-color: var(--azul);
+    border: 2px solid var(--azul);
 }
 
 .modalfooter button{
-    background-color: #1E2019;
+    background-color: var(--preto);
 }

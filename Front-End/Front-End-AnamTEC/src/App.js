@@ -14,6 +14,9 @@ import ObservacoesUsers from './pages/UserObservation';
 import ControllAcess from './pages/ControllAcess';
 import Configuracoes from './pages/Configuracoes.jsx';
 
+// NOVO: Importe o componente de Relatórios
+import ReportsDashboard from './features/reports/ReportsDashboard.jsx'; // ASSUMA ESTA PASTA
+
 function App() {
   return (
     <>
@@ -26,6 +29,9 @@ function App() {
         <Route path="/Observacoes" element={<ObservacoesUsers />} />
          <Route path="/Controle" element={<ControllAcess />} />
          <Route path="/config" element={<Configuracoes />} />
+
+         {/* NOVO: ROTA PARA RELATÓRIOS */}
+        <Route path="/relatorios" element={<ReportsDashboard />} />
       </Routes>
     </Router>
     <ToastContainer />    

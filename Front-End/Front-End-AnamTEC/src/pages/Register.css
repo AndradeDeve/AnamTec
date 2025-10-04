@@ -11,7 +11,7 @@ body, html {
   justify-content:space-between;
   align-items:stretch;
   min-height: 100vh;
-  background: linear-gradient(to left, #E4EDF1  50%, #044654 50%);
+  background: linear-gradient(to left, var(--cor-fundo-principal)  50%, var(--cor-destaque) 50%);
   padding: 1rem;
 
 }
@@ -26,7 +26,7 @@ body, html {
 .header-Cadastro h1{
   font-weight: 800;
   font-size: 2.5rem;
-  color: #E4EDF1;
+  color: var(--branco);
 }
 .logoa{
   width: 80px;
@@ -37,20 +37,20 @@ body, html {
   flex:1;
   width: 100%;
   max-width: 420px;
-  background-color:#E4EDF1;
-  box-shadow: 6px 6px 10px #1E2019;
+  background-color:var(--cor-fundo-secundario) ;
+  box-shadow: 8px 6px 12px var(--preto);
   border-radius: 14px;
   margin: auto 6rem;
 }
 
 .title{
-  background-color: #044654;
+  background-color: var(--cor-destaque);
   padding: 10px ;
   text-align: center;
   border-radius: 12px 12px 0px 0px;
 }
 .title h2{
-  color: #E4EDF1;
+  color: var(--branco);
   font-size: 1.2rem;
   margin: 0;
 }
@@ -61,7 +61,7 @@ body, html {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #E4EDF1;
+  color: var(--branco);
   padding: 2rem;
   text-align: center;
   
@@ -83,7 +83,7 @@ body, html {
 }
 .field label{
   font-weight: 700;
-  color: #1E2019;
+  color: var(--cor-texto-principal);
   margin-left: 1.5rem;
 }
 
@@ -108,20 +108,21 @@ body, html {
   margin: 0 auto;
   border-radius: 8px;
   border: 6px;
-  border: 1px solid #ccc;
-  box-shadow: 2px 2px 6px rgba(0,0,0,0.12) ;
+  border: 1px solid var(--branco);
+  box-shadow: 2px 2px 6px rgba(0,0,0,1.12) ;
 }
 .cadastro-form input,
 .cadastro-form select hover{
-  color: #818181;
+  color: var(--preto);
   font-family: monospace;
   font-size: 1rem;
 }
 .voltarPrincipal {
-  margin: 0.4rem 1.2rem;
+  margin: 0.4rem 1.5rem;
   font-size: 1rem;
+  font-weight: 800;
   cursor: pointer;
-  color: rgb(24, 24, 153);
+  color: var(--cor-link);
   text-decoration: underline;
 }
 
@@ -133,8 +134,8 @@ body, html {
 }
 .actions .btn-submit {
   flex: 1;
-  background:#044654;
-  color:#E4EDF1;
+  background:var(--cor-destaque);
+  color: var(--branco);
   padding:10px 28px;
   
   border-radius:8px;
@@ -153,7 +154,7 @@ body, html {
 @media (max-width: 768px) {
   .cadastro-wrapper{
     flex-direction: column; 
-    background: linear-gradient(to top, #E4EDF1  75%, #044654 50%);
+    background: linear-gradient(to top, var(--cor-fundo-principal)  50%, var(--cor-destaque) 50%);
     align-items: center;
   }
   .asideContainerCadastro {
@@ -181,7 +182,7 @@ body, html {
 
   .cadastro-wrapper{
     flex-direction: column; 
-    background: linear-gradient(to top, #E4EDF1  75%, #044654 50%);
+    background: linear-gradient(to top, var(--cor-fundo-principal)  50%, var(--cor-destaque) 50%);
     align-items: center;
   }
   .header-Cadastro h1{
