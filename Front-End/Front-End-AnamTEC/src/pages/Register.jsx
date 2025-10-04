@@ -1,5 +1,3 @@
-
-// src/pages/Cadastro.jsx
 import React, { useState, useEffect } from "react";
 import { postFunctionUser } from "../services/APIService"; // seu serviço de API
 import logoAnamTec from "../assets/Anamtec-logo.png"; // Importa a logo 
@@ -7,6 +5,7 @@ import { toast } from 'react-toastify';
 import { showToast } from "../Utils/toast.js"; // importamos o helper
 import { useNavigate } from 'react-router-dom';
 import "./Register.css";
+import { formHelperTextClasses } from "@mui/material";
 //ARQUIVO ATUALIZADO PEN
 export default function Cadastro() {
   //Botão de voltar para a tela principal
@@ -25,7 +24,8 @@ export default function Cadastro() {
     email: "",
     senha: "",
     cargo: "",
-    curso: "" // será usado apenas quando necessário
+    curso: "", // será usado apenas quando necessário
+    disciplina:"",
   });
 
   // lista de cursos (pode vir da API futuramente)
@@ -44,6 +44,17 @@ export default function Cadastro() {
     "Agenciamento de viagens",
   ];
 
+  // [NOVO] Lista de disciplinas disponíveis (pode vir da API futuramente)
+  const disciplinasDisponiveis = [
+    "Programação e Desenvolvimento",
+    "Banco de Dados",
+    "Programação Web",
+    "Designer Digital",
+    "Fundamentos da Informática",
+    "Desenvolvimento de Sistema",
+    "Sistemas Embarcados",
+    "Análise e Projeto de Sistemas"
+  ];
   // cargos possíveis
   const cargos = [
     { value: "", label: "Selecione o cargo" },
@@ -54,19 +65,40 @@ export default function Cadastro() {
   ];
 
   // helper para saber se devemos mostrar o campo de curso
-  const precisaCurso = (cargo) =>
-    cargo === "Coordenador de Curso" || cargo === "Professor";
+  const precisaCursoEDisciplina = (cargo) =>
+    cargo === "Coordenador de Curso" || 
+    cargo === "Professor";
 
   // quando o cargo mudar e não precisar de curso, limpamos o campo curso
   useEffect(() => {
-    if (!precisaCurso(formData.cargo) && formData.curso !== "") {
-      setFormData((prev) => ({ ...prev, curso: "" }));
+    if (!precisaCursoEDisciplina(formData.cargo) && (formData.curso !== "" || formData.disciplina)){
+      setFormData((prev) => ({ 
+        ...prev, 
+        curso: "", 
+        disciplina:"" 
+      }));
     }
   }, [formData.cargo]);
-
+  
+  //Mascara para CPF
+  const mascaraCPF = (value) => {
+    value = value.substring(0,14);
+  
+    value = value.replace(/(\d{3})(\d)/, "$1.$2");
+    value = value.replace(/(\d{3})(\d)/, "$1.$2");
+    value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  
+    return value;
+  };
   // manipula mudanças nos inputs/selects
   function handleChange(e) {
     const { name, value } = e.target;
+
+    if (name ==="cpf"){
+        const mascaraCPFValue = mascaraCPF(value);
+        setFormData((prev) => ({ ...prev, [name]: mascaraCPFValue}));
+        return;
+      }
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
@@ -76,31 +108,66 @@ export default function Cadastro() {
   return regex.test(email);
 }
 
+  function isValidCpf(cpf) {
+    return cpf.length === 14;
+  }
+  
+
 
   // submit do formulário
   async function handleSubmit(e) {
     e.preventDefault();
 
-    // validações simples
+    // [Validação 1] - Validação do Cargo 
     if (!formData.cargo) {
       showToast ("warn","Selecione um cargo.");
       return;
     }
-    if (precisaCurso(formData.cargo) && !formData.curso) {
+    // [Validação 2] - Validação Condicional do Curso
+    if (precisaCursoEDisciplina(formData.cargo) && !formData.curso) {
       showToast("warn","Para esse cargo, selecione um curso.");
       return;
     }
-    if (!formData.nome || !formData.email || !formData.senha) {
-       showToast("warn","Preencha os campos obrigatórios (RM, CPF, nome, email, senha).");
+
+    // [NOVA VALIDAÇÃO] - Validação Condicional da Disciplina
+    if (precisaCursoEDisciplina(formData.cargo) && !formData.disciplina) {
+        showToast("warn", "Para esse cargo, selecione uma disciplina.");
+        return;
+    }
+
+    // [Validação 3] - Validação do RM (Condicionalmente obrigatório)
+    // Se o cargo não for 'Secretaria' nem 'Coordenador Pedagógico', o RM é obrigatório.
+    const rmNãoObrigatorio = formData.cargo ==="Secretaria" || formData.cargo === "Coordenador Pedagógico";
+    if (!rmNãoObrigatorio && !formData.rm){
+      showToast ("warn", "O campo RM é obrigátorio para o seu cargo.");
       return;
     }
+
+    // [Validação 4] - Validação do CPF
+    if (!formData.cpf){
+      showToast("warn","Preencha o CPF");
+      return;
+    }
+    if(!isValidCpf(formData.cpf)){
+      showToast("warn","O CPF deve ter 11 digitos.Por favor, verifique.");
+      return;
+    }
+
+    // [Validação 5] - Validação dos campos básicos obrigatórios
+    if (!formData.nome || !formData.email || !formData.senha) {
+       showToast("warn","Preencha o restante dos campos obrigatórios (nome, email, senha).");
+      return;
+    }
+
+     // [Validação 6] - Validação de Email
     if (!isValidEmail(formData.email)) {
     showToast("warn", "Digite um e-mail válido.");
     return;
 }
 
     try {
-      const data = await postFunctionUser(formData); // chama seu serviço
+      const data = await postFunctionUser(formData); 
+      // chama seu serviço
       // console.log("Resposta do servidor:", result);
       if(data.status === 201) {
         showToast("success", 'Login efetuado com sucesso')
@@ -147,7 +214,7 @@ export default function Cadastro() {
         </div>
 
         {/* Se cargo for Coordenador ou Professor mostra o select de curso */}
-        {precisaCurso(formData.cargo) && (
+        {precisaCursoEDisciplina(formData.cargo) && (
           <div className="field">
             <label htmlFor="curso">Curso:</label>
             <select
@@ -155,7 +222,6 @@ export default function Cadastro() {
               name="curso"
               value={formData.curso}
               onChange={handleChange}
-            
             >
               <option value="">Selecione o curso</option>
               {cursosDisponiveis.map((c) => (
@@ -166,34 +232,50 @@ export default function Cadastro() {
             </select>
           </div>
         )}
-
+         {/* [NOVO CAMPO] Se cargo for Coordenador ou Professor mostra o select de disciplina */}
+        {precisaCursoEDisciplina(formData.cargo) && (
         <div className="field">
-          <label htmlFor="rm">
-            RM:
-          {(formData.cargo === "Secretaria" || formData.cargo === "Coordenador Pedagógico") &&(
-            <span 
-              className="tooltip-icon"
-              title="O campo RM não é obrigatório para esse usuário"
+            <label htmlFor="disciplina">Disciplina:</label>
+            <select
+                id="disciplina"
+                name="disciplina"
+                value={formData.disciplina}
+                onChange={handleChange}
             >
-             *
-            </span>
-          )}
-
-          </label>
-          <input
-            type="text"
-            id="rm"
-            name="rm"
-            placeholder="Informe o RM"
-            value={formData.rm}
-            onChange={handleChange}
-            
-          />
+                <option value="">Selecione a disciplina</option>
+                {disciplinasDisponiveis.map((d) => (
+                    <option key={d} value={d}>
+                        {d}
+                    </option>
+                ))}
+            </select>
+        </div>
+      )}
+      <div className="field">
+        <label htmlFor="rm">
+          RM:
+          {(formData.cargo === "Secretaria" || formData.cargo === "Coordenador Pedagógico") &&(
+          <span 
+            className="tooltip-icon"
+            title="O campo RM não é obrigatório para esse usuário"
+          >
+            *
+          </span>
+        )}
+        </label>
+        <input
+          type="text"
+          id="rm"
+          name="rm"
+          placeholder="Informe o RM"
+          value={formData.rm}
+          onChange={handleChange}
+        />
         </div>
         <div className="field">
           <label htmlFor="cpf">CPF:</label>
           <input
-            type="number"
+            type="text"
             id="cpf"
             name="cpf"
             placeholder="Informe o CPF"
@@ -248,7 +330,6 @@ export default function Cadastro() {
 
         <footer className="btns col-12 row col-md-12">
           <div className="actionss">
-       
             <button type="submit" className="btn-submit">
             Cadastrar
             </button>

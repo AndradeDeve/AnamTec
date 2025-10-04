@@ -21,7 +21,14 @@ const Header = () => {
   const toggleConfig = () => {
     setconfigOpen((prev) => !prev);
   };
-
+    // Função para abrir o link do NSA em uma nova aba
+   const handleNsaAccess = () => {
+    // Abre o URL em uma nova aba (_blank)
+    window.open('https://nsa.cps.sp.gov.br/', '_blank');
+    
+    // Opcional: Fecha o menu dropdown após o clique, melhorando a UX
+    setMenuOpen(false);
+  };
 
   const navigate = useNavigate();
 
@@ -49,7 +56,7 @@ const Header = () => {
               <span>Cadastrar</span>
               </li>
              
-              <li>
+              <li onClick={handleNsaAccess}>
                 <img src={nsaIcon} alt="Link de Acesso para o site do NSA" />
               <span>Acesso ao NSA</span>
               </li>

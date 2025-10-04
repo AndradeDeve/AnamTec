@@ -27,7 +27,7 @@ const RedefineSenha = ({ show, onClose,  onEnviar }) => {
 
     }catch(erro){
       console.log("Erro: ", erro);
-      toast.warn('E-mail inválido.', {
+      toast.warn('Informe um e-mail válido.', {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -35,7 +35,7 @@ const RedefineSenha = ({ show, onClose,  onEnviar }) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "dark",
       });
     }
   }
