@@ -26,15 +26,15 @@ routes.use('/resetSenha', authenticate, resetSenhaController);
 routes.use("/deficiencia", deficienciaController);
 routes.use("/alergias", alergiaController);     
 routes.use("/responsavel", responsavelController);
-routes.use("/aluno", alunoController);
-routes.use("/user", authenticate,usuarioController);
+routes.use("/aluno", authenticate, authorizationRoles("coordenador pedagógico", "coordenador curso", "secretaria"), alunoController);
+routes.use("/user", authenticate, authorizationRoles("coordenador pedagógico", "secretaria"),usuarioController);
 routes.use("/login", loginController);
 routes.use('/cursos', cursoController);
 routes.use("/type", typeController);
 routes.use("/endereco", enderecoController);
 routes.use("/diagnostico", diagnosticaController);
 routes.use("/restricoes", restricoesController);
-routes.use("/registroAulas", registroAulasController);
+routes.use("/registroAulas", authenticate ,authorizationRoles("professor", "coordenador de curso"), registroAulasController);
 routes.use("/medicamentos", medicamentosController);
 routes.use("/dadosMedicos", dadosMedicosController);    
 

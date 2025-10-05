@@ -5,21 +5,85 @@ import { hash } from 'bcrypt';
 
 const routes = express.Router();
 
-routes.get("/", async (request, response) => {
-    const {nome, cpf} = request.query;
-    
+routes.get("/", async (req, res) => {
     try{
+        const [rows] = await pool.query(
+            `SELECT 
+            u.id as id_user,
+            u.nome as nome_user,
+            u.RM as rm,
+            u.disciplina as disciplina, 
+            c.curso as curso_prof,
+            t.tipo as entidade,
+            c.curso as curso_user,
+            c.coordenador, 
+            CASE
+            WHEN u.deletedAt IS NULL  THEN 'ativo'
+            ELSE 'inativo'
+            END AS status
+            FROM tbl_usuario u
+            INNER JOIN juncao_curso_user juc ON u.id = juc.id_user
+            INNER JOIN tbl_curso c ON juc.id_curso = c.id
+            INNER JOIN juncao_type_user jut ON u.id = jut.id_user
+            INNER JOIN tbl_type t ON jut.id_type = t.id`
+        );
 
-        let sql = `SELECT * FROM tbl_usuario WHERE deletedAt IS NULL`;
-        const params = [];
-        if(nome){
-            sql += ` AND nome LIKE ?`;
-            params.push(`%${nome}%`);
+        if(!rows && rows.length === 0){
+            return res.status(404).json({err: "Usuários não encontrados."});
         }
 
-        if(cpf){
-            sql += ` AND CPF = ?`;
-            params.push(cpf);
+        return res.status(200).json(rows);
+    }catch(err){
+        console.error("Erro: ", err);
+        return response.status(500).json({err: "Erro no servisor."})
+    }
+})
+
+routes.get("/specific", async (request, response) => {
+    const { curso, rm, nome, coordenador, turno} = request.query;
+    try{
+        let sql = `SELECT 
+            u.nome as nome_user,
+            u.RM as rm,
+            u.disciplina as disciplina, 
+            c.curso as curso_prof,
+            t.tipo as entidade,
+            c.curso as curso_user,
+            c.coordenador, 
+            CASE
+            WHEN u.deletedAt IS NULL  THEN 'ativo'
+            ELSE 'inativo'
+            END AS status
+            FROM tbl_usuario u
+            INNER JOIN juncao_curso_user juc ON u.id = juc.id_user
+            INNER JOIN tbl_curso c ON juc.id_curso = c.id
+            INNER JOIN juncao_type_user jut ON u.id = jut.id_user
+            INNER JOIN tbl_type t ON jut.id_type = t.id`;
+        const params = [];
+
+        if (turno) {
+            sql += `WHERE c.turno LIKE ?`;
+            params.push(turno);
+        }
+
+        if (curso) {
+        sql += ` WHERE c.curso LIKE ?`;
+        params.push(curso);
+        }
+
+        if (coordenador) {
+        sql += ` WHERE c.coordenador LIKE ?`;
+        params.push(coordenador);
+        }
+
+        if (rm) {
+        sql += ` WHERE u.RM = ?`;
+        params.push(rm);
+        }
+
+        if (nome) {
+        sql += ` WHERE u.nome LIKE ?`;
+        params.push(nome);
         }
 
         const [rows] = await pool.query(sql, params);
@@ -38,9 +102,19 @@ routes.get("/", async (request, response) => {
 
 routes.post("/", async (request, response) => {
     const {cpf, nome, email, senha, curso} = request.body;
-    let {rm, cargo} = request.body;
+    let {rm, cargo, disciplina} = request.body;
     try{
-        if(rm){
+        
+        const disciplinaRegex = /^[\p{L}\s\-']{2,35}$/u;
+        if(disciplina && cargo.toLowerCase() === "professor"){
+            if(!disciplinaRegex.test(disciplina.trim())){
+                return response.status(400).json({err: "Disciplina inválida"});
+            }
+        }else{
+            disciplina = null;
+        }
+
+        if(rm && cargo.toLowerCase() === "coordenador de Curso" && cargo.toLowerCase() === "professor"){
             const rmRegex = /^\d{7,15}$/;
             if(!rm || !rmRegex.test(rm.toLowerCase().trim())){
                 return response.status(400).json({err: "Rm inválido"})
@@ -94,8 +168,8 @@ routes.post("/", async (request, response) => {
 
         const hashedSenha = await hash(senha, 10);
 
-        await pool.query(`INSERT INTO tbl_usuario (RM, CPF, nome, email, senha) VALUES(?, ?, ?, ?, ?)`,
-            [rm, cpf, nome, email, hashedSenha]
+        await pool.query(`INSERT INTO tbl_usuario (RM, CPF, nome, email, senha, disciplina) VALUES(?, ?, ?, ?, ?, ?)`,
+            [rm, cpf, nome, email, hashedSenha, disciplina]
         );
         const [idUserExiste] = await pool.query(`SELECT * FROM tbl_usuario WHERE CPF = ?`, [cpf])
 
@@ -172,7 +246,6 @@ routes.put("/:id", async (request, response) => {
     }
 });
 
-// /Exemplo de como usar o nodemailer para recuperação de senhas....
 
 routes.delete("/:cpf", async(request, response) => {
     const {cpf} = request.params;

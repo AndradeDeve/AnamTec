@@ -6,6 +6,7 @@ import './StudantTable.css';
 export default function StudentTable({alunosFiltrados = []}) {
     
   const navigate = useNavigate();
+  
   // Se não há alunos, mostrar mensagem
   if (!alunosFiltrados || alunosFiltrados.length === 0) {
     return (
@@ -50,9 +51,9 @@ export default function StudentTable({alunosFiltrados = []}) {
             </tr>
           </thead>
           <tbody className=''>
-             {alunosFiltrados.map((aluno, index) => (
+             {Array.isArray(alunosFiltrados) && alunosFiltrados.map((aluno, index) => (
               <tr key={index}>
-                <td className="p-3">{aluno.ra}</td>
+                <td className="p-3">{aluno.rm}</td>
                 <td className="p-3">{aluno.nome_aluno}</td>
                 <td className="p-3">{aluno.nome_curso}</td>
                 <td className="p-3">{aluno.semestre}</td>

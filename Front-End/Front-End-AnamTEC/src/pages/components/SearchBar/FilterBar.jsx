@@ -8,19 +8,20 @@ import './FilterBar.css';
 
 function FilterBar({onSearch}) {
   const [termo, setTermo] = useState(""); 
-  const [filtro, setFiltro] = useState("ra");
+  const [filtro, setFiltro] = useState("rm");
 
 
  const  handleAcess = async (e) => {
   e.preventDefault();
   try{
-    console.log(filtro);
+    console.log("filtro",filtro);
     if(termo.length <3 ){
-      toast.error(`O ${filtro.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
+      toast.warn(`O ${filtro.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
+      return
     }
-    const data = await getFunctionAlunoSpecific(filtro, termo+(filtro!="ra"?"%":""));
+    const data = await getFunctionAlunoSpecific(filtro, termo+(filtro!="rm"?"%":""));
     if(data.status === 200){
-      onSearch(data)
+      onSearch(data.data || [])
     } 
   }catch(error){
     console.log("Erro: ", error);
@@ -41,7 +42,7 @@ function FilterBar({onSearch}) {
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           >
-            <option value="ra">RM</option>
+            <option value="rm">RM</option>
             <option value="nome">Nome do Aluno</option>
             <option value="curso">Curso</option>
             <option value="turno">Turno</option>

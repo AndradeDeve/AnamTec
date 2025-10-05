@@ -5,7 +5,7 @@ import pool from '../database/data-source.js';
 const routes = express.Router();
 
 routes.get("/", async (request, response) => {
-    const { id, cpf, nome } = request.query;
+    const { id, } = request.query;
     try {
         let sql = `SELECT * FROM tbl_responsavel WHERE deletedAt IS NULL`;
         const params = [];
@@ -13,16 +13,6 @@ routes.get("/", async (request, response) => {
         if (id) {
             sql += ` AND id = ?`;
             params.push(id);
-        }
-
-        if (cpf) {
-            sql += ` AND CPF = ?`;
-            params.push(cpf);
-        }
-
-        if (nome) {
-            sql += ` AND nome LIKE ?`;
-            params.push(`%${nome}%`);
         }
 
         const [rows] = await pool.query(sql, params);

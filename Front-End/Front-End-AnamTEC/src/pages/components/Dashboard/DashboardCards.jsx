@@ -22,13 +22,11 @@ export default function DashboardCards() {
     const fetchNumerosAl = async () => {
       try {
         const response = await getFunctionAlunoCards();
-        console.log(response.data)
         setNumerosAl({
           totalAlunos: response.data.total_alunos,
           anamineseConcluida: response.data.anaminese_concluida,
           anaminesePendente: response.data.anaminese_pendente
         });
-        console.log("Resposta completa:",numerosAl);
       } catch(err) {
         console.log("Erro: ", err);
         setNumerosAl({

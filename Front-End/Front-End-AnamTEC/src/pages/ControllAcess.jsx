@@ -1,14 +1,23 @@
 // src/pages/ControleAcesso.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Table, Button, Form, Card } from "react-bootstrap";
 import Header from "./components/Header/Header"; 
+import { getFunctionUser } from "../services/APIService.js";
+import { getFunctionAlunoControll } from "../services/APIService.js";
+import { getFunctionAlunoControllSpacific } from "../services/APIService.js";
+import { getFunctionUserSpecific } from "../services/APIService.js";
 import "./ControllAcess.css";
+import { toast } from "react-toastify";
 
 export default function ControleAcesso() {
   const [filtroStatus, setFiltroStatus] = useState("");   // "" | "ativo" | "inativo"
   const [filtroAlunoProf, setFiltroAlunoProf] = useState("") // "" | "Aluno" | "Professor"
   const [tipoPesquisa, setTipoPesquisa] = useState("rm"); 
   const [valorPesquisa, setValorPesquisa] = useState("");
+  const [usuarios, setUsuarios] = useState([]);
+  const [alunos, setAlunos] = useState([]);
+  const [usuariosFiltrados, setUsuariosFiltrados] = useState([]);
+  const dadosCombindados = [...alunos, ...usuarios]
 
     const labelPorTipo = {
     rm: "RM",
@@ -16,18 +25,90 @@ export default function ControleAcesso() {
     curso: "Curso",
     coordenador: "Coordenador",
   };
-  // Exemplo de dados mockados
-  const usuarios = [
-      { rm: "20100", nome: "Zorvanius Meteora", entidade: "Aluno", disciplina: "Não Aplica", curso: "Desenvolvimento de Sistemas", coordenador: "Marcos Costa", status: "Ativo" },
-      { rm: "18005", nome: "Bréfila Aurora", entidade: "Aluno", disciplina: "Não Aplica", curso: "Administração", coordenador: "Ricardo", status: "Ativo" },
-      { rm: "19045", nome: "Krumthor César", entidade: "Aluno", disciplina: "Não Aplica", curso: "Logística", coordenador: "Olivaldo", status: "Inativo" },
-      { rm: "19754", nome: "Lullabee Sofia", entidade: "Aluno", disciplina: "Não Aplica", curso: "Eletroeletrônica", coordenador: "Willian Martins", status: "Ativo" },
-      { rm: "21023", nome: "Xandrópico Dante", entidade: "Aluno", disciplina: "Não Aplica", curso: "Desenvolvimento de Sistemas", coordenador: "Marcos Costa", status: "Ativo" },
-  ];
+  
+  useEffect(()  => {
+    const fetchUser = async () => {
+      try{
+        const responseUser = await getFunctionUser();
+        const responseAl = await getFunctionAlunoControll(); 
+        
+        setUsuarios(responseUser.data);
+        setAlunos(responseAl.data);
+      }catch(err){
+        console.log("Erro: ", err);
+        toast.error("Sla");
+      }
+    }
+    fetchUser()
+  }, []);
 
-  const handlePesquisar = () => {
-    console.log("🔍 Pesquisando por:", tipoPesquisa, valorPesquisa, filtroStatus, filtroAlunoProf);
+
+  const handlePesquisar = async () => {
+    try{
+      let resultado = [...dadosCombindados];
+      
+      if (valorPesquisa.trim() !== "") {
+
+        if(valorPesquisa.length < 3){
+          toast.warn(`O ${tipoPesquisa.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
+          return
+        }
+
+        let alunosRes = [];
+        let usersRes = [];
+
+        try {
+          const responseAl = await getFunctionAlunoControllSpacific(
+            tipoPesquisa,
+            valorPesquisa + (tipoPesquisa !== "rm" ? "%" : "")
+          );
+          console.log("Sucesso.")
+          alunosRes = responseAl.data || [];
+        } catch (err) {
+          console.warn("Nenhum aluno encontrado");
+        }
+
+        try {
+          const responseUser = await getFunctionUserSpecific(
+            tipoPesquisa,
+            valorPesquisa + (tipoPesquisa !== "rm" ? "%" : "")
+          );
+          usersRes = responseUser.data.response || [];
+          console.log(usersRes)
+        } catch (err) {
+          console.warn("Nenhum professor encontrado",err);
+        }
+        resultado = [...alunosRes, ...usersRes];
+        if(!resultado || resultado.length === 0 ){
+          toast.warn("Nenhuma entidade encontrada.")
+        }
+
+      }
+      
+      if (filtroStatus) {
+        resultado = resultado.filter(
+          (u) => u.status && u.status.toLowerCase() === filtroStatus.toLowerCase()
+        );
+      }
+      const normalizarEntidade = (tipo) => {
+      if (!tipo) return "aluno";
+        const t = tipo.toLowerCase();
+        if (t.includes("professor")) return "professor";
+        return t;
+      };
+
+      if (filtroAlunoProf) {
+        resultado = resultado.filter((u) => {
+        return normalizarEntidade(u.entidade) === filtroAlunoProf.toLowerCase();
+      });
+    }
+      setUsuariosFiltrados(resultado);
+    }catch(err){
+      console.log("Erro: ", err);
+      toast.error("Erro ao buscar entidade(s).")
+    }
     // Aqui no futuro vamos integrar com API
+    // Já estamos integrando 🥲
   };
 
   return (
@@ -108,13 +189,13 @@ export default function ControleAcesso() {
                   </tr>
                 </thead>
                 <tbody>
-                  {usuarios.map((user, index) => (
+                 {(usuariosFiltrados.length > 0 ? usuariosFiltrados : dadosCombindados).map((user, index) => (
                     <tr key={index}>
-                      <td>{user.rm}</td>
-                      <td>{user.nome}</td>
-                      <td>{user.entidade}</td>
-                      <td>{user.disciplina}</td>
-                      <td>{user.curso}</td>
+                      <td>{user.rm || "Não se aplica"}</td>
+                      <td>{user.nome_user || user.nome_aluno}</td>
+                      <td>{user.entidade || "Aluno"}</td>
+                      <td>{user.disciplina || "Não se aplica"}</td>
+                      <td>{user.curso_user || user.nome_curso}</td>
                       <td>{user.coordenador}</td>
                       <td>
                         <span

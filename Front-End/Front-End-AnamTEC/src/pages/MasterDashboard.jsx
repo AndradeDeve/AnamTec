@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header/Header';
 import DashboardCards from './components/Dashboard/DashboardCards';
-import  { getFunctionAluno } from './../services/APIService.js';
+import { getFunctionAluno } from './../services/APIService.js';
+import { postEmailAlunosPendentes } from './../services/APIService.js';
 import FilterBar from './components/SearchBar/FilterBar';
 import StudentTable from './components/StudantTable/StudantTable';
 import ButtonGrid from './components/ButtonGrid/ButtonGrid';
+import { toast } from 'react-toastify';
 
 export default function MasterDashboard() {
   const [showModal, setShowModal] = useState(false);
-  const [alunosFiltrados, setAlunosFiltrados] = useState(null);
+  const [alunosFiltrados, setAlunosFiltrados] = useState([]);
   const [alunosPendentes, setAlunosPendentes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAlunos = async () => {
-      try {
-        
-        const dados = await getFunctionAluno();
-        setAlunosFiltrados(dados);
-        setLoading(true);
-        setAlunosFiltrados(dados || []);
-      } catch (error) {
-        setAlunosFiltrados([]);
-        console.error('Erro ao buscar dados dos alunos:', error);
-      }finally {
-        setLoading(false); 
-      };
-    };
-    fetchAlunos();
-  }, []);
+  const fetchAlunos = async () => {
+    try {
+      const dados = await getFunctionAluno();
+      console.log("dados", dados)
+      setAlunosFiltrados(dados || []);
+    } catch (error) {
+      setAlunosFiltrados([]);
+      console.error('Erro ao buscar dados dos alunos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchAlunos();
+}, []);
 
   const carregarAlunosPendentes = () => {
     const mock = [
@@ -47,8 +47,19 @@ export default function MasterDashboard() {
     setAlunosFiltrados(dados);
   };
 
-  const enviarLembretes = () => {
-    console.log("Enviando e-mails para:", alunosPendentes);
+  const enviarLembretes = async () => {
+    try{
+      const response = await postEmailAlunosPendentes();
+      if(response.status === 200){
+        toast.success("E-mails enviados para alunos pendentes");
+      }else if(response.status === 404){
+        toast.error("Nenhum aluno encontrado.");
+      }else{
+        toast.error("Erro ao enviar e-mail para alunos")
+      };
+    }catch(err){
+      console.log("Erro: ", err);
+    }
     setShowModal(false);
   };
 
