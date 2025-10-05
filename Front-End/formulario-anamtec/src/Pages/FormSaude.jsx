@@ -274,7 +274,7 @@ function FormSaude() {
 
             <Col xs={12} md={8}>
             <Form.Group controlId="formfile">
-              <Form.Label>Se sim realize o upload:</Form.Label>
+              <Form.Label>Se sim, realize o upload:</Form.Label>
               <Form.Control 
               type="file" 
               accept=".pdf, .jpg, .jpe, .png" 
@@ -282,7 +282,7 @@ function FormSaude() {
             />
               {saude.laudo && (
                 <p className="mt-2 text-success">
-                  Arquivo selecionado {laudo.name}
+                  Arquivo selecionado: {saude.laudo.name}
                 </p>
               )}
             </Form.Group>

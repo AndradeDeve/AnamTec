@@ -112,8 +112,6 @@ export default function Cadastro() {
     return cpf.length === 14;
   }
   
-
-
   // submit do formulário
   async function handleSubmit(e) {
     e.preventDefault();
@@ -171,7 +169,6 @@ export default function Cadastro() {
       // console.log("Resposta do servidor:", result);
       if(data.status === 201) {
         showToast("success", 'Login efetuado com sucesso')
-     
       }
       // opcional: limpar formulário
       // setFormData({ rm: "",cpf:"" ,nome: "", email: "", senha: "", cargo: "", curso: "" });
@@ -186,7 +183,7 @@ export default function Cadastro() {
             {/* TOPO - Logo e Título */}
       <div className="asideContainerCadastro d-flex-">
       <header className="header-Cadastro">
-        <h1>AnamTec</h1>
+        <h1 className="d-none d-sm-block">AnamTec</h1>
         <img src={logoAnamTec} alt="Logo" className="logoa" />
       </header>
       <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
@@ -293,7 +290,6 @@ export default function Cadastro() {
             placeholder="Nome"
             value={formData.nome}
             onChange={handleChange}
-          
           />
         </div>
 
@@ -306,7 +302,6 @@ export default function Cadastro() {
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            
           />
         </div>
 
@@ -319,7 +314,6 @@ export default function Cadastro() {
             placeholder="Senha"
             value={formData.senha}
             onChange={handleChange}
-            
           />
         </div>
             <div className="voltar">

@@ -17,7 +17,17 @@ routes.post("/", async(request, response) => {
             return response.status(401).json({err: "E-mail inválido"});
         }
 
-        const [rows] = await pool.query(`SELECT * FROM tbl_usuario WHERE email = ? AND deletedAt IS NULL`, [email]);
+        const [rows] = await pool.query(`
+            SELECT
+            u.nome as nome,
+            u.senha as senha,
+            u.email as email,
+            t.tipo as type
+            FROM tbl_usuario u
+            INNER JOIN juncao_type_user jut ON u.id = jut.id_user
+            INNER JOIN tbl_type t ON jut.id_type = t.id 
+            WHERE u.email = ? AND u.deletedAt IS NULL
+            `, [email]);
 
         if(rows.length === 0){
             return response.status(401).json({err: "Usuário não encontrado."});
@@ -29,9 +39,9 @@ routes.post("/", async(request, response) => {
         if(!senhaValida){
             return response.status(401).json({err: "Senha inválida."});
         }        
-        const token = genereteToken({user:user.nome, email:user.email, id_type:user.id_type});
+        const token = genereteToken({user:user.nome, email:user.email, type:user.type});
         
-        return response.status(200).json({response: "Login efetuado com sucesso.", token, typeUser:user.id_type, email:user.email});
+        return response.status(200).json({response: "Login efetuado com sucesso.", token, typeUser:user.type, email:user.email});
     }catch(err){
         console.log("Erro ao efetuar o login:", err);
         return response.status(500).json({err: "Erro no servidor."});

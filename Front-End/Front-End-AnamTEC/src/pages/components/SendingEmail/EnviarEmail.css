@@ -1,42 +1,39 @@
 .modal{
    margin: 10% 0%;
    font-family: Arial, Helvetica, sans-serif;
-
-   
 }
 
 .modalheader{
-    background-color: #044654;   
-    color:#E4EDF1;
+    background-color: var(--cor-destaque);   
+    color:var(--branco);
    
 }
 
 .modalTitle{
-    font-size: 18pt;
+    font-size: 2rem;
     font-weight: 600;
-    color:#E4EDF1;
+    color:(--branco);
 }
 
 .modalbody{
-    background-color: #044654;
-     border: 2px solid #044654;
+    background-color: var(--cor-destaque);
 }
 
 .modalbody p{
-    font-size: 16pt;
-    color:#E4EDF1;
+    font-size: 1.2rem;
+    color:var(--branco);
 }
 
 .modalbody ul{
-    font-size: 14pt;
-    color: #E4EDF1;
+    font-size: 1.2rem;
+    color: (--branco);
 }
 
 .modalfooter{
-    background-color: #044654;
-    border: 2px solid #044654;
+    background-color: var(--cor-destaque);
+    border: 2px solid var(--cor-destaque);
 }
 
 .modalfooter button{
-    background-color: #1E2019;
+    background-color: var(--preto);
 }

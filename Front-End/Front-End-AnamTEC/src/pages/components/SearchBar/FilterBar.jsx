@@ -8,19 +8,20 @@ import './FilterBar.css';
 
 function FilterBar({onSearch}) {
   const [termo, setTermo] = useState(""); 
-  const [filtro, setFiltro] = useState("ra");
+  const [filtro, setFiltro] = useState("todos");
 
 
  const  handleAcess = async (e) => {
   e.preventDefault();
   try{
-    console.log(filtro);
-    if(termo.length <3 ){
-      toast.error(`O ${filtro.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
+    console.log("filtro",filtro);
+    if(termo.length <3 && filtro !== "todos"  ){
+      toast.warn(`O ${filtro.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
+      return
     }
-    const data = await getFunctionAlunoSpecific(filtro, termo+(filtro!="ra"?"%":""));
+    const data = await getFunctionAlunoSpecific(filtro, termo+(filtro!="rm"?"%":""));
     if(data.status === 200){
-      onSearch(data)
+      onSearch(data.data || [])
     } 
   }catch(error){
     console.log("Erro: ", error);
@@ -31,25 +32,25 @@ function FilterBar({onSearch}) {
 
 
  return (
-  <div className="d-flex  align-items-center justify-content-center container-fluid ">
-      <div className="d-flex row g-3 align-items-center ">
+  <div className="d-flex align-items-center justify-content-center container-fluid ">
+      <div className="d-flex row g-4 align-items-center ">
         
         {/* Dropdown */}
-        <div className="col-12 col-sm-6 col-md-5">
+        <div className="col-12 col-md-5">
           <select
             className="form-select"
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           >
-            <option value="ra">RM</option>
+            <option value="todos">Todos</option>
+            <option value="rm">RM</option>
             <option value="nome">Nome do Aluno</option>
             <option value="curso">Curso</option>
             <option value="turno">Turno</option>
             <option value="coordenador">Coordenador</option>
-            <option value="status">Status Anamnese</option>
           </select>
         </div>
-       <div className="col-12 col-sm-6 col-md-7">
+       <div className="col-12 col-md-7">
         <div className="search-bar">
           <input
             type="text"

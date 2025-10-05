@@ -1,68 +1,81 @@
-import express from 'express';
-import pool from '../database/data-source.js';
+import express from "express";
+import pool from "../database/data-source.js";
+import { upload } from "../utils/cloudinaryConfig.js";
 
 const routes = express.Router();
 
-const enumSexo = ['feminino', 'masculino'];
-const enumTpSangue = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-const enumSimNao = ['sim', 'não'];
+const enumSexo = ["feminino", "masculino"];
+const enumTpSangue = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+const enumSimNao = ["sim", "não"];
 
-routes.get('/', async (req, res) => {
+routes.get("/", async (req, res) => { 
   try {
-    const [rows] = await pool.query('SELECT * FROM tbl_dadosMedicos');
-    if (!rows.length) return res.status(404).json({ err: 'Nenhum dado médico encontrado.' });
+    const [rows] = await pool.query("SELECT * FROM tbl_dadosMedicos");
+    if (!rows.length) return res.status(404).json({ err: "Nenhum dado médico encontrado." });
     return res.status(200).json({ response: rows });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ err: 'Erro no servidor.' });
+    return res.status(500).json({ err: "Erro no servidor." });
   }
 });
 
-routes.get('/:id', async (req, res) => {
+routes.get("/:id", async (req, res) => {
   const { id } = req.params;
-  if (isNaN(id)) return res.status(400).json({ err: 'ID inválido.' });
+  if (isNaN(id)) return res.status(400).json({ err: "ID inválido." });
 
   try {
-    const [rows] = await pool.query('SELECT * FROM tbl_dadosMedicos WHERE id = ?', [id]);
-    if (!rows.length) return res.status(404).json({ err: 'Dado médico não encontrado.' });
+    const [rows] = await pool.query("SELECT * FROM tbl_dadosMedicos WHERE id = ?", [id]);
+    if (!rows.length) return res.status(404).json({ err: "Dado médico não encontrado." });
     return res.status(200).json({ response: rows[0] });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ err: 'Erro no servidor.' });
+    return res.status(500).json({ err: "Erro no servidor." });
   }
 });
 
-routes.post('/', async (req, res) => {
-  const {
-    sexo,
-    tp_sangue,
-    peso,
-    altura,
-    gravidez,
-    idade,
-    alcool,
-    fumo,
-    drogas,
-    obs,
-    laudo,
-    id_alergias,
-    id_diagnostico,
-    id_deficiencias,
-    id_restricoes,
-    id_cirurgias,
-    id_medicamentos,
-    id_aluno
-  } = req.body;
-  try {
-    if (!enumSexo.includes(sexo)) return res.status(400).json({ err: 'Sexo inválido.' });
-    if (!enumTpSangue.includes(tp_sangue)) return res.status(400).json({ err: 'Tipo sanguíneo inválido.' });
-    if (typeof !peso === 'number' || peso <= 0) return res.status(400).json({ err: 'Peso inválido.' });
-    if (typeof !altura === 'number' || altura <= 0) return res.status(400).json({ err: 'Altura inválida.' });
-    if (!enumSimNao.includes(gravidez)) return res.status(400).json({ err: 'Gravidez inválido.' });
-    if (!Number.isInteger(idade) || idade < 0) return res.status(400).json({ err: 'Idade inválida.' });
-    if (!enumSimNao.includes(alcool)) return res.status(400).json({ err: 'Álcool inválido.' });
-    if (!enumSimNao.includes(fumo)) return res.status(400).json({ err: 'Fumo inválido.' });
-    if (!enumSimNao.includes(drogas)) return res.status(400).json({ err: 'Drogas inválido.' });
+routes.post("/", (req, res, next) => {
+  upload.single("laudo")(req, res, function (err) {
+    if (err) {
+      console.error("Erro no upload:", err);
+      return res.status(500).json({ error: err.message });
+    }
+    next();
+  });
+}, async (req, res) => {
+    try { 
+    console.log("oiiiiiiiiiiiiiiiiiiiiiii")
+    const {
+      sexo,
+      tp_sangue,
+      peso,
+      altura,
+      gravidez,
+      idade,
+      alcool,
+      fumo,
+      drogas,
+      obs,
+      id_alergias,
+      id_diagnostico,
+      id_deficiencias,
+      id_restricoes,
+      id_cirurgias,
+      id_medicamentos,
+      id_aluno
+    } = req.body;
+    let laudo = req.file?.path || req.file?.url || null;
+
+    console.log("Arquivo recebido do Cloudinary:", JSON.stringify(req.file, null, 2));
+
+    if (!enumSexo.includes(sexo)) return res.status(400).json({ err: "Sexo inválido." });
+    if (!enumTpSangue.includes(tp_sangue)) return res.status(400).json({ err: "Tipo sanguíneo inválido." });
+    if (typeof !peso === "number" || peso <= 0) return res.status(400).json({ err: "Peso inválido." });
+    if (typeof !altura === "number" || altura <= 0) return res.status(400).json({ err: "Altura inválida." });
+    if (!enumSimNao.includes(gravidez)) return res.status(400).json({ err: "Gravidez inválido." });
+    if (!Number.isInteger(idade) || idade < 0) return res.status(400).json({ err: "Idade inválida." });
+    if (!enumSimNao.includes(alcool)) return res.status(400).json({ err: "Álcool inválido." });
+    if (!enumSimNao.includes(fumo)) return res.status(400).json({ err: "Fumo inválido." });
+    if (!enumSimNao.includes(drogas)) return res.status(400).json({ err: "Drogas inválido." });
 
     if (
       isNaN(id_alergias) ||
@@ -72,7 +85,7 @@ routes.post('/', async (req, res) => {
       isNaN(id_cirurgias) ||
       isNaN(id_medicamentos)
     ) {
-      return res.status(400).json({ err: 'IDs de chaves estrangeiras inválidos.' });
+      return res.status(400).json({ err: "IDs de chaves estrangeiras inválidos." });
     }
 
       const [idExiste] =  await pool.query(`SELECT * FROM tbl_cadastro_al WHERE id = ?`, [id_aluno]);
@@ -81,12 +94,10 @@ routes.post('/', async (req, res) => {
       }
 
     if (isNaN(id_aluno)) {
-      return res.status(400).json({ err: 'ID do aluno inválido.' });
+      return res.status(400).json({ err: "ID do aluno inválido." });
     }
 
-    if (obs && typeof obs !== 'string') return res.status(400).json({ err: 'Obs deve ser string.' });
-    if (laudo && typeof laudo !== 'string') return res.status(400).json({ err: 'Laudo deve ser string.' });
-
+    if (obs && typeof obs !== "string") return res.status(400).json({ err: "Obs deve ser string." });
     
     const [result] = await pool.query(
       `INSERT INTO tbl_dadosMedicos
@@ -95,26 +106,26 @@ routes.post('/', async (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         sexo, tp_sangue, peso, altura, gravidez, idade, alcool, fumo, drogas,
-        obs || null, laudo || null,
+        obs || null, laudo,
         id_alergias, id_diagnostico, id_deficiencias, id_restricoes,
         id_cirurgias, id_medicamentos, id_aluno || null
       ]
     );
-    return res.status(201).json({ response: 'Dados médicos cadastrados com sucesso.'});
+    return res.status(201).json({ response: "Dados médicos cadastrados com sucesso."});
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ err: 'Erro no servidor.' });
+    console.log("erro: ",err);
+    return res.status(200).json({ error: "Erro no servidor." });
   }
 });
 
-routes.put('/:id', async (req, res) => {
+routes.put("/:id", async (req, res) => {
   const { id } = req.params;
-  if (isNaN(id)) return res.status(400).json({ err: 'ID inválido.' });
+  if (isNaN(id)) return res.status(400).json({ err: "ID inválido." });
 
   const allowedFields = [
-    'sexo', 'tp_sangue', 'peso', 'altura', 'gravidez', 'idade', 'alcool', 'fumo', 'drogas',
-    'obs', 'laudo', 'id_alergias', 'id_diagnostico', 'id_deficiencias', 'id_restricoes',
-    'id_cirurgias', 'id_medicamentos', 'id_aluno'
+    "sexo", "tp_sangue", "peso", "altura", "gravidez", "idade", "alcool", "fumo", "drogas",
+    "obs", "laudo", "id_alergias", "id_diagnostico", "id_deficiencias", "id_restricoes",
+    "id_cirurgias", "id_medicamentos", "id_aluno"
   ];
 
   const fieldsToUpdate = {};
@@ -125,59 +136,59 @@ routes.put('/:id', async (req, res) => {
   }
 
   if (Object.keys(fieldsToUpdate).length === 0) {
-    return res.status(400).json({ err: 'Nenhum campo para atualizar.' });
+    return res.status(400).json({ err: "Nenhum campo para atualizar." });
   }
 
-  if ('sexo' in fieldsToUpdate && !enumSexo.includes(fieldsToUpdate.sexo)) {
-    return res.status(400).json({ err: 'Sexo inválido.' });
+  if ("sexo" in fieldsToUpdate && !enumSexo.includes(fieldsToUpdate.sexo)) {
+    return res.status(400).json({ err: "Sexo inválido." });
   }
-  if ('tp_sangue' in fieldsToUpdate && !enumTpSangue.includes(fieldsToUpdate.tp_sangue)) {
-    return res.status(400).json({ err: 'Tipo sanguíneo inválido.' });
+  if ("tp_sangue" in fieldsToUpdate && !enumTpSangue.includes(fieldsToUpdate.tp_sangue)) {
+    return res.status(400).json({ err: "Tipo sanguíneo inválido." });
   }
-  if ('peso' in fieldsToUpdate && (typeof fieldsToUpdate.peso !== 'number' || fieldsToUpdate.peso <= 0)) {
-    return res.status(400).json({ err: 'Peso inválido.' });
+  if ("peso" in fieldsToUpdate && (typeof fieldsToUpdate.peso !== "number" || fieldsToUpdate.peso <= 0)) {
+    return res.status(400).json({ err: "Peso inválido." });
   }
-  if ('altura' in fieldsToUpdate && (typeof fieldsToUpdate.altura !== 'number' || fieldsToUpdate.altura <= 0)) {
-    return res.status(400).json({ err: 'Altura inválida.' });
+  if ("altura" in fieldsToUpdate && (typeof fieldsToUpdate.altura !== "number" || fieldsToUpdate.altura <= 0)) {
+    return res.status(400).json({ err: "Altura inválida." });
   }
-  if ('gravidez' in fieldsToUpdate && !enumSimNao.includes(fieldsToUpdate.gravidez)) {
-    return res.status(400).json({ err: 'Gravidez inválido.' });
+  if ("gravidez" in fieldsToUpdate && !enumSimNao.includes(fieldsToUpdate.gravidez)) {
+    return res.status(400).json({ err: "Gravidez inválido." });
   }
-  if ('idade' in fieldsToUpdate && (!Number.isInteger(fieldsToUpdate.idade) || fieldsToUpdate.idade < 0)) {
-    return res.status(400).json({ err: 'Idade inválida.' });
+  if ("idade" in fieldsToUpdate && (!Number.isInteger(fieldsToUpdate.idade) || fieldsToUpdate.idade < 0)) {
+    return res.status(400).json({ err: "Idade inválida." });
   }
-  if ('alcool' in fieldsToUpdate && !enumSimNao.includes(fieldsToUpdate.alcool)) {
-    return res.status(400).json({ err: 'Álcool inválido.' });
+  if ("alcool" in fieldsToUpdate && !enumSimNao.includes(fieldsToUpdate.alcool)) {
+    return res.status(400).json({ err: "Álcool inválido." });
   }
-  if ('fumo' in fieldsToUpdate && !enumSimNao.includes(fieldsToUpdate.fumo)) {
-    return res.status(400).json({ err: 'Fumo inválido.' });
+  if ("fumo" in fieldsToUpdate && !enumSimNao.includes(fieldsToUpdate.fumo)) {
+    return res.status(400).json({ err: "Fumo inválido." });
   }
-  if ('drogas' in fieldsToUpdate && !enumSimNao.includes(fieldsToUpdate.drogas)) {
-    return res.status(400).json({ err: 'Drogas inválido.' });
+  if ("drogas" in fieldsToUpdate && !enumSimNao.includes(fieldsToUpdate.drogas)) {
+    return res.status(400).json({ err: "Drogas inválido." });
   }
-  if ('obs' in fieldsToUpdate && fieldsToUpdate.obs !== null && typeof fieldsToUpdate.obs !== 'string') {
-    return res.status(400).json({ err: 'Obs deve ser string.' });
+  if ("obs" in fieldsToUpdate && fieldsToUpdate.obs !== null && typeof fieldsToUpdate.obs !== "string") {
+    return res.status(400).json({ err: "Obs deve ser string." });
   }
-  if ('laudo' in fieldsToUpdate && fieldsToUpdate.laudo !== null && typeof fieldsToUpdate.laudo !== 'string') {
-    return res.status(400).json({ err: 'Laudo deve ser string.' });
+  if ("laudo" in fieldsToUpdate && fieldsToUpdate.laudo !== null && typeof fieldsToUpdate.laudo !== "string") {
+    return res.status(400).json({ err: "Laudo deve ser string." });
   }
   if (
-    ('id_alergias' in fieldsToUpdate && isNaN(fieldsToUpdate.id_alergias)) ||
-    ('id_diagnostico' in fieldsToUpdate && isNaN(fieldsToUpdate.id_diagnostico)) ||
-    ('id_deficiencias' in fieldsToUpdate && isNaN(fieldsToUpdate.id_deficiencias)) ||
-    ('id_restricoes' in fieldsToUpdate && isNaN(fieldsToUpdate.id_restricoes)) ||
-    ('id_cirurgias' in fieldsToUpdate && isNaN(fieldsToUpdate.id_cirurgias)) ||
-    ('id_medicamentos' in fieldsToUpdate && isNaN(fieldsToUpdate.id_medicamentos))
+    ("id_alergias" in fieldsToUpdate && isNaN(fieldsToUpdate.id_alergias)) ||
+    ("id_diagnostico" in fieldsToUpdate && isNaN(fieldsToUpdate.id_diagnostico)) ||
+    ("id_deficiencias" in fieldsToUpdate && isNaN(fieldsToUpdate.id_deficiencias)) ||
+    ("id_restricoes" in fieldsToUpdate && isNaN(fieldsToUpdate.id_restricoes)) ||
+    ("id_cirurgias" in fieldsToUpdate && isNaN(fieldsToUpdate.id_cirurgias)) ||
+    ("id_medicamentos" in fieldsToUpdate && isNaN(fieldsToUpdate.id_medicamentos))
   ) {
-    return res.status(400).json({ err: 'IDs de chaves estrangeiras inválidos.' });
+    return res.status(400).json({ err: "IDs de chaves estrangeiras inválidos." });
   }
-  if ('id_aluno' in fieldsToUpdate && fieldsToUpdate.id_aluno !== null && isNaN(fieldsToUpdate.id_aluno)) {
-    return res.status(400).json({ err: 'ID do aluno inválido.' });
+  if ("id_aluno" in fieldsToUpdate && fieldsToUpdate.id_aluno !== null && isNaN(fieldsToUpdate.id_aluno)) {
+    return res.status(400).json({ err: "ID do aluno inválido." });
   }
 
   const setClause = Object.keys(fieldsToUpdate)
     .map(field => `${field} = ?`)
-    .join(', ');
+    .join(", ");
 
   const values = Object.values(fieldsToUpdate);
   values.push(id);
@@ -188,12 +199,12 @@ routes.put('/:id', async (req, res) => {
       values
     );
     if (result.affectedRows === 0) {
-      return res.status(404).json({ err: 'Dado médico não encontrado para atualizar.' });
+      return res.status(404).json({ err: "Dado médico não encontrado para atualizar." });
     }
-    return res.status(200).json({ response: 'Dados médicos atualizados com sucesso.' });
+    return res.status(200).json({ response: "Dados médicos atualizados com sucesso." });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ err: 'Erro no servidor.' });
+    return res.status(500).json({ err: "Erro no servidor." });
   }
 });
 

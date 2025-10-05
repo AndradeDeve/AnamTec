@@ -1,10 +1,10 @@
 .tabela-container {
   max-height: 600px; /* altura máxima da tabela */
-  overflow-y: auto;   /* scroll vertical */
-  padding: 10px;
-  border: 1px solid #ddd;
+  overflow-y: auto; /* scroll vertical */
+  padding: 8px;
+  border: 2px solid var(--branco);
   border-radius: 8px;
-  background-color: #044654;
+  background-color: var(--cor-destaque);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -20,8 +20,8 @@ table {
 thead th {
   position: sticky;
   top: 0;
-  background-color:#044654 !important;
-  color:#E4EDF1 !important;
+  background-color: var(--cor-destaque) !important;
+  color:var(--branco) !important;
   z-index: 1;
   padding: 30px 10px;
 }
@@ -29,18 +29,18 @@ thead th {
 
 
 .btn-table {
-  background-color: #044654;
-  color: #fff;
+  background-color: var(--cor-destaque);
+  color: var(--branco);
   padding: 8px 12px;
-  border: 1px solid #1e201983;
-  box-shadow: 2px 2px 5px #1E2019;
+  border: 1px solid var(--preto);
+  box-shadow: 2px 2px 5px var(--preto);
   border-radius: 4px;
   font-size: 0.85rem;
   cursor: pointer;
 }
 
 .btn-table:hover {
-  background-color: #296a79;
+  background-color: var(--azulHover);
 }
 
 @media (max-width: 768px) {
