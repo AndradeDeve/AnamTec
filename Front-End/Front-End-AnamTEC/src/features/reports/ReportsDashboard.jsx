@@ -5,7 +5,7 @@ import { useReportData } from './hooks/useReportData';
 import FilterControls from './components/FilterControls';
 import AnamnseBarGrafico from './components/Graficos/AnamneseBarGrafico'; // Nome corrigido
 import AnamnsePieGrafico from './components/Graficos/AnamnesePieGrafico'; // Nome corrigido
-
+import Header from "../../pages/components/Header/Header"; 
 export default function ReportsDashboard() {
   // Inicializa o hook de navegação
   const navigate = useNavigate(); // <--- Inicializa navigate
@@ -33,8 +33,10 @@ export default function ReportsDashboard() {
   if (loading) {
     return <div className="text-center p-5">Carregando dados...</div>;
   }
-
   return (
+    <>
+       <Header />
+
     <div className="container-fluid p-4">
       {/* NOVO: Botão para Voltar à Home */}
       <div className="row mb-3">
@@ -90,5 +92,6 @@ export default function ReportsDashboard() {
         </div>
       </div>
     </div>
+  </>
   );
 }

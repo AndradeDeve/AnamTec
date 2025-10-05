@@ -31,17 +31,17 @@ function FilterBar({onSearch}) {
 
 
  return (
-  <div className="d-flex  align-items-center justify-content-center container-fluid ">
-      <div className="d-flex row g-3 align-items-center ">
+  <div className="d-flex align-items-center justify-content-center container-fluid ">
+      <div className="d-flex row g-4 align-items-center ">
         
         {/* Dropdown */}
-        <div className="col-12 col-sm-6 col-md-5">
+        <div className="col-12 col-md-5">
           <select
             className="form-select"
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           >
-            <option value="ra">RM</option>
+            <option value="rm">RM</option>
             <option value="nome">Nome do Aluno</option>
             <option value="curso">Curso</option>
             <option value="turno">Turno</option>
@@ -49,7 +49,7 @@ function FilterBar({onSearch}) {
             <option value="status">Status Anamnese</option>
           </select>
         </div>
-       <div className="col-12 col-sm-6 col-md-7">
+       <div className="col-12 col-md-7">
         <div className="search-bar">
           <input
             type="text"

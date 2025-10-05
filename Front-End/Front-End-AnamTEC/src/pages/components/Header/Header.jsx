@@ -73,7 +73,7 @@ const Header = () => {
 
         {/* Logo */}
         <div className="col text-center">
-          <span className='d-md-inline fw-bold fs-4'>
+          <span className='d-md-inline fw-bold fs-4 d-none d-sm-block'>
           AnamTec
           </span> 
           <img src={logoAnamtec} alt="Logo AnamTec" className='ms-2' height="60"/>

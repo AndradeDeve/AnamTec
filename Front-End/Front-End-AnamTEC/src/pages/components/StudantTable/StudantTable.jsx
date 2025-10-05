@@ -9,7 +9,7 @@ export default function StudentTable({alunosFiltrados = []}) {
   // Se não há alunos, mostrar mensagem
   if (!alunosFiltrados || alunosFiltrados.length === 0) {
     return (
-      <div className="tabela-container col-12 col-md-12">
+      <div className="tabela-container col-11 m-auto col-md-10 my-2">
       <div className="tabela-scroll-horizontal">
         <table className="table table-hover table-bordered table-striped align-middle text-center">
           <thead className="thead-dark sticky-top">

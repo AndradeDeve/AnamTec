@@ -1,7 +1,7 @@
 .tabela-container {
   max-height: 600px; /* altura máxima da tabela */
-  overflow-y: auto;   /* scroll vertical */
-  padding: 10px;
+  overflow-y: auto; /* scroll vertical */
+  padding: 8px;
   border: 2px solid var(--branco);
   border-radius: 8px;
   background-color: var(--cor-destaque);

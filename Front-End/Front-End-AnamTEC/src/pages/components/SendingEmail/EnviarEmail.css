@@ -1,39 +1,37 @@
 .modal{
    margin: 10% 0%;
    font-family: Arial, Helvetica, sans-serif;
-
-   
 }
 
 .modalheader{
-    background-color: var(--azul);   
-    color:var(--cor-texto-principal);
+    background-color: var(--cor-destaque);   
+    color:var(--branco);
    
 }
 
 .modalTitle{
-    font-size: 18pt;
+    font-size: 2rem;
     font-weight: 600;
     color:(--branco);
 }
 
 .modalbody{
-    background-color: var(--azul);
+    background-color: var(--cor-destaque);
 }
 
 .modalbody p{
-    font-size: 16pt;
+    font-size: 1.2rem;
     color:var(--branco);
 }
 
 .modalbody ul{
-    font-size: 14pt;
+    font-size: 1.2rem;
     color: (--branco);
 }
 
 .modalfooter{
-    background-color: var(--azul);
-    border: 2px solid var(--azul);
+    background-color: var(--cor-destaque);
+    border: 2px solid var(--cor-destaque);
 }
 
 .modalfooter button{

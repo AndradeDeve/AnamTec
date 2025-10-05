@@ -5,18 +5,14 @@ import ConfirmedIcon from '../../../assets/confirmedCheck.png';
 import ErrorIcon from '../../../assets/errorIcon.png';
 import {getFunctionAlunoCards} from '../../../services/APIService'
 
-
-
-
-
 export default function DashboardCards() {
   const [numerosAl, setNumerosAl] = useState({
     totalAlunos: 0,
     anamineseConcluida: 0,
     anaminesePendente: 0
   });
-  const [loading, setLoading] = useState(true);
 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchNumerosAl = async () => {
@@ -51,10 +47,10 @@ export default function DashboardCards() {
 ];
 
   return (
-    <div className="container  my-1">
-      <div className="row g-4">
+    <div className="container my-1">
+      <div className="row g-3">
         {cards.map((card, index) => (
-          <div key={index} className="col-4 col-sm-6 col-md-4 mb-3" >
+          <div key={index} className="col-4 col-md-4 mb-3">
             <div className={`dashboard-card text-white text-center p-4 rounded shadow 
               ${card.color}`}>
               <img src={card.icon} alt={`ícone ${card.title}`} className="mb-2" />

@@ -27,19 +27,15 @@
 @media (max-width: 768px) {
   .dashboard-card {
     min-height: 120px;   /* mantém altura proporcional */
-    padding: 1rem;       /* reduz espaçamento interno */
   }
-
   .dashboard-card img {
     width: 30px;
     height: 30px;
   }
-
   .dashboard-card p {
     font-size: 1.2rem;   /* número menor */
     margin: 0;
   }
-
   .dashboard-card h3 {
     font-size: 0.9rem;   /* título menor */
     margin: 0;

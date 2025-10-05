@@ -1,10 +1,9 @@
 body, html {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--fonte-principal);
   height: 100%;
 }
-
 .cadastro-wrapper {
   display: flex;
   flex-direction: row;
@@ -13,9 +12,7 @@ body, html {
   min-height: 100vh;
   background: linear-gradient(to left, var(--cor-fundo-principal)  50%, var(--cor-destaque) 50%);
   padding: 1rem;
-
 }
-
 /*Cabeçalho lateral*/
 .header-Cadastro {
   display: flex;
@@ -32,6 +29,8 @@ body, html {
   width: 80px;
   height: auto;
 }
+
+
 /*Card de cadastro*/
 .register-card{
   flex:1;
@@ -42,7 +41,6 @@ body, html {
   border-radius: 14px;
   margin: auto 6rem;
 }
-
 .title{
   background-color: var(--cor-destaque);
   padding: 10px ;
@@ -54,6 +52,8 @@ body, html {
   font-size: 1.2rem;
   margin: 0;
 }
+
+
 /*Texto lateral*/
 .asideContainerCadastro{
   flex:1;
@@ -64,7 +64,6 @@ body, html {
   color: var(--branco);
   padding: 2rem;
   text-align: center;
-  
 }
 .asideContainerCadastro p {
   font-size: 1rem;
@@ -72,6 +71,8 @@ body, html {
   margin: 0;
  
 }
+
+
 /*Campos*/
 .field{
   display: flex;
@@ -79,14 +80,12 @@ body, html {
   gap:0.1rem;
   margin: 0.5rem 0;
   width: 100%;
-
 }
 .field label{
   font-weight: 700;
   color: var(--cor-texto-principal);
   margin-left: 1.5rem;
 }
-
 .tooltip-icon {
   color: red;
   font-weight: bold;
@@ -94,13 +93,11 @@ body, html {
   cursor: help;
   font-size: 1.5rem;
 }
-
 .cadastro-form {
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
 }
-
 .cadastro-form input,
 .cadastro-form select {
   width: 90%;
@@ -125,7 +122,6 @@ body, html {
   color: var(--cor-link);
   text-decoration: underline;
 }
-
 .actionss { 
   display: flex;
   justify-content: center;
@@ -169,49 +165,44 @@ body, html {
     width: 100%;
     margin-top:1rem;
   }
-   .actions {
+   .actionss {
     flex-direction: column; /* empilha */
     align-items: stretch;
   }
-   .actions .btn-submit {
+   .actionss .btn-submit {
     max-width: 100%; /* ocupa largura toda no mobile */
   }
 }
 
 @media (max-width: 480px) {
-
   .cadastro-wrapper{
     flex-direction: column; 
     background: linear-gradient(to top, var(--cor-fundo-principal)  50%, var(--cor-destaque) 50%);
     align-items: center;
   }
-  .header-Cadastro h1{
-    font-size: 1.5rem;
-  }
-
-  .asideContainerCadastro p {
-  font-size: 0.8rem;
-  font-weight: 600;
   
+  .asideContainerCadastro p {
+  font-size: 1.2rem;
+  font-weight: 600;
 }
   .cadastro-form input,
   .cadastro-form select {
     width: 100%;
     font-size:0.9rem;
   }
-  .btn-submit{
+  .actionss .btn-submit{
+    max-width: 100%;
     font-size: 0.9rem;
-    padding: 0.7rem;
+    margin-left: 0.7rem;
   }
    .register-card{
     width: 100%;
   }
-   .actions {
+   .actionss {
     flex-direction: column; /* empilha */
-    align-items: stretch;
+    margin:auto;
   }
-   .actions .btn-submit {
-    max-width: 100%; /* ocupa largura toda no mobile */
+  .voltar{
+    margin:auto;
   }
-
 }

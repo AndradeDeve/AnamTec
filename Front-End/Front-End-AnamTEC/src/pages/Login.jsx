@@ -106,14 +106,14 @@ function isValidEmail(email){
   };
 
   return (
-    <div className="login-container col-12 col-md-12 col-lg-12">
+    <div className="login-container col-12 col-md-6 col-lg-12">
       {/* Cabeçalho com logo e nome do sistema */}
       <div className="aside-containerLogin d-flex">
       <div className="header-logo">
-        <h1>AnamTec</h1>
+        <h1 className="d-none d-sm-block">AnamTec</h1>
         <img src={logoAnamTec} alt="Logo" className="logoa"/>
       </div>
-       <p>Dados que importam.<br/> Decisões que transformam </p>
+       <p className="frase">Dados que importam.<br/> Decisões que transformam </p>
       </div>
 
       {/* Cartão de login */}

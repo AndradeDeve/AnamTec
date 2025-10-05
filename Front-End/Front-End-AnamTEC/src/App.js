@@ -13,7 +13,7 @@ import MasterDashboard from './pages/MasterDashboard';
 import ObservacoesUsers from './pages/UserObservation';
 import ControllAcess from './pages/ControllAcess';
 import Configuracoes from './pages/Configuracoes.jsx';
-
+import NaoAchou from './pages/not-found/index.jsx'
 // NOVO: Importe o componente de Relatórios
 import ReportsDashboard from './features/reports/ReportsDashboard.jsx'; // ASSUMA ESTA PASTA
 
@@ -22,9 +22,9 @@ function App() {
     <>
     <Router>
       <Routes>
-        <Route path="/ResetarSenha" element={<ResetPassW />} />
         <Route path="/Login" element={<Login/>} />
         <Route path="/Cadastro" element={<Cadastro />} />
+        <Route path="/ResetarSenha" element={<ResetPassW />} />
         <Route path="/" element={<MasterDashboard />} />
         <Route path="/Observacoes" element={<ObservacoesUsers />} />
          <Route path="/Controle" element={<ControllAcess />} />
