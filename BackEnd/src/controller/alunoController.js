@@ -125,7 +125,7 @@ routes.get("/controll", async (req, res) => {
 
 // Buscar aluno(s) com filtros
 routes.get("/specific", async (req, res) => {
-  const { curso, rm, nome, coordenador, turno,  status } = req.query;
+  const { curso, rm, nome, coordenador, turno,  status, todos } = req.query;
 
   try {
     let sql =`SELECT 
@@ -176,6 +176,14 @@ routes.get("/specific", async (req, res) => {
     if (nome) {
       sql += ` AND nome LIKE ?`;
       params.push(nome);
+    }
+    if(todos){
+      const [rows] = await pool.query(sql);
+
+      if (!rows || rows.length === 0) {
+        return res.status(404).json({ err: "Aluno não encontrado." });
+      }
+      return res.status(200).json(rows);
     }
 
     const [rows] = await pool.query(sql, params);

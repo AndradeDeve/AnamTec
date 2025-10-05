@@ -68,13 +68,13 @@ export default function MasterDashboard() {
       <Header />
       <main>
           <div className="row my-3 justify-content-center">
-            <div className="col-12 col-md-12">
+            <div className="col-12 col-md-10">
               <DashboardCards />
             </div>
           </div>
-          <div className="container my-3">
+          <div className="container">
             <div className="row">
-              <div className="col-12 col-md-6">
+              <div className="col-11 col-md-5">
                 <ButtonGrid
                   onCadastrar={() => console.log("Cadastrar")}
                   onPesquisar={() => console.log("Pesquisar")}
@@ -85,7 +85,7 @@ export default function MasterDashboard() {
                   onEnviar={enviarLembretes}
                 />
               </div>
-              <div className="col-12 col-md-6">
+              <div className="col-11 col-md-7">
               <FilterBar onSearch={handleSearch} />
               </div>
             </div>

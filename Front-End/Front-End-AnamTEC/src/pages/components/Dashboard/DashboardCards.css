@@ -1,6 +1,6 @@
 .dashboard-card {
   display: flex;
-  background-color: #044654; /* fallback padrão */
+  /* background-color: #044654; fallback padrão */
   min-height: 150px; /* altura mínima para manter proporção */
   flex-direction: column;
   justify-content: center;
@@ -8,15 +8,15 @@
 }
 
 .bg-cyan {
-  background-color: #044654 !important;
+  background-color: var(--cor-destaque) !important;
 }
 
 .bg-green {
-  background-color: #0E813E !important;
+  background-color: var(--verdeDashBoard) !important;
 }
 
 .bg-red {
-  background-color: #Fe4120 !important;
+  background-color: var(--vermelhoDashBoard) !important;
 }
 
 .dashboard-card img {
@@ -27,19 +27,15 @@
 @media (max-width: 768px) {
   .dashboard-card {
     min-height: 120px;   /* mantém altura proporcional */
-    padding: 1rem;       /* reduz espaçamento interno */
   }
-
   .dashboard-card img {
     width: 30px;
     height: 30px;
   }
-
   .dashboard-card p {
     font-size: 1.2rem;   /* número menor */
     margin: 0;
   }
-
   .dashboard-card h3 {
     font-size: 0.9rem;   /* título menor */
     margin: 0;

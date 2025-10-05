@@ -8,14 +8,14 @@ import './FilterBar.css';
 
 function FilterBar({onSearch}) {
   const [termo, setTermo] = useState(""); 
-  const [filtro, setFiltro] = useState("rm");
+  const [filtro, setFiltro] = useState("todos");
 
 
  const  handleAcess = async (e) => {
   e.preventDefault();
   try{
     console.log("filtro",filtro);
-    if(termo.length <3 ){
+    if(termo.length <3 && filtro !== "todos"  ){
       toast.warn(`O ${filtro.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
       return
     }
@@ -32,25 +32,25 @@ function FilterBar({onSearch}) {
 
 
  return (
-  <div className="d-flex  align-items-center justify-content-center container-fluid ">
-      <div className="d-flex row g-3 align-items-center ">
+  <div className="d-flex align-items-center justify-content-center container-fluid ">
+      <div className="d-flex row g-4 align-items-center ">
         
         {/* Dropdown */}
-        <div className="col-12 col-sm-6 col-md-5">
+        <div className="col-12 col-md-5">
           <select
             className="form-select"
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           >
+            <option value="todos">Todos</option>
             <option value="rm">RM</option>
             <option value="nome">Nome do Aluno</option>
             <option value="curso">Curso</option>
             <option value="turno">Turno</option>
             <option value="coordenador">Coordenador</option>
-            <option value="status">Status Anamnese</option>
           </select>
         </div>
-       <div className="col-12 col-sm-6 col-md-7">
+       <div className="col-12 col-md-7">
         <div className="search-bar">
           <input
             type="text"

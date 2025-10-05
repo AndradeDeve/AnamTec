@@ -3,8 +3,8 @@
   display: flex;                /* Flexbox para alinhar itens */
   justify-content: space-between; /* Distribui espaço entre os elementos */
   align-items: center;          /* Alinha no centro vertical */
-  background-color: #044654;    /* Cor de fundo */
-  color: #E4EDF1;               /* Cor do texto */
+  background-color: var(--cor-destaque);    /* Cor de fundo */
+  color: var(--branco);               /* Cor do texto */
   padding: 10px 20px;           /* Espaçamento interno */
   flex-wrap: wrap;              /* Permite quebrar linha em telas menores */
 }
@@ -13,7 +13,7 @@
 .menu-toggle {
   font-size: 28px;              /* Tamanho menor que antes para caber em telas menores */
   cursor: pointer;
-  color: #E4EDF1;
+  color: var(--branco);
   border: none;
   background: none;
 }
@@ -28,7 +28,7 @@
   gap: 10px;                      /* Espaço entre texto e imagem */
   text-align: center;
   margin: 0  auto;
-  color: #E4EDF1;           /* Centraliza horizontalmente */
+  color: var(--branco);           /* Centraliza horizontalmente */
 }
 
 .logo img {
@@ -51,9 +51,9 @@
 /* ==== DROPDOWN MENU LATERAL (☰) ==== */
 .dropdown-menu-custom {
   position: absolute;
-  background-color: #044654;
+  background-color: var(--cor-destaque);
   border-radius: 8px;
-  border: 1px solid #E4EDF1;
+  border: 1px solid var(--branco);
   padding: 0.3rem;
   z-index: 1000;
   display: none;
@@ -71,22 +71,22 @@
   margin-left: 2rem;
   gap: 2px;                    /* Espaço entre ícone e texto */
   padding: 0.4rem 0.2rem;
-  color: #fff;
+  color: var(--branco);
   border-radius: 5px;
   transition: background 0.2s;
   cursor: pointer;
 }
 
 .dropdown-menu-custom li:hover {
-  background-color: #056172;
+  background-color: var(--azulHover);
 }
 
 /* ==== DROPDOWN DE CONFIGURAÇÕES (⚙) ==== */
 .dropdown-config-custom {
   position: absolute;                /* Logo abaixo do ícone ⚙ */
   right: 0;
-  background-color: #044654;
-  border: 1px solid #E4EDF1;
+  background-color: var(--cor-destaque);
+  border: 1px solid var(--branco);
   border-radius: 8px;
   padding: 0.3rem;
   z-index: 1000;
@@ -105,14 +105,14 @@
   margin-left: 2rem;
   gap: 10px;
   padding: 0.4rem 0.2rem;
-  color: #fff;
+  color: var(--branco);
   border-radius: 5px;
   transition: background 0.2s;
   cursor: pointer;
 }
 
 .dropdown-config-custom li:hover {
-  background-color: #056172;
+  background-color: var(--azulHover);
 }
 
 /* ==== TEXTO DO USUÁRIO ==== */

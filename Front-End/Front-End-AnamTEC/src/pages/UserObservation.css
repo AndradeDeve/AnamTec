@@ -1,8 +1,18 @@
+/* Transições para tema dinâmico - Adicionei para suavidade */
+.tela-observacoes,
+.painel-esquerdo,
+.painel-direito,
+.conteudo-central,
+.comentario,
+.resposta {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 .tela-observacoes {
   display: flex;
   gap: 20px;
   padding: 20px;
-  background-color: #f4f6f8;
+  background-color: var(--cor-fundo-principal); /* Tema: Fundo principal (claro/escuro) */
   height: 100vh;
   box-sizing: border-box;
 }
@@ -12,12 +22,12 @@
 .painel-direito {
   width: 40%;
   max-width: 320px;
-  background-color: var(--azul);
-  color: var(--branco);
-  border: 3px solid #6c939c;
+  background-color: var(--cor-destaque); /* Tema: Destaque no claro (azul); no escuro, herda azul claro - ajuste se quiser secundário */
+  color: var(--cor-texto-principal); /* Tema: Texto que contrasta (branco no claro? Espera, no claro texto é preto - ajuste se painéis precisarem de branco fixo */
+  border: 3px solid var(--cor-destaque); /* Tema: Borda com destaque */
   padding: 15px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Mantenha; teste no escuro */
   overflow-y: auto;
 }
 
@@ -28,56 +38,58 @@
   flex: 1;
   max-width: 800px;
   align-items: center;
-  background-color: #ffffff;
+  background-color: var(--cor-fundo-principal); /* Tema: Fundo principal */
   padding: 2rem;
-  border-radius:1.5rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,1.1);
+  border-radius: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Corrigi opacidade de 1.1 para 0.1 */
 }
 
 .comentarios-scroll {
   overflow-y: auto;
   max-height: calc(100vh - 100px);
   padding-right: 10px;
+  background-color: var(--cor-fundo-principal); /* Tema: Herda do central, mas explícito para rolagem */
 }
 
 /* Comentários principais */
 .comentario {
-  background-color: #f9f9f9;
+  background-color: var(--cor-fundo-secundario); /* Tema: Secundário para cards */
   padding: 15px;
   margin-bottom: 20px;
   border-radius: 10px;
-  border-left: 4px solid #007bff;
+  border-left: 4px solid var(--cor-destaque); /* Tema: Borda de destaque */
 }
 
 /* Respostas */
 .resposta {
-  background-color: #eef2f5;
+  background-color: var(--cor-fundo-secundario); /* Tema: Mesmo secundário, para consistência */
   margin-top: 10px;
   margin-left: 20px;
   padding: 10px;
   border-radius: 8px;
-  border-left: 3px solid #6c757d;
+  border-left: 3px solid var(--cor-destaque); /* Tema: Borda sutil */
 }
 
 .texto {
   font-size: 15px;
   margin-bottom: 4px;
+  color: var(--cor-texto-principal); /* Tema: Texto principal */
 }
 
 .autor {
   font-size: 13px;
-  color: #555;
+  color: var(--cor-texto-principal); /* Tema: Substitui #555 por texto principal (melhor contraste no escuro) */
 }
 
 .toggle-respostas {
   font-size: 14px;
-  color: #007bff;
+  color: var(--cor-destaque); /* Tema: Link com destaque (azul) */
   text-decoration: underline;
   cursor: pointer;
   margin-top: 5px;
 }
 
-/* Responsivo */
+/* Responsivo - Sem mudanças nas cores, variáveis funcionam aqui */
 @media (max-width: 768px) {
   .tela-observacoes {
     flex-direction: column;

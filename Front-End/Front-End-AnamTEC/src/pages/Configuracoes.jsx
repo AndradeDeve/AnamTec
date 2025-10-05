@@ -1,213 +1,275 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import { putFunctionResetSenha } from "../services/APIService";
 import "./Config.css";
 
 export default function Configuracoes() {
-  // Estado para armazenar qual aba está ativa
-  const [abaAtiva, setAbaAtiva] = useState("usuario");
-  const [abaSeguranca, setAbaSeguranca] = useState("seguranca");
+    // ======================================
+    // 1. ESTADOS
+    // ======================================
+    const [abaAtiva, setAbaAtiva] = useState("usuario");
+    const navegar = useNavigate();
 
-   const navegar = useNavigate()
-    
+    // Estado geral do formulário (Usuário e Preferências)
+    const [formData, setFormData] = useState({
+        nome: "Weslley Samuel",
+        email: "weslley@exemplo.com",
+        cargo: "Coordenador Pedagógico",
+        senha: "",
+        novaSenha: "",
+        confirmarSenha: "",
+        tema: "claro",
+        notificacoes: true,
+    });
+
+    // Estado do formulário de Segurança
+    const [formSeg, setFormSeg] = useState({
+        senhaAtual: "",
+        novaSenha: "",
+        confirmarSenha: "",
+    });
+
+    // ======================================
+    // 2. EFEITO DE INICIALIZAÇÃO (TEMA)
+    // ======================================
+    useEffect(() => {
+        const temaSalvo = localStorage.getItem('temaPreferido') || 'claro';
+        const root = document.documentElement;
+
+        // Sempre limpa classes antigas para evitar conflitos
+        root.classList.remove('tema-claro', 'tema-escuro');
+
+        // Aplica o tema escuro se estiver salvo
+        if (temaSalvo === 'escuro') {
+            root.classList.add('tema-escuro');
+        } else {
+            root.classList.add('tema-claro'); // Explícito para consistência
+        }
+
+        // Atualiza o estado para que o select reflita a preferência salva
+        setFormData(prev => ({
+            ...prev,
+            tema: temaSalvo || prev.tema 
+        }));
+    }, []);
+
+    // ======================================
+    // 3. FUNÇÕES HANDLERS
+    // ======================================
+
     const navPrincipal = () => {
-      navegar("/");
-    }
-  
-  
-  // Estado geral do formulário
-  const [formData, setFormData] = useState({
-    nome: "Weslley Samuel",
-    email: "weslley@exemplo.com",
-    cargo: "Coordenador Pedagógico",
-    senha: "",
-    novaSenha: "",
-    confirmarSenha: "",
-    tema: "claro",
-    notificacoes: true,
-  });
-  
-  // Atualiza os dados dos inputs
-  function handleChange(e) {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value
-    }));
-  }
+        navegar("/");
+    };
+    
+    // FUNÇÃO UNIFICADA: Atualiza formSeg ou formData e lida com o tema
+    function handleChange(e) {
+        const { name, value, type, checked } = e.target;
+        const novoValor = type === 'checkbox' ? checked : value;
 
-//Estado do formulário de Segurança
-const [formSeg, setFormSeg] = useState({
-  senhaAtual: "",
-  novaSenha: "",
-  confirmarSenha: "",
- 
-});
-
-//Captura mudanças nos inputs
-function handleChange(e){
-  const {name, value} = e.target;
-  setFormSeg(prev => ({
-    ...prev,
-    [name]: value
-  }));
-}
-
-//Validação e envio
-async function handleSubmit(e) {
-  e.preventDefault();
-  try{
-    console.log(formSeg)
-      if (formSeg.novaSenha !== formSeg.confirmarSenha) {
-      toast.error("A nova senha e a confirmação não coincidem.");
-      return;
-    }
-    const data = await putFunctionResetSenha(formSeg);
-    console.log(data)
-    if(data.status === 200) {
-        toast.success("Senha atualizada com sucesso!");
-    }
-    console.log("Nova senha salva:", formSeg);
-  }catch(err){
-    console.error("Erro: ", err)
-  }
-  // Guilherme você chama a API aqui!!!
-  // Não querrroooooooo !!!!!!!!!
-}
-
-  return (
-    <div className="config-wrapper">
-      <h2 className="config-title">Configurações</h2>
-      <div className="config-container">
-        
-        {/* MENU LATERAL */}
-        <aside className="config-menu">
-          <ul>
-            <li 
-              className={abaAtiva === "usuario" ? "ativo" : ""} 
-              onClick={() => setAbaAtiva("usuario")}
-            >
-              Usuário
-            </li>
-            <li 
-              className={abaAtiva === "preferencias" ? "ativo" : ""} 
-              onClick={() => setAbaAtiva("preferencias")}
-            >
-              Preferências
-            </li>
-            <li 
-              className={abaAtiva === "seguranca" ? "ativo" : ""} 
-              onClick={() => setAbaAtiva("seguranca")}
-            >
-              Segurança
-            </li>
-          </ul>
-        </aside>
-
-        {/* CONTEÚDO DA ABA */}
-        <main className="config-content">
-          <form className="config-form" onSubmit={handleSubmit}>
+        // Verifica se o campo pertence ao formulário de SEGURANÇA
+        if (['senhaAtual', 'novaSenha', 'confirmarSenha'].includes(name)) {
+            setFormSeg(prev => ({ 
+                ...prev, 
+                [name]: novoValor 
+            }));
+        } else {
+            // Caso contrário, pertence ao formulário GERAL
+            setFormData(prev => ({ 
+                ...prev, 
+                [name]: novoValor 
+            }));
             
-            {/* === Aba Usuário === */}
-            {abaAtiva === "usuario" && (
-              <>
-                <label>Nome:</label>
-                <input 
-                  type="text" 
-                  name="nome" 
-                  value={formData.nome} 
-                  onChange={handleChange} 
-                />
+            // Lógica de TEMA (só executa se 'tema' for alterado)
+            if (name === 'tema') {
+                const root = document.documentElement;
+                
+                // Limpa as classes existentes
+                root.classList.remove('tema-claro', 'tema-escuro');
+                
+                if (novoValor === 'escuro') {
+                    root.classList.add('tema-escuro');
+                } else {
+                    root.classList.add('tema-claro');
+                }
+                
+                localStorage.setItem('temaPreferido', novoValor);
+            }
+        }
+    }
 
-                <label>Email:</label>
-                <input 
-                  type="email" 
-                  name="email" 
-                  value={formData.email} 
-                  onChange={handleChange} 
-                />
+    // FUNÇÃO SUBMIT: Lida com submissão condicional
+    async function handleSubmit(e) {
+        e.preventDefault();
+        
+        // Se não estiver na Aba Segurança, salva apenas as outras configurações (preferências/usuário)
+        if (abaAtiva !== "seguranca") {
+            // Em uma aplicação real, você chamaria a API PUT/POST para formData aqui
+            toast.success("Configurações salvas!");
+            console.log("Configurações salvas:", formData); 
+            return;
+        }
 
-                <label>Cargo:</label>
-                <input 
-                  type="text" 
-                  value={formData.cargo} 
-                  disabled
-                />
-              </>
-            )}
+        // LÓGICA DE SEGURANÇA (só executa na aba "seguranca")
+        try {
+            if (formSeg.novaSenha !== formSeg.confirmarSenha) {
+                toast.error("A nova senha e a confirmação não coincidem.");
+                return;
+            }
 
-            {/* === Aba Preferências === */}
-            {abaAtiva === "preferencias" && (
-              <>
-                <label>Tema:</label>
-                <select 
-                  name="tema" 
-                  value={formData.tema} 
-                  onChange={handleChange}
-                >
-                  <option value="claro">Claro</option>
-                  <option value="escuro">Escuro</option>
-                </select>aler
+            // Chama a API de reset de senha
+            const data = await putFunctionResetSenha(formSeg);
+            
+            if (data && data.status === 200) {
+                toast.success("Senha atualizada com sucesso!");
+            } else {
+                 toast.error("Erro ao atualizar senha. Verifique a senha atual.");
+            }
+            
+        } catch(err) {
+            console.error("Erro: ", err);
+            toast.error("Erro ao tentar salvar a senha. Tente novamente.");
+        }
+    }
+    
+    // ======================================
+    // 4. RENDERIZAÇÃO (JSX)
+    // ======================================
+    return (
+        <div className="config-wrapper">
+            <h2 className="config-title">Configurações</h2>
+            <div className="config-container">
+                
+                {/* MENU LATERAL */}
+                <aside className="config-menu">
+                    <ul>
+                        <li 
+                            className={abaAtiva === "usuario" ? "ativo" : ""} 
+                            onClick={() => setAbaAtiva("usuario")}
+                        >
+                            Usuário
+                        </li>
+                        <li 
+                            className={abaAtiva === "preferencias" ? "ativo" : ""} 
+                            onClick={() => setAbaAtiva("preferencias")}
+                        >
+                            Preferências
+                        </li>
+                        <li 
+                            className={abaAtiva === "seguranca" ? "ativo" : ""} 
+                            onClick={() => setAbaAtiva("seguranca")}
+                        >
+                            Segurança
+                        </li>
+                    </ul>
+                </aside>
 
-                <label className="checkbox-label">
-                  <input 
-                    type="checkbox" 
-                    name="notificacoes" 
-                    checked={formData.notificacoes} 
-                    onChange={handleChange} 
-                  />
-                  Receber notificações por e-mail
-                </label>
-              </>
-            )}
+                {/* CONTEÚDO DA ABA */}
+                <main className="config-content">
+                    <form className="config-form" onSubmit={handleSubmit}>
+                        
+                        {/* === Aba Usuário === */}
+                        {abaAtiva === "usuario" && (
+                            <>
+                                <label>Nome:</label>
+                                <input 
+                                    type="text" 
+                                    name="nome" 
+                                    value={formData.nome} 
+                                    onChange={handleChange} 
+                                />
 
-            {/* === Aba Segurança === */}
-            {abaAtiva === "seguranca" && (
-              <>
-              <label>Senha atual:</label>
-              <input 
-                type="password" 
-                name="senhaAtual" 
-                placeholder="Informe sua senha atual"
-                value={formSeg.senhaAtual}
-                onChange={handleChange}
-                required
-              />
-                <label>Nova senha:</label>
-                <input 
-                  type="password" 
-                  name="novaSenha" 
-                  value={formSeg.novaSenha} 
-                  onChange={handleChange} 
-                />
+                                <label>Email:</label>
+                                <input 
+                                    type="email" 
+                                    name="email" 
+                                    value={formData.email} 
+                                    onChange={handleChange} 
+                                />
 
-              <label>Confirmar nova senha:</label>
-              <input 
-                type="password" 
-                name="confirmarSenha" 
-                placeholder="Confirme sua nova senha"
-                value={formSeg.confirmarSenha}
-                onChange={handleChange}
-                required
-              />
-              </>
-            )}
+                                <label>Cargo:</label>
+                                <input 
+                                    type="text" 
+                                    value={formData.cargo} 
+                                    disabled
+                                />
+                            </>
+                        )}
 
-            {/* BOTÃO DE SALVAR */}
-            <div className="actions">
-              <button type="button" className="btn-salvar"
-              onClick={navPrincipal}>
-              Voltar
-              </button>
+                        {/* === Aba Preferências === */}
+                        {abaAtiva === "preferencias" && (
+                            <>
+                                <label>Tema:</label>
+                                <select 
+                                    name="tema" 
+                                    value={formData.tema} 
+                                    onChange={handleChange}
+                                >
+                                    <option value="claro">Claro</option>
+                                    <option value="escuro">Escuro</option>
+                                </select>
 
-               <button type="submit" className="btn-salvar">
-                Salvar Alterações
-              </button>
+                                <label className="checkbox-label">
+                                    <input 
+                                        type="checkbox" 
+                                        name="notificacoes" 
+                                        checked={formData.notificacoes} 
+                                        onChange={handleChange} 
+                                    />
+                                    Receber notificações por e-mail
+                                </label>
+                            </>
+                        )}
+
+                        {/* === Aba Segurança === */}
+                        {abaAtiva === "seguranca" && (
+                            <>
+                            <label>Senha atual:</label>
+                            <input 
+                                type="password" 
+                                name="senhaAtual" 
+                                placeholder="Informe sua senha atual"
+                                value={formSeg.senhaAtual}
+                                onChange={handleChange}
+                                required
+                            />
+                                <label>Nova senha:</label>
+                                <input 
+                                    type="password" 
+                                    name="novaSenha" 
+                                    value={formSeg.novaSenha} 
+                                    onChange={handleChange} 
+                                />
+
+                            <label>Confirmar nova senha:</label>
+                            <input 
+                                type="password" 
+                                name="confirmarSenha" 
+                                placeholder="Confirme sua nova senha"
+                                value={formSeg.confirmarSenha}
+                                onChange={handleChange}
+                                required
+                            />
+                            </>
+                        )}
+
+                        {/* BOTÃO DE SALVAR */}
+                        <div className="actions">
+                            <button 
+                                type="button" 
+                                className="btn-salvar"
+                                onClick={navPrincipal}
+                            >
+                                Voltar
+                            </button>
+
+                            <button type="submit" className="btn-salvar">
+                                Salvar Alterações
+                            </button>
+                        </div>
+                    </form>
+                </main>
             </div>
-          </form>
-        </main>
-      </div>
-    </div>
-  );
-}
+        </div>
+    );
+};
