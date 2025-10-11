@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import './UserObservation.css'; // Estilos personalizados
-import Header from "./components/Header/Header"; 
+import Header from "../components/Header/Header"; 
 
 export default function TelaObservacoes() {
   // Lista de professores

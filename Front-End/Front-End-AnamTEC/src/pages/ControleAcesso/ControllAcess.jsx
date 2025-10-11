@@ -1,12 +1,12 @@
 // src/pages/ControleAcesso.jsx 
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Table, Button, Form, Card, InputGroup } from "react-bootstrap";
-import Header from "./components/Header/Header"; 
-import { getFunctionUser } from "../services/APIService.js";
-import { getFunctionAlunoControll } from "../services/APIService.js";
-import { getFunctionAlunoControllSpacific } from "../services/APIService.js";
-import { getFunctionUserSpecific } from "../services/APIService.js";
-import BtnSearch from '../assets/search-icon.png';
+import Header from "../components/Header/Header.jsx"; 
+import { getFunctionUser } from "../../services/APIService.js";
+import { getFunctionAlunoControll } from "../../services/APIService.js";
+import { getFunctionAlunoControllSpacific } from "../../services/APIService.js";
+import { getFunctionUserSpecific } from "../../services/APIService.js";
+import BtnSearch from '../../assets/search-icon.png';
 import "./ControllAcess.css";
 import { toast } from "react-toastify";
 
@@ -21,8 +21,6 @@ export default function ControleAcesso() {
   const [alunos, setAlunos] = useState([]);
   const [usuariosFiltrados, setUsuariosFiltrados] = useState([]);
   const dadosCombindados = [...alunos, ...usuarios]
-
-
 
   const dadosParaExibir = (usuariosFiltrados.length > 0 ? usuariosFiltrados : dadosCombindados);
   const indexUltimoItem = correntPage * itensPorPagina;
@@ -101,9 +99,7 @@ export default function ControleAcesso() {
         if(!resultado || resultado.length === 0 ){
           toast.warn("Nenhuma entidade encontrada.")
         }
-
       }
-      
       if (filtroStatus) {
         resultado = resultado.filter(
           (u) => u.status && u.status.toLowerCase() === filtroStatus.toLowerCase()
@@ -126,7 +122,7 @@ export default function ControleAcesso() {
       console.log("Erro: ", err);
       toast.error("Erro ao buscar entidade(s).")
     }
-    // Aqui no futuro vamos integrar com API
+
     // Já estamos integrando 🥲
   };
   
@@ -137,40 +133,38 @@ export default function ControleAcesso() {
     {/* Linha 2: Pesquisa organizada */}
 <Row className="mb-4 pesquisa-row">
     <h1 className="titulo-controle">Controle de Acesso</h1>
-  <Col xs={12} md={8}>
-    <div className="d-flex gap-2 filtros-container">
-      {/* Dropdown tipo pesquisa */}
+  <Col xs={12} md={11}>
+    <div className="d-flex filtros-container align-items-center">
       <Form.Select
         value={tipoPesquisa}
         onChange={(e) => setTipoPesquisa(e.target.value)}
-        style={{ maxWidth: "150px" }}
       >
         <option value="rm">RM</option>
         <option value="nome">Nome</option>
         <option value="curso">Curso</option>
         <option value="coordenador">Coordenador</option>
       </Form.Select>
+    <InputGroup className="input-group-search">
 
-      {/* Input */}
       <Form.Control
         type="text"
         placeholder={`Pesquisar por ${labelPorTipo[tipoPesquisa]}`}
         value={valorPesquisa}
         onChange={(e) => setValorPesquisa(e.target.value)}
+        onKeyDown={(e) => { 
+            if (e.key === 'Enter') handlePesquisar(); {/*Pesquisar pela tecla Enter*/}
+        }}
       />
-
-      {/* Botão + Filtros */}
-      <button className="btn-submit" onClick={handlePesquisar}>
-        Pesquisar
-      </button>
-
-      {/* Dropdowns de filtro ao lado do botão */}
-   
+      <Button 
+          className="btn-lupa" 
+          onClick={handlePesquisar}
+        >
+          <img src={BtnSearch} alt="Pesquisar" /> 
+        </Button>
+    </InputGroup>
       <Form.Select
-
         value={filtroStatus}
         onChange={(e) => setFiltroStatus(e.target.value)}
-        style={{ maxWidth: "150px" }}
       >
         <option value="">Status</option>
         <option value="ativo">Ativos</option>
@@ -180,13 +174,11 @@ export default function ControleAcesso() {
       <Form.Select
         value={filtroAlunoProf}
         onChange={(e) => setFiltroAlunoProf(e.target.value)}
-        style={{ maxWidth: "150px" }}
       >
         <option value="">Todos</option>
         <option value="aluno">Aluno</option>
         <option value="professor">Professor</option>
       </Form.Select>
- 
     </div>
   </Col>
 </Row>
@@ -246,122 +238,9 @@ export default function ControleAcesso() {
                   Próximo
                 </button>
               </div>
-
             </Card>
           </Col>
         </Row>
-
-        {/* Linha 2: Barra de Filtros - Centralizada e com 11 colunas de largura (igual à tabela)
-        <Row className="mb-4 align-items-end justify-content-center pesquisa-row">
-             Coluna Mestra (md={11}) para garantir o alinhamento com a tabela 
-            <Col xs={12} md={11} className="d-flex flex-wrap"> 
-                
-                 1. Dropdown Tipo Pesquisa 
-                <Col xs={12} md={3} className="mb-3">
-                
-                    <Form.Select
-                        value={tipoPesquisa}
-                        onChange={(e) => setTipoPesquisa(e.target.value)}
-                    >
-                        <option value="rm">RM</option>
-                        <option value="nome">Nome</option>
-                        <option value="curso">Curso</option>
-                        <option value="coordenador">Coordenador</option>
-                    </Form.Select>
-                </Col>
-
-                2. Input Group (Input + Botão Buscar) 
-                <Col xs={12} md={5} className="mb-3">
-               
-                    <InputGroup>
-                        <Form.Control
-                            className="form-select"
-                            type="text"
-                            placeholder={`Informe o ${labelPorTipo[tipoPesquisa]}`}
-                            value={valorPesquisa}
-                            onChange={(e) => setValorPesquisa(e.target.value)}
-                        />
-                         Botão anexado ao input, usando a classe btn-buscar 
-                        <Button 
-                            className="btn-buscar" 
-                            onClick={handlePesquisar}
-                        >
-                            <img src={BtnSearch} alt="Pesquisar" />
-                        </Button>
-                    </InputGroup>
-                </Col>
-
-                 3. Filtro Status (xs={6} para ficar lado a lado no mobile) 
-                <Col xs={6} md={2} className="mb-3 pe-sm-2">
-                    <Form.Select
-                        value={filtroStatus}
-                        onChange={(e) => setFiltroStatus(e.target.value)}
-                    >
-                        <option value="">Todos</option>
-                        <option value="ativo">Ativos</option>
-                        <option value="inativo">Inativos</option>
-                    </Form.Select>
-                </Col>
-
-                 4. Filtro Entidade (Aluno/Professor) (xs={6} para ficar lado a lado no mobile) 
-                <Col xs={6} md={2} className="mb-3 ps-sm-2">
-              
-                    <Form.Select
-                        value={filtroAlunoProf}
-                        onChange={(e) => setFiltroAlunoProf(e.target.value)}
-                    >
-                        <option value="">Todos</option>
-                        <option value="aluno">Aluno</option>
-                        <option value="professor">Professor</option>
-                    </Form.Select>
-                </Col>
-                
-            </Col>
-        </Row> */}
-        
-        {/* Linha da Tabela - Centralizada e com 11 colunas de largura
-        <Row className="justify-content-center">
-            <Col xs={12} md={11}>
-                <Card className="tabela p-3">
-                    
-                    <Table striped bordered hover responsive className=" tabela-custom">
-                        <thead>
-                            <tr>
-                                <th>RM</th>
-                                <th>Nome</th>
-                                <th>Entidade</th>
-                                <th>Disciplina</th>
-                                <th>Curso</th>
-                                <th>Coordenador</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody className="table">
-                            {usuarios.map((user, index) => (
-                                <tr key={index}>
-                                    <td>{user.rm}</td>
-                                    <td>{user.nome}</td>
-                                    <td>{user.entidade}</td>
-                                    <td>{user.disciplina}</td>
-                                    <td>{user.curso}</td>
-                                    <td>{user.coordenador}</td>
-                                    <td>
-                                        <span
-                                            className={`status-badge ${
-                                                user.status.toLowerCase() === "ativo" ?
-                                                "ativo" : "inativo"
-                                            }`}
-                                        >
-                                            {user.status}
-                                        </span> 
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </Card>
-            </Col>
-        </Row> */}
       </Container>
     </>
   );

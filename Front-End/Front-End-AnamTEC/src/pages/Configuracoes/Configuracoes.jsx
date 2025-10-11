@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
-import { putFunctionResetSenha } from "../services/APIService";
+import { putFunctionResetSenha } from "../../services/APIService";
 import "./Config.css";
 
 export default function Configuracoes() {
