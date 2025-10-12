@@ -13,7 +13,7 @@ export default function Cadastro() {
   const navegar = useNavigate()
   
   const navPrincipal = () => {
-    navegar("/");
+    navegar("/Home");
   }
 
   // estado do formulário

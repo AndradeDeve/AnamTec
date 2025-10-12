@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 function genereteToken(payload){
-    return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn : 60*60+5});
+    return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn : "3h"});
 }
 
 function authenticate( request, response, next){

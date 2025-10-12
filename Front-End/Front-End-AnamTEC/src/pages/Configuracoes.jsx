@@ -59,7 +59,7 @@ export default function Configuracoes() {
     // ======================================
 
     const navPrincipal = () => {
-        navegar("/");
+        navegar("/Home");
     };
     
     // FUNÇÃO UNIFICADA: Atualiza formSeg ou formData e lida com o tema

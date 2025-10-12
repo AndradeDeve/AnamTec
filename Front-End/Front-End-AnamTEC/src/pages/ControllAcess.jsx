@@ -6,6 +6,10 @@ import { getFunctionUser } from "../services/APIService.js";
 import { getFunctionAlunoControll } from "../services/APIService.js";
 import { getFunctionAlunoControllSpacific } from "../services/APIService.js";
 import { getFunctionUserSpecific } from "../services/APIService.js";
+import { deleteFunctionAluno } from "../services/APIService.js";
+import { ativarFunctionAluno } from "../services/APIService.js";
+import { deleteFunctionUser } from "../services/APIService.js";
+import { ativarFunctionUser } from "../services/APIService.js";
 import BtnSearch from '../assets/search-icon.png';
 import "./ControllAcess.css";
 import { toast } from "react-toastify";
@@ -60,6 +64,51 @@ export default function ControleAcesso() {
     }
     fetchUser()
   }, []);
+
+  const deleteAtUser = async (id, tipo, status)  => {
+    try {
+      if (tipo === "aluno") {
+        if (status === "ativo") {
+          const deletedAluno = await deleteFunctionAluno(id);
+          if (deletedAluno.status === 200) toast.success("Aluno deletado com sucesso.");
+        } else {
+          const ativarAluno = await ativarFunctionAluno(id);
+          if (ativarAluno.status === 200) toast.success("Aluno ativado com sucesso.");
+        }
+
+        setAlunos((prev) =>
+          prev.map((a) =>
+            a.id === id ? { ...a, status: a.status === "ativo" ? "inativo" : "ativo" } : a
+          )
+        );
+      } else {
+        if (status === "ativo") {
+          const deletedUser = await deleteFunctionUser(id);
+          if (deletedUser.status === 200) toast.success("Usuário deletado com sucesso.");
+        } else {
+          const ativarUser = await ativarFunctionUser(id);
+          if (ativarUser.status === 200) toast.success("Usuário ativado com sucesso.");
+        }
+
+        setUsuarios((prev) =>
+          prev.map((u) =>
+            u.id === id ? { ...u, status: u.status === "ativo" ? "inativo" : "ativo" } : u
+          )
+        );
+      }
+
+      // 🔥 Atualiza também a lista filtrada se estiver sendo exibida
+      setUsuariosFiltrados((prev) =>
+        prev.map((u) =>
+          u.id === id ? { ...u, status: u.status === "ativo" ? "inativo" : "ativo" } : u
+        )
+      );
+
+    } catch (err) {
+      console.error("Erro: ", err);
+      toast.error("Erro ao atualizar status da entidade.");
+    }
+  };
 
 
   const handlePesquisar = async () => {
@@ -217,13 +266,14 @@ export default function ControleAcesso() {
                       <td>{user.curso_user || user.nome_curso}</td>
                       <td>{user.coordenador}</td>
                       <td>
-                        <span
+                        <button
                           className={`status-badge ${
                             user.status.toLowerCase() === "ativo" ? "ativo" : "inativo"
-                          }`}
+                          }`} onClick={() =>deleteAtUser(user.id, user.entidade || "aluno", user.status)}
+                          
                         >
                           {user.status}
-                        </span> 
+                        </button> 
                       </td>
                     </tr>
                   ))}
@@ -250,7 +300,7 @@ export default function ControleAcesso() {
             </Card>
           </Col>
         </Row>
-
+                {/* Porque temos uma segunda tabela ???????????? */}
         {/* Linha 2: Barra de Filtros - Centralizada e com 11 colunas de largura (igual à tabela)
         <Row className="mb-4 align-items-end justify-content-center pesquisa-row">
              Coluna Mestra (md={11}) para garantir o alinhamento com a tabela 

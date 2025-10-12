@@ -46,7 +46,7 @@ const Header = () => {
           <div className={`dropdown-menu-custom ${menuOpen ? 'show' : ''}`}>
             <ul className="list-unstyled m-0 p-2">
               {/*NAVEGAÇÂO ENTRE AS PÁGINAS ==> */}
-              <li onClick={() => navigate('/')}>
+              <li onClick={() => navigate('/Home')}>
               <img src={homeIcon} alt="Página Home" />
               <span>Home</span>
               </li>
@@ -97,7 +97,7 @@ const Header = () => {
                 <img src={configIcon} alt="Configurações" />
                 <span>Configurações</span>
               </li>
-              <li onClick={() => navigate('/login')}>
+              <li onClick={() => navigate('/')}>
               <img src={personIcon} alt="Sair do sistema" />
               <span>Sair</span>
               </li>

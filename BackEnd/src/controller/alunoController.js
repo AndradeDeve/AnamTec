@@ -8,7 +8,7 @@ routes.get("/", async (req, res) => {
   try{
     const [rows] = await pool.query(
         `SELECT 
-          al.id AS id_aluno,  
+          al.id AS id,  
           al.nome AS nome_aluno,
           al.rm AS rm,
           c.curso AS nome_curso,
@@ -68,7 +68,7 @@ routes.get("/controll", async (req, res) => {
 
   try {
     let sql =`SELECT 
-          al.id AS id_aluno,  
+          al.id AS id,  
           al.nome AS nome_aluno,
           al.rm AS rm,
           c.curso AS nome_curso,
@@ -110,7 +110,6 @@ routes.get("/controll", async (req, res) => {
     }
 
     const [rows] = await pool.query(sql, params);
-
     if (!rows || rows.length === 0) {
       return res.status(404).json({ err: "Aluno não encontrado." });
     }
@@ -129,7 +128,7 @@ routes.get("/specific", async (req, res) => {
 
   try {
     let sql =`SELECT 
-              al.id AS id_aluno,  
+              al.id AS id,  
               al.nome AS nome_aluno,
               al.rm AS rm,
               c.curso AS nome_curso,
@@ -204,7 +203,7 @@ routes.get("/curso", async (req, res) => {
   try {
     const [rows] = await pool.query(
         `SELECT 
-          al.id AS id_aluno,  
+          al.id AS id,  
           al.nome AS nome_aluno,
           al.rm AS rm,
           c.curso AS nome_curso,
@@ -445,10 +444,10 @@ routes.put("/:RM", async (req, res) => {
 });
 
 // Deletar aluno
-routes.delete("/:RM", async (req, res) => {
-  const { RM } = req.params;
+routes.delete("/:ID", async (req, res) => {
+  const { ID } = req.params;
 
-  if (!RM) {
+  if (!ID) {
     return res.status(400).json({ err: "Informe o RM do aluno." });
   }
 
@@ -458,8 +457,35 @@ routes.delete("/:RM", async (req, res) => {
     const [rows] = await pool.query(
       `UPDATE tbl_cadastro_al 
        SET deletedAt = ? 
-       WHERE rm = ? AND deletedAt IS NULL`,
-      [dataDelete, RM]
+       WHERE id = ? AND deletedAt IS NULL`,
+      [dataDelete, ID]
+    );
+
+    if (rows.affectedRows === 0) {
+      return res.status(404).json({ err: "Aluno não encontrado." });
+    }
+
+    return res.status(200).json({ msg: "Aluno deletado com sucesso." });
+  } catch (err) {
+    console.error("Erro ao deletar aluno:", err);
+    return res.status(500).json({ err: "Erro no servidor." });
+  }
+});
+
+routes.put("/ativo/:ID", async (req, res) => {
+  const { ID } = req.params;
+
+  if (!ID) {
+    return res.status(400).json({ err: "Informe o ID do aluno." });
+  }
+
+  try {
+    const deletedAt = null
+    const [rows] = await pool.query(
+      `UPDATE tbl_cadastro_al 
+       SET deletedAt = ? 
+       WHERE id = ? `,
+      [deletedAt, ID]
     );
 
     if (rows.affectedRows === 0) {

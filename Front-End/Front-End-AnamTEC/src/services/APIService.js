@@ -11,6 +11,18 @@ export async function getFunctionAlunoSpecific(specific, value){
   return response;
 }
 
+export async function ativarFunctionAluno(id) {
+  const response = await axios.put(`${apiUrl}/aluno/ativo/${id}`,{}, { 
+    headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+  return response; 
+}
+
+export async function deleteFunctionAluno(id){
+  const response = await axios.delete(`${apiUrl}/aluno/${id}`, { 
+    headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+  return response;
+}
+
 export async function  getFunctionAlunoCards() {
   const response = await axios.get(`${apiUrl}/aluno/card`, { 
     headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
@@ -73,6 +85,18 @@ export async function postFunctionUser(dados) {
   const response = await axios.post(`${apiUrl}/user`, dados , { 
     headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
   return response;
+}
+
+export async function deleteFunctionUser(id) {
+  const response = await axios.delete(`${apiUrl}/user/${id}`, { 
+    headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+  return response;
+}
+
+export async function ativarFunctionUser(id) {
+  const response = await axios.put(`${apiUrl}/user/ativo/${id}`,{}, { 
+    headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+  return response; 
 }
 
 export async function postFunctionLogin(dados) {
