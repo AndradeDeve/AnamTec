@@ -14,7 +14,6 @@ function FilterBar({onSearch}) {
  const  handleAcess = async (e) => {
   e.preventDefault();
   try{
-    console.log("filtro",filtro);
     if(termo.length <3 && filtro !== "todos"  ){
       toast.warn(`O ${filtro.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
       return

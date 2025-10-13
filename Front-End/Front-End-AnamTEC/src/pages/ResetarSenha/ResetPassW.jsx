@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import "./ResetPassW.css";
-import logoAnamTec from "../assets/Anamtec-logo.png";
-import RedefineSenha from "../pages/components/EmailPassword/index"
+import logoAnamTec from "../../assets/Anamtec-logo.png";
+import RedefineSenha from "../components/EmailPassword/index"
 import { toast } from 'react-toastify';
-import { putFunctionResetSenha } from '../services/APIService';
+import { putFunctionResetSenha } from '../../services/APIService';
 import { useNavigate } from 'react-router-dom';
 
 export default function ResetPassW() {

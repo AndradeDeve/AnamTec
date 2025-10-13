@@ -18,7 +18,6 @@ export default function MasterDashboard() {
   const fetchAlunos = async () => {
     try {
       const dados = await getFunctionAluno();
-      console.log("dados", dados)
       setAlunosFiltrados(dados || []);
     } catch (error) {
       setAlunosFiltrados([]);

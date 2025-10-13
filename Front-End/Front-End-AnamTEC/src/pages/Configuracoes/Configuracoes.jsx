@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
-import { putFunctionResetSenha } from "../services/APIService";
+import { putFunctionResetSenha } from "../../services/APIService";
 import "./Config.css";
+import { getUser } from "../../helpers/auth";
 
 export default function Configuracoes() {
     // ======================================
@@ -13,9 +14,9 @@ export default function Configuracoes() {
 
     // Estado geral do formulário (Usuário e Preferências)
     const [formData, setFormData] = useState({
-        nome: "Weslley Samuel",
-        email: "weslley@exemplo.com",
-        cargo: "Coordenador Pedagógico",
+        nome: "",
+        email: "",
+        type: "",
         senha: "",
         novaSenha: "",
         confirmarSenha: "",
@@ -34,6 +35,8 @@ export default function Configuracoes() {
     // 2. EFEITO DE INICIALIZAÇÃO (TEMA)
     // ======================================
     useEffect(() => {
+        const userdata = getUser();
+        
         const temaSalvo = localStorage.getItem('temaPreferido') || 'claro';
         const root = document.documentElement;
 
@@ -52,6 +55,17 @@ export default function Configuracoes() {
             ...prev,
             tema: temaSalvo || prev.tema 
         }));
+
+        if (userdata) {
+        setFormData(prev => ({
+            ...prev,
+            nome: userdata.user || userdata.user || prev.user,
+            email: userdata.email || prev.email,
+            type: userdata.type || userdata.role || prev.type,
+            tema: temaSalvo || prev.tema
+        }));
+    }
+
     }, []);
 
     // ======================================
@@ -59,7 +73,7 @@ export default function Configuracoes() {
     // ======================================
 
     const navPrincipal = () => {
-        navegar("/");
+        navegar("/Home");
     };
     
     // FUNÇÃO UNIFICADA: Atualiza formSeg ou formData e lida com o tema
@@ -190,7 +204,7 @@ export default function Configuracoes() {
                                 <label>Cargo:</label>
                                 <input 
                                     type="text" 
-                                    value={formData.cargo} 
+                                    value={formData.type} 
                                     disabled
                                 />
                             </>

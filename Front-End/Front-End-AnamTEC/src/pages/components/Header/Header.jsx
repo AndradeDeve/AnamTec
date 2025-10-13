@@ -1,113 +1,107 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import homeIcon from '../../../assets/home.png';
 import personIcon from '../../../assets/person.png';
-import passWordIcon from '../../../assets/password.png';
 import nsaIcon from '../../../assets/nsa.png';
 import controlAcessIcon from '../../../assets/control-acess.png';
 import relatorioIcon from '../../../assets/relatorio.png';
 import logoAnamtec from '../../../assets/Anamtec-logo.png';
-import configIcon from '../../../assets/config-icon.png'
-
+import { getUser } from '../../../helpers/auth';
+// import configIcon from '../../../assets/config-icon.png'  // Não mais necessário, pois o ícone navega direto
 import './Header.css'; // mantém seu CSS personalizado
 
+
 const Header = () => {
+  const [ typeUser, setTypeUser ] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const user = getUser();
+    setTypeUser(user ? user.type : "");
+  }, []);
+  
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   }
-  const [configOpen, setconfigOpen] = useState(false);
-  const toggleConfig = () => {
-    setconfigOpen((prev) => !prev);
-  };
+  // Os estados e funções configOpen/toggleConfig foram removidos pois o ícone navega direto.
+
     // Função para abrir o link do NSA em uma nova aba
    const handleNsaAccess = () => {
     // Abre o URL em uma nova aba (_blank)
     window.open('https://nsa.cps.sp.gov.br/', '_blank');
-    
-    // Opcional: Fecha o menu dropdown após o clique, melhorando a UX
+    // Fecha o menu após o clique
     setMenuOpen(false);
   };
 
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  return (
-    <header className="header py-3">
-      <div className="container-fluid">
-      {/* Linha principal do Header */}
+return (
+  <header className="header py-3">
+    <div className="container-fluid">
       <div className="row align-items-center justify-content-between">
-
-        {/* Ícone de menu e dropdown */}
         <div className="col-auto">
           <div className="menu-toggle d-md-flex" onClick={toggleMenu}>☰</div>
-
-
-          {/* Dropdown - aparece abaixo do menu */}
-          <div className={`dropdown-menu-custom ${menuOpen ? 'show' : ''}`}>
-            <ul className="list-unstyled m-0 p-2">
-              {/*NAVEGAÇÂO ENTRE AS PÁGINAS ==> */}
-              <li onClick={() => navigate('/')}>
-              <img src={homeIcon} alt="Página Home" />
-              <span>Home</span>
-              </li>
-              <li onClick={() => navigate('/Cadastro')}>
-              <img src={personIcon} alt="Página de Cadastro" />
-              <span>Cadastrar</span>
-              </li>
+          
+          {/* Sidebar Menu - Usa display: flex column para ancorar o footer */}
+          <div className={`sidebar-menu-custom ${menuOpen ? 'show' : ''}`}>
              
-              <li onClick={handleNsaAccess}>
-                <img src={nsaIcon} alt="Link de Acesso para o site do NSA" />
-              <span>Acesso ao NSA</span>
-              </li>
-              <li onClick={() => navigate('/controle')}>
-              <img src={controlAcessIcon} alt="Controle de Acesso de Professores" />
-              <span>Controle de Acesso</span></li>
-              
-               <li onClick={() => navigate('/relatorios')}>
-              <img src={relatorioIcon} alt="Página de Relatórios" />
-              <span>Relatório</span>
-            </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Logo */}
-        <div className="col text-center">
-          <span className='d-md-inline fw-bold fs-4 d-none d-sm-block'>
-          AnamTec
-          </span> 
-          <img src={logoAnamtec} alt="Logo AnamTec" className='ms-2' height="60"/>
-        </div>
-
-        {/* Mensagem de Saudação */}
-        <div className="col-auto d-flex align-items-center gap-3">
-           {/* Saudação só aparece em telas maiores */}
-          <span className="user-section d-none d-md-inline">
-            Bem-vindo <strong>(Coordenador Pedagógico)</strong>
-          </span>
-
-          {/* Configurações (engrenagem) */} 
-          <div className="position-relative ">
-          <div className="menu-toggle" onClick={toggleConfig}>⚙</div>
-
-          <div className={`dropdown-config-custom ${configOpen ? 'show' : ''}`}>
-            <ul className="list-unstyled m-0 p-2">
+             {/* Botão para Fechar o menu (TOPO) */}
+             <div className="close-btn" onClick={toggleMenu}>&times;</div> 
             
-              <li onClick={() => navigate('/config')}>
-                <img src={configIcon} alt="Configurações" />
-                <span>Configurações</span>
-              </li>
-              <li onClick={() => navigate('/login')}>
-              <img src={personIcon} alt="Sair do sistema" />
-              <span>Sair</span>
-              </li>
+            {/* CONTAINER PRINCIPAL/COM SCROLL: Apenas este bloco rola */}
+            <div className='sidebar-list-container'> 
+                <ul className="list-unstyled sidebar-list">
+                  {/* Opções de Navegação */}
+                  <li className='mx-2' onClick={() => { navigate('/home'); toggleMenu(); }}>
+                    <img src={homeIcon} alt="Página Home" />
+                  <span>Home</span>
+                  </li>
+                  <li className='mx-2' onClick={() => { navigate('/Cadastro'); toggleMenu(); }}>
+                    <img src={personIcon} alt="Página de Cadastro" />
+                  <span>Cadastrar</span>
+                  </li>
+                  <li className='mx-2'  onClick={() => { handleNsaAccess(); toggleMenu(); }}>
+                    <img src={nsaIcon} alt="Link de Acesso para o site do NSA" />
+                  <span>Acesso ao NSA</span>
+                  </li>
+                  <li className='mx-2' onClick={() => { navigate('/controle'); toggleMenu(); }}>
+                    <img src={controlAcessIcon} alt="Controle de Acesso de Professores" />
+                  <span>Controle de Acesso</span></li>         
+                  <li className='mx-2' onClick={() => { navigate('/relatorios'); toggleMenu(); }}>
+                    <img src={relatorioIcon} alt="Página de Relatórios" />
+                  <span>Relatório</span>
+                  </li>
+                </ul>
+             </div>
+             {/* FIM DO CONTAINER DE SCROLL */}
+
+            {/* ITEM ANCORADO: Opção Sair (RODAPÉ) */}
+            <ul className="list-unstyled sidebar-footer-list">
+                 <li className='mx-2' onClick={() => { navigate('/'); toggleMenu(); }}>
+                    <img src={personIcon} alt="Sair do sistema" />
+                 <span>Sair</span>
+                 </li>
             </ul>
           </div>
+        </div>
+      <div className="col text-center">
+        <span className='d-md-inline fw-bold fs-4 d-none d-sm-block'>
+        AnamTec
+        </span> 
+        <img src={logoAnamtec} alt="Logo AnamTec" className='ms-2' height="60"/>
+      </div>
+        <div className="col-auto d-flex align-items-center gap-3">
+          <span className="user-section d-none d-md-inline">
+            Bem-vindo <strong>({typeUser})</strong>
+          </span>
+          {/* O ícone de engrenagem agora navega diretamente para a página de Configurações */}
+          <div className="menu-toggle config-toggle" onClick={() => navigate('/config')}>
+             ⚙
           </div>
         </div>
       </div>
     </div>
-    </header>
+  </header>
   );
 };
 

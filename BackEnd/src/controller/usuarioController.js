@@ -9,7 +9,7 @@ routes.get("/", async (req, res) => {
     try{
         const [rows] = await pool.query(
             `SELECT 
-            u.id as id_user,
+            u.id as id,
             u.nome as nome_user,
             u.RM as rm,
             u.disciplina as disciplina, 
@@ -43,6 +43,7 @@ routes.get("/specific", async (request, response) => {
     const { curso, rm, nome, coordenador, turno} = request.query;
     try{
         let sql = `SELECT 
+            u.id as id,
             u.nome as nome_user,
             u.RM as rm,
             u.disciplina as disciplina, 
@@ -55,7 +56,7 @@ routes.get("/specific", async (request, response) => {
             ELSE 'inativo'
             END AS status
             FROM tbl_usuario u
-            INNER JOIN juncao_curso_user juc ON u.id = juc.id_user
+            INNER JOIN juncao_curso_user juc ON u.id = juc.id_user  
             INNER JOIN tbl_curso c ON juc.id_curso = c.id
             INNER JOIN juncao_type_user jut ON u.id = jut.id_user
             INNER JOIN tbl_type t ON jut.id_type = t.id`;
@@ -103,8 +104,10 @@ routes.get("/specific", async (request, response) => {
 routes.post("/", async (request, response) => {
     const {cpf, nome, email, senha, curso} = request.body;
     let {rm, cargo, disciplina} = request.body;
+    console.log(cpf)
     try{
-        
+        const cpfsemPontuacao = cpf.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"?]/g, "");
+        console.log(cpfsemPontuacao)
         const disciplinaRegex = /^[\p{L}\s\-']{2,35}$/u;
         if(disciplina && cargo.toLowerCase() === "professor"){
             if(!disciplinaRegex.test(disciplina.trim())){
@@ -140,7 +143,7 @@ routes.post("/", async (request, response) => {
             id_curso = null;
         }   
         
-        if(!validarCPF(cpf)){
+        if(!validarCPF(cpfsemPontuacao)){
             return response.status(400).json({err: "Cpf inválido."});
         }
         cargo = cargo.toLowerCase()
@@ -169,9 +172,9 @@ routes.post("/", async (request, response) => {
         const hashedSenha = await hash(senha, 10);
 
         await pool.query(`INSERT INTO tbl_usuario (RM, CPF, nome, email, senha, disciplina) VALUES(?, ?, ?, ?, ?, ?)`,
-            [rm, cpf, nome, email, hashedSenha, disciplina]
+            [rm, cpfsemPontuacao, nome, email, hashedSenha, disciplina]
         );
-        const [idUserExiste] = await pool.query(`SELECT * FROM tbl_usuario WHERE CPF = ?`, [cpf])
+        const [idUserExiste] = await pool.query(`SELECT * FROM tbl_usuario WHERE CPF = ?`, [cpfsemPontuacao])
 
         if(idUserExiste.length === 0){
             return response.status(400).json({response: "Erro ao cadastrar usuário."})
@@ -247,17 +250,17 @@ routes.put("/:id", async (request, response) => {
 });
 
 
-routes.delete("/:cpf", async(request, response) => {
-    const {cpf} = request.params;
+routes.delete("/:ID", async(request, response) => {
+    const {ID} = request.params;
 
-    if(!validarCPF(cpf)){
-            return response.status(400).json({err: "Cpf inválido."});
+    if(!ID){
+            return response.status(400).json({err: "ID inválido."});
         }
     try{
-        const dataDelet = new Date();
+        const deletedAt = new Date();
         const [rows] = await pool.query(
-            `UPDATE tbl_usuario SET deletedAt = ? WHERE CPF = ?`,
-             [dataDelet, cpf]);
+            `UPDATE tbl_usuario SET deletedAt = ? WHERE id = ?`,
+             [deletedAt, ID]);
 
          if(rows.affectedRows === 0){
             return response.status(400).json({err: "Usuário não encontrado."});
@@ -268,5 +271,27 @@ routes.delete("/:cpf", async(request, response) => {
         return response.status(500).json({err: "Erro no servidor."});
     }
 })
+
+routes.put("/ativo/:ID", async (request, response) => {
+    const {ID} = request.params;
+
+    if(!ID){
+            return response.status(400).json({err: "ID inválido."});
+        }
+    try{
+        const deletedAt = null;
+        const [rows] = await pool.query(
+            `UPDATE tbl_usuario SET deletedAt = ? WHERE id = ?`,
+             [deletedAt, ID]);
+
+         if(rows.affectedRows === 0){
+            return response.status(400).json({err: "Usuário não encontrado."});
+        };
+        return response.status(200).json({err: "Usuário Ativado  com sucesso"});
+    }catch(err){
+        console.log("Erro ao deletar usuário:", err);
+        return response.status(500).json({err: "Erro no servidor."});
+    }
+});
 
 export default routes;

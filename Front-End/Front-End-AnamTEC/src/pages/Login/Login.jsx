@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import {toast } from 'react-toastify';
 import "./Login.css";
-import { postFunctionLogin } from '../services/APIService';
-import logoAnamTec from "../assets/Anamtec-logo.png";
+import { postFunctionLogin } from '../../services/APIService';
+import logoAnamTec from "../../assets/Anamtec-logo.png";
 import { useNavigate } from 'react-router-dom';
-import RedefineSenha from "../pages/components/EmailPassword/index"
+import RedefineSenha from "../components/EmailPassword/index"
 
 export default function Login() {
 
@@ -20,7 +20,7 @@ const navResetSenha = () => {
 
 }
 const navCoord = () => {
-    navigate("/", { replace: true}); // Redireciona para a página do coordenador pedagógico
+    navigate("/Home", { replace: true}); // Redireciona para a página do coordenador pedagógico
 }
 
 function isValidEmail(email){ 

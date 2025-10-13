@@ -1,127 +1,101 @@
-/* ==== ESTILO GERAL DO HEADER ==== */
 .header {
-  display: flex;                /* Flexbox para alinhar itens */
-  justify-content: space-between; /* Distribui espaço entre os elementos */
-  align-items: center;          /* Alinha no centro vertical */
-  background-color: var(--cor-destaque);    /* Cor de fundo */
-  color: var(--branco);               /* Cor do texto */
-  padding: 10px 20px;           /* Espaçamento interno */
-  flex-wrap: wrap;              /* Permite quebrar linha em telas menores */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--cor-destaque);
+  color: var(--branco);
+  padding: 10px 20px;
+  flex-wrap: wrap;
+
+  position: sticky;
+  top: 0;
+  z-index: 1050; 
 }
 
-/* ==== BOTÃO DO MENU (☰) ==== */
 .menu-toggle {
-  font-size: 28px;              /* Tamanho menor que antes para caber em telas menores */
+  font-size: 28px;
   cursor: pointer;
   color: var(--branco);
   border: none;
   background: none;
 }
 
-/* ==== LOGO ==== */
-.logo {
-  display: flex;                  /* Alinha logo + texto lado a lado */
-  align-items: center;            /* Centraliza verticalmente */
-  justify-content: center;        /* Centraliza horizontalmente */
-  font-size: 1.8rem;
-  font-weight: 600;
-  gap: 10px;                      /* Espaço entre texto e imagem */
-  text-align: center;
-  margin: 0  auto;
-  color: var(--branco);           /* Centraliza horizontalmente */
+.sidebar-menu-custom {
+  position: fixed; 
+  top: 92px; 
+  left: 0;
+  height: calc(100vh - 92px); 
+  width: 280px;  
+  z-index: 1050; 
+  display: flex; 
+  flex-direction: column;
+  justify-content: space-between; 
+  background-color: var(--cor-destaque);
+  border-right: 3px solid var(--branco); 
+  padding: 20px; 
+ 
+  transform: translateX(-100%); 
+  transition: transform 0.3s ease-in-out; 
 }
 
-.logo img {
-  width: 60px;                  /* Tamanho padrão da logo */
-  margin-left: 10px;
-  vertical-align: middle;
+.sidebar-menu-custom.show {
+  transform: translateX(0); 
 }
 
-
-/* Ajusta o tamanho da logo em telas muito pequenas */
-@media (max-width: 768px) {
-  .logo img {
-    width: 45px;
-  }
-  .logo {
-    font-size: 1.4rem;
-  }
-}
-
-/* ==== DROPDOWN MENU LATERAL (☰) ==== */
-.dropdown-menu-custom {
+.close-btn {
   position: absolute;
-  background-color: var(--cor-destaque);
-  border-radius: 8px;
-  border: 1px solid var(--branco);
-  padding: 0.3rem;
-  z-index: 1000;
-  display: none;
-  max-width: 150px;
-  min-width: 200px;             /* Tamanho mínimo */
+  top: 10px;
+  right: 20px;
+  font-size: 30px;
+  color: var(--branco);
+  cursor: pointer;
 }
 
-.dropdown-menu-custom.show {
-  display: block;               /* Mostra quando ativado */
+.sidebar-list-container {
+    overflow-y: auto; /* APENAS este bloco rola, não o botão Sair */
+    flex-grow: 1; /* Permite que ocupe todo o espaço disponível entre o topo e o rodapé */
+    /* Garante um pequeno espaço entre o botão de fechar e o início da lista se necessário */
+    padding-top: 10px; 
 }
 
-.dropdown-menu-custom li {
+.sidebar-list {
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu-custom li {
   display: flex;
   align-items: center;
-  margin-left: 2rem;
-  gap: 2px;                    /* Espaço entre ícone e texto */
-  padding: 0.4rem 0.2rem;
+  margin-left: 0; 
+  gap: 15px;      
+  padding: 0.8rem 1rem;
   color: var(--branco);
   border-radius: 5px;
   transition: background 0.2s;
   cursor: pointer;
 }
 
-.dropdown-menu-custom li:hover {
+.sidebar-menu-custom li:hover {
   background-color: var(--azulHover);
 }
 
-/* ==== DROPDOWN DE CONFIGURAÇÕES (⚙) ==== */
-.dropdown-config-custom {
-  position: absolute;                /* Logo abaixo do ícone ⚙ */
-  right: 0;
-  background-color: var(--cor-destaque);
-  border: 1px solid var(--branco);
-  border-radius: 8px;
-  padding: 0.3rem;
-  z-index: 1000;
-  display: none;
-  
-   
+.sidebar-menu-custom li img {
+  width: 24px;
+  height: 24px;
 }
 
-.dropdown-config-custom.show {
-  display: block;
+.sidebar-footer-list {
+  margin: 0; 
+  padding: 0;
+  padding-top: 15px; 
+
 }
 
-.dropdown-config-custom li {
-  display: flex;
-  align-items: center;
-  margin-left: 2rem;
-  gap: 10px;
-  padding: 0.4rem 0.2rem;
-  color: var(--branco);
-  border-radius: 5px;
-  transition: background 0.2s;
-  cursor: pointer;
-}
-
-.dropdown-config-custom li:hover {
-  background-color: var(--azulHover);
-}
-
-/* ==== TEXTO DO USUÁRIO ==== */
 .user-section {
-  font-size: 1rem;             /* Responsivo */
-  white-space: nowrap;         /* Impede quebra de linha */
+  font-size: 1rem;             
+  white-space: nowrap;         
 }
 
-/* Em telas pequenas, diminui tamanho da fonte */
 @media (max-width: 768px) {
   .user-section {
     font-size: 0.9rem;
