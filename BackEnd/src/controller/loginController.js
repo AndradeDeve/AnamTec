@@ -40,7 +40,6 @@ routes.post("/", async(request, response) => {
             return response.status(401).json({err: "Senha inválida."});
         }        
         const token = genereteToken({user:user.nome, email:user.email, type:user.type});
-        
         return response.status(200).json({response: "Login efetuado com sucesso.", token, typeUser:user.type, email:user.email});
     }catch(err){
         console.log("Erro ao efetuar o login:", err);

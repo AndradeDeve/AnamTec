@@ -4,15 +4,16 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// CSS customizado
 
-import Login from './pages/Login';
-import Cadastro from './pages/Register.jsx';
-import ResetPassW from './pages/ResetPassW';
+import ProtectedRouter from './helpers/protectedRouter.js'; 
+
+import Login from './pages/Login/Login.jsx';
+import Cadastro from './pages/Cadastro/Register.jsx';
+import ResetPassW from './pages/ResetarSenha/ResetPassW.jsx';
 import MasterDashboard from './pages/MasterDashboard';
-import ObservacoesUsers from './pages/UserObservation';
-import ControllAcess from './pages/ControllAcess';
-import Configuracoes from './pages/Configuracoes.jsx';
+import ObservacoesUsers from './pages/Observacoes/UserObservation.jsx';
+import ControllAcess from './pages/ControleAcesso/ControllAcess.jsx';
+import Configuracoes from './pages/Configuracoes/Configuracoes.jsx';
 import NaoAchou from './pages/not-found/index.jsx'
 // NOVO: Importe o componente de Relatórios
 import ReportsDashboard from './features/reports/ReportsDashboard.jsx'; // ASSUMA ESTA PASTA
@@ -23,12 +24,17 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login/>} />
-        <Route path="/Cadastro" element={<Cadastro />} />
+        <Route path="/Cadastro" element={
+                //Somente o Admin (Coordenador Pedagogico) pode acessar, se estiver logado.
+            <ProtectedRouter roles={['coordenador pedagógico']}>  
+                <Cadastro /> 
+            </ProtectedRouter>} />
         <Route path="/ResetarSenha" element={<ResetPassW />} />
         <Route path="/Home" element={<MasterDashboard />} />
         <Route path="/Observacoes" element={<ObservacoesUsers />} />
-         <Route path="/Controle" element={<ControllAcess />} />
-         <Route path="/config" element={<Configuracoes />} />
+        <Route path="/Controle" element={<ControllAcess />} />
+        <Route path="/config" element={<Configuracoes />} />
+            
 
          {/* NOVO: ROTA PARA RELATÓRIOS */}
         <Route path="/relatorios" element={<ReportsDashboard />} />

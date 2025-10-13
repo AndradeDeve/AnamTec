@@ -104,8 +104,10 @@ routes.get("/specific", async (request, response) => {
 routes.post("/", async (request, response) => {
     const {cpf, nome, email, senha, curso} = request.body;
     let {rm, cargo, disciplina} = request.body;
+    console.log(cpf)
     try{
-        
+        const cpfsemPontuacao = cpf.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"?]/g, "");
+        console.log(cpfsemPontuacao)
         const disciplinaRegex = /^[\p{L}\s\-']{2,35}$/u;
         if(disciplina && cargo.toLowerCase() === "professor"){
             if(!disciplinaRegex.test(disciplina.trim())){
@@ -141,7 +143,7 @@ routes.post("/", async (request, response) => {
             id_curso = null;
         }   
         
-        if(!validarCPF(cpf)){
+        if(!validarCPF(cpfsemPontuacao)){
             return response.status(400).json({err: "Cpf inválido."});
         }
         cargo = cargo.toLowerCase()
@@ -170,9 +172,9 @@ routes.post("/", async (request, response) => {
         const hashedSenha = await hash(senha, 10);
 
         await pool.query(`INSERT INTO tbl_usuario (RM, CPF, nome, email, senha, disciplina) VALUES(?, ?, ?, ?, ?, ?)`,
-            [rm, cpf, nome, email, hashedSenha, disciplina]
+            [rm, cpfsemPontuacao, nome, email, hashedSenha, disciplina]
         );
-        const [idUserExiste] = await pool.query(`SELECT * FROM tbl_usuario WHERE CPF = ?`, [cpf])
+        const [idUserExiste] = await pool.query(`SELECT * FROM tbl_usuario WHERE CPF = ?`, [cpfsemPontuacao])
 
         if(idUserExiste.length === 0){
             return response.status(400).json({response: "Erro ao cadastrar usuário."})

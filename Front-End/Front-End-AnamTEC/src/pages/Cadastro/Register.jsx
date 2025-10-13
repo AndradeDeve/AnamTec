@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { postFunctionUser } from "../services/APIService"; // seu serviço de API
-import logoAnamTec from "../assets/Anamtec-logo.png"; // Importa a logo 
+import { postFunctionUser } from "../../services/APIService.js"; // seu serviço de API
+import logoAnamTec from "../../assets/Anamtec-logo.png"; // Importa a logo 
 import { toast } from 'react-toastify';
-import { showToast } from "../Utils/toast.js"; // importamos o helper
+import { showToast } from "../../Utils/toast.js"; // importamos o helper
 import { useNavigate } from 'react-router-dom';
 import "./Register.css";
 import { formHelperTextClasses } from "@mui/material";

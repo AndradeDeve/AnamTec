@@ -26,7 +26,7 @@ routes.use('/resetSenha', authenticate, resetSenhaController);
 routes.use("/deficiencia", deficienciaController);
 routes.use("/alergias", alergiaController);     
 routes.use("/responsavel", responsavelController);
-routes.use("/aluno", authenticate, authorizationRoles("coordenador pedagógico", "coordenador curso", "secretaria"), alunoController);
+routes.use("/aluno", authenticate, authorizationRoles("coordenador pedagógico", "coordenador curso", "secretaria", "professor"), alunoController);
 routes.use("/user", authenticate, authorizationRoles("coordenador pedagógico", "secretaria"),usuarioController);
 routes.use("/login", loginController);
 routes.use('/cursos', cursoController);
