@@ -20,7 +20,7 @@ const navResetSenha = () => {
 
 }
 const navCoord = () => {
-    navigate("/Home", { replace: true}); // Redireciona para a página do coordenador pedagógico
+    navigate("/home", { replace: true}); // Redireciona para a página do coordenador pedagógico
 }
 
 function isValidEmail(email){ 

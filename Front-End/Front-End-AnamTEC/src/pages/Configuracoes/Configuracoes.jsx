@@ -119,7 +119,14 @@ export default function Configuracoes() {
         // Se não estiver na Aba Segurança, salva apenas as outras configurações (preferências/usuário)
         if (abaAtiva !== "seguranca") {
             // Em uma aplicação real, você chamaria a API PUT/POST para formData aqui
-            toast.success("Configurações salvas!");
+            toast.success('Configurações salvas!', { 
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined, theme: "dark" });
             console.log("Configurações salvas:", formData); 
             return;
         }
@@ -127,7 +134,14 @@ export default function Configuracoes() {
         // LÓGICA DE SEGURANÇA (só executa na aba "seguranca")
         try {
             if (formSeg.novaSenha !== formSeg.confirmarSenha) {
-                toast.error("A nova senha e a confirmação não coincidem.");
+                toast.error('A nova senha e a confirmação não coincidem.', { 
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined, theme: "dark" });
                 return;
             }
 
@@ -135,14 +149,35 @@ export default function Configuracoes() {
             const data = await putFunctionResetSenha(formSeg);
             
             if (data && data.status === 200) {
-                toast.success("Senha atualizada com sucesso!");
+                toast.success('Senha atualizada com sucesso!.', { 
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined, theme: "dark" });
             } else {
-                 toast.error("Erro ao atualizar senha. Verifique a senha atual.");
+                 toast.error('Erro ao atualizar senha. Verifique a senha atual.', { 
+                         position: "top-center",
+                         autoClose: 5000,
+                         hideProgressBar: false,
+                         closeOnClick: false,
+                         pauseOnHover: true,
+                         draggable: true,
+                         progress: undefined, theme: "dark" });
             }
             
         } catch(err) {
             console.error("Erro: ", err);
-            toast.error("Erro ao tentar salvar a senha. Tente novamente.");
+            toast.error('Erro ao tentar salvar a senha. Tente novamente.', { 
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined, theme: "dark" });
         }
     }
     

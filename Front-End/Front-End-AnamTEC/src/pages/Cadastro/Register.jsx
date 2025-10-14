@@ -168,7 +168,7 @@ export default function Cadastro() {
       // chama seu serviço
       // console.log("Resposta do servidor:", result);
       if(data.status === 201) {
-        showToast("success", 'Login efetuado com sucesso')
+        showToast("success", 'Cadastro efetuado com sucesso')
       }
       // opcional: limpar formulário
       // setFormData({ rm: "",cpf:"" ,nome: "", email: "", senha: "", cargo: "", curso: "" });
