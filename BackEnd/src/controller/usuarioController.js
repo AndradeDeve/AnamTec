@@ -107,7 +107,6 @@ routes.post("/", async (request, response) => {
     console.log(cpf)
     try{
         const cpfsemPontuacao = cpf.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"?]/g, "");
-        console.log(cpfsemPontuacao)
         const disciplinaRegex = /^[\p{L}\s\-']{2,35}$/u;
         if(disciplina && cargo.toLowerCase() === "professor"){
             if(!disciplinaRegex.test(disciplina.trim())){

@@ -15,7 +15,15 @@ function FilterBar({onSearch}) {
   e.preventDefault();
   try{
     if(termo.length <3 && filtro !== "todos"  ){
-      toast.warn(`O ${filtro.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
+      toast.warn(`O ${filtro.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`, { 
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined, theme: "dark" 
+      });
       return
     }
     const data = await getFunctionAlunoSpecific(filtro, termo+(filtro!="rm"?"%":""));
@@ -24,7 +32,15 @@ function FilterBar({onSearch}) {
     } 
   }catch(error){
     console.log("Erro: ", error);
-    toast.error('Erro ao buscar dados')
+    toast.error('Erro ao buscar dados.', { 
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined, theme: "dark" 
+      });
   }
   
 };

@@ -1,6 +1,7 @@
 import { getUser } from "./auth";   
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react"; 
+import { toast } from "react-toastify";
 
 
 function ProtectedRouter({children, roles}){
@@ -29,6 +30,7 @@ function ProtectedRouter({children, roles}){
     // Evita renderizar a rota se o usuário não estiver logado 
     // ou se estiver logado mas sem permissão (pois o useEffect vai redirecionar)
     if (!user || (roles && !roles.includes(user.type))) {
+        toast.warn("Você não tem permissão para acessar esta página.");
         return null; // Não renderiza nada enquanto o redirecionamento acontece
     }
 

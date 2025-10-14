@@ -54,7 +54,15 @@ export default function ControleAcesso() {
         setAlunos(responseAl.data);
       }catch(err){
         console.log("Erro: ", err);
-        toast.error("Erro ao buscar usuários.");
+        toast.warn('Erro ao buscar usuários.', {  
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark" });
       }
     }
     fetchUser()
@@ -65,10 +73,30 @@ export default function ControleAcesso() {
       if (tipo === "aluno") {
         if (status === "ativo") {
           const deletedAluno = await deleteFunctionAluno(id);
-          if (deletedAluno.status === 200) toast.success("Aluno deletado com sucesso.");
+          if (deletedAluno.status === 200){
+            toast.success('Aluno deletado com sucesso.', {  
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark" });
+          };
         } else {
           const ativarAluno = await ativarFunctionAluno(id);
-          if (ativarAluno.status === 200) toast.success("Aluno ativado com sucesso.");
+          if (ativarAluno.status === 200){
+            toast.success('Aluno deletado com sucesso.', {  
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark" });
+          };
         }
 
         setAlunos((prev) =>
@@ -79,10 +107,30 @@ export default function ControleAcesso() {
       } else {
         if (status === "ativo") {
           const deletedUser = await deleteFunctionUser(id);
-          if (deletedUser.status === 200) toast.success("Usuário deletado com sucesso.");
+          if (deletedUser.status === 200){
+            toast.success('Usuário deletado com sucesso.', {  
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark" });
+          };
         } else {
           const ativarUser = await ativarFunctionUser(id);
-          if (ativarUser.status === 200) toast.success("Usuário ativado com sucesso.");
+          if (ativarUser.status === 200){
+            toast.success('Usuário ativo com sucesso.', {  
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark" });
+          };
         }
 
         setUsuarios((prev) =>
@@ -101,7 +149,15 @@ export default function ControleAcesso() {
 
     } catch (err) {
       console.error("Erro: ", err);
-      toast.error("Erro ao atualizar status da entidade.");
+      toast.error('Erro ao atualizar status da entidade.', {  
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark" });
     }
   };
 
@@ -113,7 +169,15 @@ export default function ControleAcesso() {
       if (valorPesquisa.trim() !== "") {
 
         if(valorPesquisa.length < 3){
-          toast.warn(`O ${tipoPesquisa.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
+          toast.warn(`O ${tipoPesquisa.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`, {  
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark" });
           return
         }
 
@@ -143,7 +207,15 @@ export default function ControleAcesso() {
         }
         resultado = [...alunosRes, ...usersRes];
         if(!resultado || resultado.length === 0 ){
-          toast.warn("Nenhuma entidade encontrada.")
+          toast.warn("Nenhuma entidade encontrada.", {  
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark" });
         }
       }
       if (filtroStatus) {
@@ -166,7 +238,15 @@ export default function ControleAcesso() {
       setUsuariosFiltrados(resultado);
     }catch(err){
       console.log("Erro: ", err);
-      toast.error("Erro ao buscar entidade(s).")
+      toast.error("Erro ao buscar entidade(s).", {  
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark" });
     }
 
     // Já estamos integrando 🥲
