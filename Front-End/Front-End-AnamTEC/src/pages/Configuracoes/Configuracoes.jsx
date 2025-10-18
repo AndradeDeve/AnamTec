@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import { toast } from "react-toastify";
+import { showToast } from "../../Utils/toast";
 import { putFunctionResetSenha } from "../../services/APIService";
 import "./Config.css";
 import { getUser } from "../../helpers/auth";
 
 export default function Configuracoes() {
-    // ======================================
-    // 1. ESTADOS
-    // ======================================
+
     const [abaAtiva, setAbaAtiva] = useState("usuario");
     const navegar = useNavigate();
+    // Novos estados para o Modal de Confirmação
+    const [showModal, setShowModal] = useState(false);
+    const [pendingTheme, setPendingTheme] = useState(null);
 
-    // Estado geral do formulário (Usuário e Preferências)
     const [formData, setFormData] = useState({
         nome: "",
         email: "",
@@ -23,17 +23,32 @@ export default function Configuracoes() {
         tema: "claro",
         notificacoes: true,
     });
-
-    // Estado do formulário de Segurança
+    
     const [formSeg, setFormSeg] = useState({
         senhaAtual: "",
         novaSenha: "",
         confirmarSenha: "",
     });
 
-    // ======================================
-    // 2. EFEITO DE INICIALIZAÇÃO (TEMA)
-    // ======================================
+    // Função para aplicar o tema visualmente e salvar no localStorage
+    const applyTheme = (novoTema) => {
+        const root = document.documentElement;
+        
+        // Limpa as classes existentes
+        root.classList.remove('tema-claro', 'tema-escuro'); 
+
+        // Aplica a nova classe
+        if (novoTema === 'escuro') {
+            root.classList.add('tema-escuro');
+        } else {
+            root.classList.add('tema-claro');
+        }
+        
+        localStorage.setItem('temaPreferido', novoTema);
+        showToast("success", "Tema atualizado com sucesso!");
+        setShowModal(false); // Fecha o modal
+    };
+    
     useEffect(() => {
         const userdata = getUser();
         
@@ -57,139 +72,117 @@ export default function Configuracoes() {
         }));
 
         if (userdata) {
-        setFormData(prev => ({
-            ...prev,
-            nome: userdata.user || userdata.user || prev.user,
-            email: userdata.email || prev.email,
-            type: userdata.type || userdata.role || prev.type,
-            tema: temaSalvo || prev.tema
-        }));
-    }
-
+            setFormData(prev => ({
+                ...prev,
+                nome: userdata.user || prev.user,
+                email: userdata.email || prev.email,
+                type: userdata.type || prev.type,
+                tema: temaSalvo || prev.tema
+            }));
+        }
     }, []);
-
-    // ======================================
-    // 3. FUNÇÕES HANDLERS
-    // ======================================
 
     const navPrincipal = () => {
         navegar("/Home");
     };
-    
-    // FUNÇÃO UNIFICADA: Atualiza formSeg ou formData e lida com o tema
+
     function handleChange(e) {
         const { name, value, type, checked } = e.target;
         const novoValor = type === 'checkbox' ? checked : value;
 
-        // Verifica se o campo pertence ao formulário de SEGURANÇA
         if (['senhaAtual', 'novaSenha', 'confirmarSenha'].includes(name)) {
             setFormSeg(prev => ({ 
                 ...prev, 
                 [name]: novoValor 
             }));
         } else {
-            // Caso contrário, pertence ao formulário GERAL
+            // Caso contrário, pertence ao formulário GERAL (inclui o tema)
             setFormData(prev => ({ 
                 ...prev, 
                 [name]: novoValor 
             }));
-            
-            // Lógica de TEMA (só executa se 'tema' for alterado)
-            if (name === 'tema') {
-                const root = document.documentElement;
-                
-                // Limpa as classes existentes
-                root.classList.remove('tema-claro', 'tema-escuro');
-                
-                if (novoValor === 'escuro') {
-                    root.classList.add('tema-escuro');
-                } else {
-                    root.classList.add('tema-claro');
-                }
-                
-                localStorage.setItem('temaPreferido', novoValor);
-            }
+
         }
     }
 
-    // FUNÇÃO SUBMIT: Lida com submissão condicional
     async function handleSubmit(e) {
         e.preventDefault();
-        
-        // Se não estiver na Aba Segurança, salva apenas as outras configurações (preferências/usuário)
-        if (abaAtiva !== "seguranca") {
-            // Em uma aplicação real, você chamaria a API PUT/POST para formData aqui
-            toast.success('Configurações salvas!', { 
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined, theme: "dark" });
-            console.log("Configurações salvas:", formData); 
+
+        if (abaAtiva === "preferencias") {
+            const temaSelecionado = formData.tema;
+            const temaAtual = localStorage.getItem('temaPreferido') || 'claro';
+            
+            if (temaSelecionado !== temaAtual) {
+                setPendingTheme(temaSelecionado);
+                setShowModal(true);
+                return; 
+            } 
+    
+            showToast("success","Configurações salvas!");
+            console.log("Configurações salvas (sem tema):", formData); 
             return;
         }
 
-        // LÓGICA DE SEGURANÇA (só executa na aba "seguranca")
-        try {
-            if (formSeg.novaSenha !== formSeg.confirmarSenha) {
-                toast.error('A nova senha e a confirmação não coincidem.', { 
-                        position: "top-center",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: false,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined, theme: "dark" });
-                return;
+        if (abaAtiva === "seguranca") {
+            try {
+                if (formSeg.novaSenha !== formSeg.confirmarSenha) {
+                    showToast ("error","A nova senha e a confirmação não coincidem.");
+                    return;
+                }
+                // Chama a API de reset de senha
+                const data = await putFunctionResetSenha(formSeg);
+                
+                if (data && data.status === 200) {
+                    showToast ("success","Senha atualizada com sucesso!.");
+                } else {
+                    showToast("error","Erro ao atualizar senha. Verifique a senha atual.");
+                }
+                    
+            } catch(err) {
+                console.error("Erro: ", err);
+                showToast("error","Erro ao tentar salvar a senha. Tente novamente.");
             }
-
-            // Chama a API de reset de senha
-            const data = await putFunctionResetSenha(formSeg);
-            
-            if (data && data.status === 200) {
-                toast.success('Senha atualizada com sucesso!.', { 
-                        position: "top-center",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: false,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined, theme: "dark" });
-            } else {
-                 toast.error('Erro ao atualizar senha. Verifique a senha atual.', { 
-                         position: "top-center",
-                         autoClose: 5000,
-                         hideProgressBar: false,
-                         closeOnClick: false,
-                         pauseOnHover: true,
-                         draggable: true,
-                         progress: undefined, theme: "dark" });
-            }
-            
-        } catch(err) {
-            console.error("Erro: ", err);
-            toast.error('Erro ao tentar salvar a senha. Tente novamente.', { 
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined, theme: "dark" });
+            return;
         }
+        // 3. Lógica para ABA USUÁRIO (e outras que não sejam seguranca/preferencias)
+        showToast("success","Configurações salvas!");
+        console.log("Configurações salvas:", formData); 
+        return;
     }
-    
-    // ======================================
-    // 4. RENDERIZAÇÃO (JSX)
-    // ======================================
+
+    const ConfirmationModal = () => {
+        if (!showModal) return null;
+        return (
+            <div className="modal-overlay">
+                <div className="modal-content">
+                    <h3>Confirmação de Tema</h3>
+                    <p>Você tem certeza que deseja alterar o tema para (<strong>{pendingTheme === 'escuro' ? 'Escuro' : 'Claro'}</strong>)?</p>
+                    <div className="modal-actions">
+                        <button 
+                            type="button"
+                            className="btn-salvar btn-cancel" 
+                            onClick={() => setShowModal(false)}
+                        >
+                            Cancelar
+                        </button>
+                        <button 
+                            type="button"
+                            className="btn-salvar btn-confirm" 
+                            onClick={() => applyTheme(pendingTheme)}
+                        >
+                            Confirmar e Aplicar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+    // --- Fim Componente Modal ---
+
     return (
         <div className="config-wrapper">
             <h2 className="config-title">Configurações</h2>
             <div className="config-container">
-                
-                {/* MENU LATERAL */}
                 <aside className="config-menu">
                     <ul>
                         <li 
@@ -213,7 +206,6 @@ export default function Configuracoes() {
                     </ul>
                 </aside>
 
-                {/* CONTEÚDO DA ABA */}
                 <main className="config-content">
                     <form className="config-form" onSubmit={handleSubmit}>
                         
@@ -269,7 +261,6 @@ export default function Configuracoes() {
                                 </label>
                             </>
                         )}
-
                         {/* === Aba Segurança === */}
                         {abaAtiva === "seguranca" && (
                             <>
@@ -301,7 +292,6 @@ export default function Configuracoes() {
                             />
                             </>
                         )}
-
                         {/* BOTÃO DE SALVAR */}
                         <div className="actions">
                             <button 
@@ -319,6 +309,9 @@ export default function Configuracoes() {
                     </form>
                 </main>
             </div>
+            
+            {/* Renderiza o Modal de Confirmação */}
+            <ConfirmationModal />
         </div>
     );
 };

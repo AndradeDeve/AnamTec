@@ -7,8 +7,7 @@ import controlAcessIcon from '../../../assets/control-acess.png';
 import relatorioIcon from '../../../assets/relatorio.png';
 import logoAnamtec from '../../../assets/Anamtec-logo.png';
 import { getUser } from '../../../helpers/auth';
-// import configIcon from '../../../assets/config-icon.png'  // Não mais necessário, pois o ícone navega direto
-import './Header.css'; // mantém seu CSS personalizado
+import './Header.css'; 
 
 
 const Header = () => {
@@ -23,13 +22,8 @@ const Header = () => {
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   }
-  // Os estados e funções configOpen/toggleConfig foram removidos pois o ícone navega direto.
-
-    // Função para abrir o link do NSA em uma nova aba
    const handleNsaAccess = () => {
-    // Abre o URL em uma nova aba (_blank)
     window.open('https://nsa.cps.sp.gov.br/', '_blank');
-    // Fecha o menu após o clique
     setMenuOpen(false);
   };
 
@@ -41,17 +35,10 @@ return (
       <div className="row align-items-center justify-content-between">
         <div className="col-auto">
           <div className="menu-toggle d-md-flex" onClick={toggleMenu}>☰</div>
-          
-          {/* Sidebar Menu - Usa display: flex column para ancorar o footer */}
-          <div className={`sidebar-menu-custom ${menuOpen ? 'show' : ''}`}>
-             
-             {/* Botão para Fechar o menu (TOPO) */}
-             <div className="close-btn" onClick={toggleMenu}>&times;</div> 
-            
-            {/* CONTAINER PRINCIPAL/COM SCROLL: Apenas este bloco rola */}
+            <div className={`sidebar-menu-custom ${menuOpen ? 'show' : ''}`}>
+            <div className="close-btn" onClick={toggleMenu}>&times;</div> 
             <div className='sidebar-list-container'> 
                 <ul className="list-unstyled sidebar-list">
-                  {/* Opções de Navegação */}
                   <li className='mx-2' onClick={() => { navigate('/home'); toggleMenu(); }}>
                     <img src={homeIcon} alt="Página Home" />
                   <span>Home</span>
@@ -73,20 +60,17 @@ return (
                   </li>
                 </ul>
              </div>
-             {/* FIM DO CONTAINER DE SCROLL */}
-
-            {/* ITEM ANCORADO: Opção Sair (RODAPÉ) */}
             <ul className="list-unstyled sidebar-footer-list">
-                 <li className='mx-2' onClick={() => { navigate('/'); toggleMenu(); }}>
-                    <img src={personIcon} alt="Sair do sistema" />
-                 <span>Sair</span>
-                 </li>
+              <li className='mx-2' onClick={() => { navigate('/'); toggleMenu(); }}>
+                <img src={personIcon} alt="Sair do sistema" />
+              <span>Sair</span>
+              </li>
             </ul>
           </div>
         </div>
       <div className="col text-center">
         <span className='d-md-inline fw-bold fs-4 d-none d-sm-block'>
-        AnamTec
+          AnamTec
         </span> 
         <img src={logoAnamtec} alt="Logo AnamTec" className='ms-2' height="60"/>
       </div>

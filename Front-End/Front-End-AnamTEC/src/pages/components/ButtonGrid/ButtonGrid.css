@@ -1,9 +1,8 @@
 .button-row {
   display: flex;
-  gap: 1rem; /* Espaço entre botões */
-  justify-content: flex-start; /* Centraliza horizontalmente */
-  flex-wrap: wrap; /* Quebra linha se não couber
-   */
+  gap: 1rem;
+  justify-content: flex-start; 
+  flex-wrap: wrap; 
    margin-right: 1.7rem;
 }
 .custom-btn {
@@ -15,8 +14,8 @@
   font-weight: 500;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.14);
   transition: all 0.3s ease;
-  flex: 1 1 120px; /* Cresce, encolhe, mínimo de 120px */
-  max-width: 200px; /* Não fica maior que 180px */
+  flex: 1 1 120px; 
+  max-width: 200px; 
 }
 .custom-btn:hover {
   background-color: var(--azulHover);
@@ -26,26 +25,26 @@
 @media (max-width: 768px) {
   .button-row {
     display: inline-flex;
-    flex-wrap: wrap; /* Quebra linha em telas muito estreitas */
+    flex-wrap: wrap; 
     justify-content: center;
   }
   .custom-btn {
-    flex: 1 1 100px; /* Ocupam no mínimo 100px cada */
-    max-width: none; /* Desativa limite rígido no mobile */
+    flex: 1 1 100px; 
+    max-width: none; 
   }
 }
 
 @media (max-width: 480px) {
   .button-row {
     display: inline-flex;
-    flex-wrap: wrap; /* Quebra linha em telas muito estreitas */
+    flex-wrap: wrap;
     margin:auto;
     margin-left: 3rem;
     justify-content: center;
   }
   .custom-btn {
-    flex: 1 1 100px; /* Ocupam no mínimo 100px cada */
-    max-width: none; /* Desativa limite rígido no mobile */
+    flex: 1 1 100px; 
+    max-width: none; 
   
   }
 }

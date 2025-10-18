@@ -1,0 +1,12 @@
+.course-select-override {
+    width: 100% !important; /* Pode ser necessário !important se houver conflito */
+}
+
+@media (min-width: 768px) {
+    .course-select-override {
+        /* Define uma largura mínima que acomoda o texto longo */
+        min-width: 380px !important; 
+        /* Ocupa o máximo de espaço do container Bootstrap */
+        width: auto !important; 
+    }
+}

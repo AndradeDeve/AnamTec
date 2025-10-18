@@ -1,7 +1,6 @@
 .dashboard-card {
   display: flex;
-  /* background-color: #044654; fallback padrão */
-  min-height: 150px; /* altura mínima para manter proporção */
+  min-height: 150px; 
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -10,6 +9,16 @@
 .bg-cyan {
   background-color: var(--cor-destaque) !important;
 }
+
+.dashboard-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
 
 .bg-green {
   background-color: var(--verdeDashBoard) !important;

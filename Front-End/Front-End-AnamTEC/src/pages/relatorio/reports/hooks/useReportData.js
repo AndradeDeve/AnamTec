@@ -10,7 +10,7 @@ const aggregateDistributionData = (data, categoryKey) => {
     return acc;
   }, {});
 
-  // Transforma o objeto de contagens no formato esperado pelo Recharts
+ 
   return Object.keys(counts).map(key => ({
     name: key,
     value: counts[key],
@@ -25,7 +25,7 @@ export function useReportData() {
     ageRange: 'all',
     gender: 'all',
     status: 'all',
-    timeframe: 'month', // 'day', 'week', 'month'
+    timeframe: 'month',
     distributionCategory: 'gender', // Novo filtro para o gráfico de pizza: 'gender' ou 'status'
   });
 

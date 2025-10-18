@@ -1,0 +1,123 @@
+.not-found-wrapper{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+  align-items:stretch;
+  min-height: 100vh;
+  /* Garante que o gradiente reaja às variáveis do tema */
+  background: linear-gradient(to left, var(--cor-fundo-principal)  50%, var(--cor-destaque) 50%);
+  padding: 1rem;
+}
+
+.asideContainerNotFound{
+  flex:1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--branco); 
+  padding: 2rem;
+  text-align: center;
+}
+
+.header-Not-Found {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap:1rem;  
+}
+.header-Not-Found h1{
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: var(--branco);
+}
+.logoa{
+  width: 80px;
+  height: auto;
+}
+
+.not-card{
+    flex:1;
+    width: 100%;
+    max-width: 420px;
+    /* Usando a variável de fundo que muda no tema escuro */
+    background-color:var(--cor-fundo-secundario) ;
+    /* A sombra também usa a variável, o que é bom */
+    box-shadow: 8px 6px 12px var(--preto);
+    border-radius: 14px;
+    margin: auto 6rem;
+}
+.titleNF{
+  background-color: var(--cor-destaque);
+  padding: 10px ;
+  text-align: center;
+  border-radius: 12px 12px 0px 0px;
+}
+.titleNF h2{
+  color: var(--branco);
+  font-size: 1.2rem;
+  margin: 0;
+}
+.message-content {
+    padding: 30px;
+    text-align: center;
+}
+
+/* 🚨 NOVO: Estilo para o ícone. Usando a cor de destaque. */
+.lock-icon-403 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    /* A cor do ícone usa o link/destaque, que contrasta bem em ambos os temas */
+    color: var(--cor-destaque); 
+}
+
+/* 🚨 CORREÇÕES PRINCIPAIS: Usando variáveis de texto */
+.error-code-403 {
+    font-size: 2.2em;
+    font-weight: 700;
+    /* Usa a cor secundária (Cinza no claro, Cinza Claro no escuro) */
+    color: var(--cor-texto-secundario); 
+    margin: 5px 0 15px 0;
+}
+.main-message {
+    font-size: 1em;
+    /* Usa a cor principal (Preto no claro, Branco no escuro) */
+    color: var(--cor-texto-principal); 
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+.details-message {
+    font-size: 0.95em;
+    /* Usa a cor secundária */
+    color: var(--cor-texto-secundario); 
+    margin-bottom: 10px;
+}
+/* FIM DAS CORREÇÕES */
+
+.action-buttons-403 {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 30px 30px 30px; 
+    align-items: center; 
+}
+.action-buttons-403 .btn-submit {
+    max-width: 250px; 
+    width: 100%;
+    background-color: var(--cor-destaque); 
+    border-radius: 8px;
+}
+.support-link {
+    color: var(--cor-link);
+    text-decoration: none;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+.support-link:hover {
+    text-decoration: underline;
+}
+@media (max-width: 768px) {
+    .action-buttons-403 {
+        padding: 0 15px 15px 15px;
+    }
+}

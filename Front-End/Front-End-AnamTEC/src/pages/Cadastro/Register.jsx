@@ -6,9 +6,9 @@ import { showToast } from "../../Utils/toast.js"; // importamos o helper
 import { useNavigate } from 'react-router-dom';
 import "./Register.css";
 import { formHelperTextClasses } from "@mui/material";
-//ARQUIVO ATUALIZADO PEN
+
 export default function Cadastro() {
-  //Botão de voltar para a tela principal
+
 
   const navegar = useNavigate()
   
@@ -16,7 +16,6 @@ export default function Cadastro() {
     navegar("/Home");
   }
 
-  // estado do formulário
   const [formData, setFormData] = useState({
     rm: "",
     cpf: "",
@@ -24,11 +23,10 @@ export default function Cadastro() {
     email: "",
     senha: "",
     cargo: "",
-    curso: "", // será usado apenas quando necessário
+    curso: "", 
     disciplina:"",
   });
 
-  // lista de cursos (pode vir da API futuramente)
   const cursosDisponiveis = [
     "Administração",
     "Recursos Humanos",
@@ -44,7 +42,6 @@ export default function Cadastro() {
     "Agenciamento de viagens",
   ];
 
-  // [NOVO] Lista de disciplinas disponíveis (pode vir da API futuramente)
   const disciplinasDisponiveis = [
     "Programação e Desenvolvimento",
     "Banco de Dados",
@@ -55,7 +52,6 @@ export default function Cadastro() {
     "Sistemas Embarcados",
     "Análise e Projeto de Sistemas"
   ];
-  // cargos possíveis
   const cargos = [
     { value: "", label: "Selecione o cargo" },
     { value: "Coordenador Pedagógico", label:"Coordenador Pedagógico" },
@@ -64,12 +60,10 @@ export default function Cadastro() {
     { value: "Professor", label: "Professor" }
   ];
 
-  // helper para saber se devemos mostrar o campo de curso
   const precisaCursoEDisciplina = (cargo) =>
     cargo === "Coordenador de Curso" || 
     cargo === "Professor";
 
-  // quando o cargo mudar e não precisar de curso, limpamos o campo curso
   useEffect(() => {
     if (!precisaCursoEDisciplina(formData.cargo) && (formData.curso !== "" || formData.disciplina)){
       setFormData((prev) => ({ 
@@ -80,7 +74,6 @@ export default function Cadastro() {
     }
   }, [formData.cargo]);
   
-  //Mascara para CPF
   const mascaraCPF = (value) => {
     value = value.substring(0,14);
   
@@ -90,7 +83,6 @@ export default function Cadastro() {
   
     return value;
   };
-  // manipula mudanças nos inputs/selects
   function handleChange(e) {
     const { name, value } = e.target;
 
@@ -112,36 +104,26 @@ export default function Cadastro() {
     return cpf.length === 14;
   }
   
-  // submit do formulário
   async function handleSubmit(e) {
     e.preventDefault();
 
-    // [Validação 1] - Validação do Cargo 
     if (!formData.cargo) {
       showToast ("warn","Selecione um cargo.");
       return;
     }
-    // [Validação 2] - Validação Condicional do Curso
     if (precisaCursoEDisciplina(formData.cargo) && !formData.curso) {
       showToast("warn","Para esse cargo, selecione um curso.");
       return;
     }
-
-    // [NOVA VALIDAÇÃO] - Validação Condicional da Disciplina
     if (precisaCursoEDisciplina(formData.cargo) && !formData.disciplina) {
         showToast("warn", "Para esse cargo, selecione uma disciplina.");
         return;
     }
-
-    // [Validação 3] - Validação do RM (Condicionalmente obrigatório)
-    // Se o cargo não for 'Secretaria' nem 'Coordenador Pedagógico', o RM é obrigatório.
     const rmNãoObrigatorio = formData.cargo ==="Secretaria" || formData.cargo === "Coordenador Pedagógico";
     if (!rmNãoObrigatorio && !formData.rm){
       showToast ("warn", "O campo RM é obrigátorio para o seu cargo.");
       return;
     }
-
-    // [Validação 4] - Validação do CPF
     if (!formData.cpf){
       showToast("warn","Preencha o CPF");
       return;
@@ -150,28 +132,23 @@ export default function Cadastro() {
       showToast("warn","O CPF deve ter 11 digitos.Por favor, verifique.");
       return;
     }
-
-    // [Validação 5] - Validação dos campos básicos obrigatórios
     if (!formData.nome || !formData.email || !formData.senha) {
        showToast("warn","Preencha o restante dos campos obrigatórios (nome, email, senha).");
       return;
     }
-
-     // [Validação 6] - Validação de Email
     if (!isValidEmail(formData.email)) {
     showToast("warn", "Digite um e-mail válido.");
     return;
-}
+    }
 
     try {
       const data = await postFunctionUser(formData); 
-      // chama seu serviço
+  
       // console.log("Resposta do servidor:", result);
       if(data.status === 201) {
         showToast("success", 'Cadastro efetuado com sucesso')
       }
-      // opcional: limpar formulário
-      // setFormData({ rm: "",cpf:"" ,nome: "", email: "", senha: "", cargo: "", curso: "" });
+  
     } catch (error) {
       console.log("Erro ao cadastrar:", error);
       showToast("error", "Erro ao efetuar cadastro. Tente novamente.");
@@ -180,7 +157,7 @@ export default function Cadastro() {
 
   return (
     <div className="cadastro-wrapper col-12 col-md-6 col-lg-12">
-            {/* TOPO - Logo e Título */}
+       
       <div className="asideContainerCadastro d-flex-">
       <header className="header-Cadastro">
         <h1 className="d-none d-sm-block">AnamTec</h1>

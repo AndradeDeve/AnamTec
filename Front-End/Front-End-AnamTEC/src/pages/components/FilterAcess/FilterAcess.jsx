@@ -1,13 +1,9 @@
-
 import React,{useState} from 'react'
-import { Form, Button, Row, Col } from 
-"react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import './FilterAcess.css'
-
 function FilterAcess({onSearch}) {
   const [termo, setTermo] = useState("");
   const [pesquisa, setPesquisa] = useState("RM");
-
 
 const handleAcess = () =>{
   if (!termo){
@@ -41,7 +37,6 @@ const handleAcess = () =>{
           onChange={(e) => setTermo(e.target.value)} 
           />
       </div>
-
       <div className="col-12 col-sm-12-col-md-4 d-grid">
       <button className="custon-btn" onClick={handleAcess}>
         Pesquisar

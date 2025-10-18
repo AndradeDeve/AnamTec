@@ -11,24 +11,43 @@ import { toast } from 'react-toastify';
 export default function MasterDashboard() {
   const [showModal, setShowModal] = useState(false);
   const [alunosFiltrados, setAlunosFiltrados] = useState([]);
+  const [todosAlunos, setTodosAlunos] = useState([]); // ✅ novo estado base
   const [alunosPendentes, setAlunosPendentes] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 🔹 Busca inicial dos alunos
   useEffect(() => {
-  const fetchAlunos = async () => {
-    try {
-      const dados = await getFunctionAluno();
-      setAlunosFiltrados(dados || []);
-    } catch (error) {
-      setAlunosFiltrados([]);
-      console.error('Erro ao buscar dados dos alunos:', error);
-    } finally {
-      setLoading(false);
+    const fetchAlunos = async () => {
+      try {
+        const dados = await getFunctionAluno();
+        setTodosAlunos(dados || []);
+        setAlunosFiltrados(dados || []);
+      } catch (error) {
+        console.error('Erro ao buscar dados dos alunos:', error);
+        setTodosAlunos([]);
+        setAlunosFiltrados([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAlunos();
+  }, []);
+
+  // 🔹 Quando o usuário clica em um card
+  const handleCardClick = (tipo) => {
+    if (tipo === 'todos') {
+      setAlunosFiltrados(todosAlunos);
+    } else {
+      const filtrados = todosAlunos.filter(aluno =>
+        tipo === 'concluida'
+          ? aluno.status === 'Concluída'
+          : aluno.status === 'Não' || aluno.status === 'Pendente'
+      );
+      setAlunosFiltrados(filtrados);
     }
   };
-  fetchAlunos();
-}, []);
 
+  // 🔹 Mock do modal
   const carregarAlunosPendentes = () => {
     const mock = [
       { id: 1, nome: "Ana Paula", emailResponsavel: "ana.mae@email.com" },
@@ -46,17 +65,18 @@ export default function MasterDashboard() {
     setAlunosFiltrados(dados);
   };
 
+  // 🔹 Enviar lembretes
   const enviarLembretes = async () => {
-    try{
+    try {
       const response = await postEmailAlunosPendentes();
-      if(response.status === 200){
+      if (response.status === 200) {
         toast.success("E-mails enviados para alunos pendentes");
-      }else if(response.status === 404){
+      } else if (response.status === 404) {
         toast.error("Nenhum aluno encontrado.");
-      }else{
-        toast.error("Erro ao enviar e-mail para alunos")
-      };
-    }catch(err){
+      } else {
+        toast.error("Erro ao enviar e-mail para alunos");
+      }
+    } catch (err) {
       console.log("Erro: ", err);
     }
     setShowModal(false);
@@ -66,30 +86,32 @@ export default function MasterDashboard() {
     <header>
       <Header />
       <main>
-          <div className="row my-3 justify-content-center">
-            <div className="col-12 col-md-10">
-              <DashboardCards />
-            </div>
+        <div className="row my-3 justify-content-center">
+          <div className="col-12 col-md-10">
+            <DashboardCards onCardClick={handleCardClick} />
           </div>
-          <div className="container">
-            <div className="row">
-              <div className="col-11 col-md-5">
-                <ButtonGrid
-                  onCadastrar={() => console.log("Cadastrar")}
-                  onPesquisar={() => console.log("Pesquisar")}
-                  onEnviarEmail={abrirModal}
-                  showModal={showModal}
-                  setShowModal={setShowModal}
-                  alunosPendentes={alunosPendentes}
-                  onEnviar={enviarLembretes}
-                />
-              </div>
-              <div className="col-11 col-md-7">
+        </div>
+
+        <div className="container">
+          <div className="row">
+            <div className="col-11 col-md-5">
+              <ButtonGrid
+                onCadastrar={() => console.log("Cadastrar")}
+                onPesquisar={() => console.log("Pesquisar")}
+                onEnviarEmail={abrirModal}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                alunosPendentes={alunosPendentes}
+                onEnviar={enviarLembretes}
+              />
+            </div>
+            <div className="col-11 col-md-7">
               <FilterBar onSearch={handleSearch} />
-              </div>
             </div>
           </div>
-        <StudentTable alunosFiltrados={alunosFiltrados}/>
+        </div>
+
+        <StudentTable alunosFiltrados={alunosFiltrados} />
       </main>
     </header>
   );

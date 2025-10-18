@@ -1,14 +1,13 @@
-// src/features/reports/ReportsDashboard.jsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // <--- Importar useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import { useReportData } from './hooks/useReportData';
 import FilterControls from './components/FilterControls';
-import AnamnseBarGrafico from './components/Graficos/AnamneseBarGrafico'; // Nome corrigido
-import AnamnsePieGrafico from './components/Graficos/AnamnesePieGrafico'; // Nome corrigido
-import Header from "../../pages/components/Header/Header"; 
+import AnamnseBarGrafico from './components/Graficos/AnamneseBarGrafico'; 
+import AnamnsePieGrafico from './components/Graficos/AnamnesePieGrafico'; 
+import Header from "../../components/Header/Header"; 
 export default function ReportsDashboard() {
-  // Inicializa o hook de navegação
-  const navigate = useNavigate(); // <--- Inicializa navigate
+
+  const navigate = useNavigate(); 
 
   const { 
     loading, 
@@ -38,19 +37,9 @@ export default function ReportsDashboard() {
        <Header />
 
     <div className="container-fluid p-4">
-      {/* NOVO: Botão para Voltar à Home */}
-      <div className="row mb-3">
-          <div className="col-12">
-            <button 
-              className="btn btn-secondary" 
-              onClick={() => navigate('/')} // Navega para a rota principal
-            >
-              ← Voltar para o Dashboard Principal
-            </button>
-          </div>
-      </div>
+   
       
-      <h1 className="mb-4">Relatórios de Anamneses</h1>
+      <h1 className="mb-4 text-center">Relatórios de Anamneses</h1>
       
       {/* Linha de Filtros */}
       <div className="row mb-4">

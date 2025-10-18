@@ -49,9 +49,8 @@ export default function ControleAcesso() {
       try{
           const responseUser = await getFunctionUser();
           const responseAl = await getFunctionAlunoControll(); 
-          console.log("Usuários:", responseUser);
-        setUsuarios(responseUser.data);
-        setAlunos(responseAl.data);
+          setUsuarios(responseUser.data);
+          setAlunos(responseAl.data);
       }catch(err){
         console.log("Erro: ", err);
         toast.warn('Erro ao buscar usuários.', {  
@@ -87,7 +86,7 @@ export default function ControleAcesso() {
         } else {
           const ativarAluno = await ativarFunctionAluno(id);
           if (ativarAluno.status === 200){
-            toast.success('Aluno deletado com sucesso.', {  
+            toast.success('Aluno Ativo com sucesso.', {  
               position: "top-center",
               autoClose: 5000,
               hideProgressBar: false,
@@ -222,6 +221,17 @@ export default function ControleAcesso() {
         resultado = resultado.filter(
           (u) => u.status && u.status.toLowerCase() === filtroStatus.toLowerCase()
         );
+        if(resultado.length === 0){
+          toast.warn("Nenhuma entidade encontrada com esse status.", {  
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark" });
+        }
       }
       const normalizarEntidade = (tipo) => {
       if (!tipo) return "aluno";
