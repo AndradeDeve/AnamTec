@@ -221,6 +221,17 @@ export default function ControleAcesso() {
         resultado = resultado.filter(
           (u) => u.status && u.status.toLowerCase() === filtroStatus.toLowerCase()
         );
+        if(resultado.length === 0){
+          toast.warn("Nenhuma entidade encontrada com esse status.", {  
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark" });
+        }
       }
       const normalizarEntidade = (tipo) => {
       if (!tipo) return "aluno";

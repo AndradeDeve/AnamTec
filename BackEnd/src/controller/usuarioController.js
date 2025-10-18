@@ -104,11 +104,11 @@ routes.get("/specific", async (request, response) => {
 routes.post("/", async (request, response) => {
     const {cpf, nome, email, senha, curso} = request.body;
     let {rm, cargo, disciplina} = request.body;
-    console.log(cpf)
+    console.log(rm)
     try{
         const cpfsemPontuacao = cpf.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"?]/g, "");
         const disciplinaRegex = /^[\p{L}\s\-']{2,35}$/u;
-        if(disciplina && cargo.toLowerCase() === "professor"){
+        if(disciplina && cargo.toLowerCase() === "professor" || cargo.toLowerCase() === "coordenador de curso"){
             if(!disciplinaRegex.test(disciplina.trim())){
                 return response.status(400).json({err: "Disciplina inválida"});
             }
@@ -116,14 +116,11 @@ routes.post("/", async (request, response) => {
             disciplina = null;
         }
 
-        if(rm && cargo.toLowerCase() === "coordenador de Curso" && cargo.toLowerCase() === "professor"){
-            const rmRegex = /^\d{7,15}$/;
-            if(!rm || !rmRegex.test(rm.toLowerCase().trim())){
-                return response.status(400).json({err: "Rm inválido"})
-            }
-        }else{
-            rm = null;
+        const rmRegex = /^\d{7,15}$/;
+        if(!rm || !rmRegex.test(rm.toLowerCase().trim())){
+            return response.status(400).json({err: "Rm inválido"})
         }
+
         
         let id_curso; 
 

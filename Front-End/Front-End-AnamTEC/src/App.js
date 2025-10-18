@@ -30,7 +30,7 @@ function App() {
             </ProtectedRouter>} />
         <Route path="/ResetarSenha" element={<ResetPassW />} />
        <Route path="/Home" element={
-        <ProtectedRouter roles={['coordenador pedagógico', 'secretaria', 'coordenador de curso', 'professor']}>
+        <ProtectedRouter>
             <MasterDashboard />
         </ProtectedRouter>} />
         <Route path="/Observacoes" element={<ObservacoesUsers />} />
