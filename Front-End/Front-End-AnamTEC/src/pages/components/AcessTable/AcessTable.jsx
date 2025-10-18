@@ -1,7 +1,6 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 import AccessRow from "../AcessRow/AcessRow";
-
 const AccessTable = () => {
   // Simulação de dados (futuramente vem da API)
   const dados = [

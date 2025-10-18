@@ -1,7 +1,7 @@
 import { getUser } from "./auth";   
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react"; 
-import { toast } from "react-toastify";
+import { showToast } from "../Utils/toast";
 
 
 function ProtectedRouter({children, roles}){
@@ -30,24 +30,11 @@ function ProtectedRouter({children, roles}){
     // Evita renderizar a rota se o usuário não estiver logado 
     // ou se estiver logado mas sem permissão (pois o useEffect vai redirecionar)
     if (!user || (roles && !roles.includes(user.type))) {
-        toast.warn("Você não tem permissão para acessar esta página.");
+        showToast("warn","Você não tem permissão para acessar esta página.");
         return null; // Não renderiza nada enquanto o redirecionamento acontece
     }
 
-    // Se passou em todas as verificações, renderiza o componente filho (a tela)
     return children; 
-
-
-    // Uso dentro de um componente
-/*
-<div>
-    <h1>Lista de Usuários</h1>
-    // Este botão só aparece se o usuário for Admin ou Secretary
-    <HasRole roles={['Admin', 'Secretary']}>
-        <button>Adicionar Novo Usuário</button>
-    </HasRole>
-</div>
-*/
 }
 
 export default ProtectedRouter

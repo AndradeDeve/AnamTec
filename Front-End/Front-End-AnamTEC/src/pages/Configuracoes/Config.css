@@ -134,3 +134,65 @@
     justify-content: center;
   }
 }
+
+
+/* --- NOVOS ESTILOS PARA O MODAL DE CONFIRMAÇÃO --- */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente escuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; 
+}
+
+.modal-content {
+    background: var(--cor-fundo-secundario); 
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+    color: var(--cor-texto-principal);
+    margin-top: 0;
+}
+
+.modal-content p {
+    margin-bottom: 25px;
+    line-height: 1.5;
+    font-size: 1.1rem;
+    color: var(--cor-texto-principal);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.modal-actions .btn-salvar {
+    /* Herda o estilo base de btn-salvar */
+    padding: 10px 20px;
+    border: none;
+    font-weight: 600;
+}
+
+.btn-cancel {
+    background-color: var(--cor-destaque);
+    color: var(--branco);
+}
+
+.btn-confirm {
+    /* Usa a cor principal de destaque do seu site */
+    background-color: var(--cor-destaque);
+    color: var(--branco);
+}
