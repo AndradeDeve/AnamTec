@@ -1,4 +1,6 @@
-/* Transições para tema dinâmico - Adicionei para suavidade */
+/* ============================================== */
+/* Transições para tema dinâmico */
+/* ============================================== */
 .tela-observacoes,
 .painel-esquerdo,
 .painel-direito,
@@ -8,100 +10,271 @@
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
+/* ============================================== */
+/* Estrutura principal */
+/* ============================================== */
 .tela-observacoes {
   display: flex;
   gap: 20px;
   padding: 20px;
-  background-color: var(--cor-fundo-principal); /* Tema: Fundo principal (claro/escuro) */
-  height: 100vh;
+  background-color: var(--cor-fundo-principal);
+  height: calc(100vh - 60px);
   box-sizing: border-box;
 }
 
+/* ============================================== */
+/* Painéis laterais */
+/* ============================================== */
 .painel-esquerdo,
 .painel-direito {
-  width: 40%;
-  max-width: 320px;
-  background-color: var(--cor-destaque); /* Tema: Destaque no claro (azul); no escuro, herda azul claro - ajuste se quiser secundário */
-  color: var(--cor-texto-principal); /* Tema: Texto que contrasta (branco no claro? Espera, no claro texto é preto - ajuste se painéis precisarem de branco fixo */
-  border: 3px solid var(--cor-destaque); /* Tema: Borda com destaque */
+  width: 280px;
+  flex-shrink: 0;
+  height: 100%;
+  background-color: var(--cor-destaque);
+  color: var(--cor-texto-principal);
+  border: 3px solid var(--cor-destaque);
   padding: 15px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Mantenha; teste no escuro */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   overflow-y: auto;
 }
 
-/* Área central com rolagem */
+.painel-esquerdo h5,
+.painel-direito h5 {
+  text-align: center;
+}
+
+/* Links e divisores */
+.painel-direito a {
+  color: var(--cor-texto-principal);
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.painel-direito hr {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================== */
+/* Dropdown de cursos - Ajuste de visibilidade */
+/* ============================================== */
+.painel-esquerdo select.form-select {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--cor-fundo-principal);
+  color: var(--cor-texto-principal);
+  font-size: 0.95rem;
+  text-align: center;
+  text-overflow: unset;
+  white-space: normal;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Para igualar totalmente com os cards abaixo */
+.painel-esquerdo .form-select:focus {
+  outline: none;
+  border: 2px solid var(--cor-fundo-secundario);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.painel-esquerdo .form-select option {
+  color: #000; /* mantém legibilidade dentro do dropdown */
+}
+
+/* ============================================== */
+/* Lista de professores - Cards */
+/* ============================================== */
+.lista-professores-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.professor-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--cor-texto-principal);
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, border 0.2s ease;
+  border: 2px solid transparent;
+  font-weight: 500;
+  text-align: center;
+}
+
+.professor-card:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.professor-card.selecionado {
+  background-color: var(--cor-fundo-secundario);
+  border: 2px solid var(--cor-fundo-secundario);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+}
+
+/* ============================================== */
+/* Área central */
+/* ============================================== */
 .conteudo-central {
   display: flex;
   flex-direction: column;
   flex: 1;
-  max-width: 800px;
-  align-items: center;
-  background-color: var(--cor-fundo-principal); /* Tema: Fundo principal */
+  height: 100%;
+  align-items: stretch;
+  background-color: var(--cor-fundo-principal);
   padding: 2rem;
   border-radius: 1.5rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Corrigi opacidade de 1.1 para 0.1 */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
+.conteudo-central h4 {
+  text-align: center;
+}
+
+/* Área de rolagem dos comentários */
 .comentarios-scroll {
   overflow-y: auto;
-  max-height: calc(100vh - 100px);
+  flex: 1;
   padding-right: 10px;
-  background-color: var(--cor-fundo-principal); /* Tema: Herda do central, mas explícito para rolagem */
+  background-color: var(--cor-fundo-principal);
 }
 
-/* Comentários principais */
+/* ============================================== */
+/* Comentários */
+/* ============================================== */
 .comentario {
-  background-color: var(--cor-fundo-secundario); /* Tema: Secundário para cards */
+  background-color: var(--cor-fundo-secundario);
   padding: 15px;
   margin-bottom: 20px;
   border-radius: 10px;
-  border-left: 4px solid var(--cor-destaque); /* Tema: Borda de destaque */
+  border-left: 4px solid var(--cor-destaque);
 }
 
-/* Respostas */
 .resposta {
-  background-color: var(--cor-fundo-secundario); /* Tema: Mesmo secundário, para consistência */
-  margin-top: 10px;
-  margin-left: 20px;
+  background-color: rgba(255, 255, 255, 0.07);
+  margin-top: 8px;
   padding: 10px;
-  border-radius: 8px;
-  border-left: 3px solid var(--cor-destaque); /* Tema: Borda sutil */
+  border-radius: 6px;
+  border-left: 3px solid var(--cor-destaque);
 }
 
 .texto {
-  font-size: 15px;
   margin-bottom: 4px;
-  color: var(--cor-texto-principal); /* Tema: Texto principal */
+  font-size: 0.95rem;
 }
 
 .autor {
-  font-size: 13px;
-  color: var(--cor-texto-principal); /* Tema: Substitui #555 por texto principal (melhor contraste no escuro) */
+  font-size: 0.85rem;
+  color: var(--cor-texto-secundario);
 }
 
 .toggle-respostas {
-  font-size: 14px;
-  color: var(--cor-destaque); /* Tema: Link com destaque (azul) */
-  text-decoration: underline;
-  cursor: pointer;
+  display: inline-block;
   margin-top: 5px;
+  font-size: 0.85rem;
 }
 
-/* Responsivo - Sem mudanças nas cores, variáveis funcionam aqui */
+/* ============================================== */
+/* Input principal (nova observação) */
+/* ============================================== */
+.input-comentario-principal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.input-comentario-principal-container .form-control {
+  max-width: 700px;
+
+}
+
+.input-comentario-principal-container .btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+}
+
+/* ============================================== */
+/* Mensagem Central */
+/* ============================================== */
+.mensagem-central {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  color: var(--cor-texto-principal);
+  font-size: 1.2rem;
+  padding: 10px;
+}
+
+/* ============================================== */
+/* Responsividade */
+/* ============================================== */
 @media (max-width: 768px) {
   .tela-observacoes {
     flex-direction: column;
     height: auto;
+    min-height: calc(100vh - 60px);
+    padding: 15px;
   }
 
-  .painel-esquerdo,
-  .painel-direito,
+  .painel-direito {
+    display: none;
+  }
+  
+  .painel-esquerdo {
+    width: 100%;
+    height: auto;
+    order: 1;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0 0 15px 0;
+    overflow-y: visible;
+  }
+  
+  .painel-esquerdo h5 {
+    display: none;
+  }
+
+  .lista-professores-cards {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    gap: 10px;
+  }
+  
+  .professor-card {
+    min-width: 150px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
   .conteudo-central {
     width: 100%;
+    height: auto;
+    order: 2;
+    padding: 1rem;
+  }
+  
+  .comentarios-scroll {
+    max-height: 60vh;
+    flex: none;
   }
 
-  .comentarios-scroll {
-    max-height: none;
+  .input-comentario-principal-container .form-control {
+    max-width: 100%;
   }
 }
