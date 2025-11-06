@@ -24,7 +24,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Login/>} />
         <Route path="/Cadastro" element={
-                
             <ProtectedRouter roles={['coordenador pedagógico']}>  
                 <Cadastro /> 
             </ProtectedRouter>} />

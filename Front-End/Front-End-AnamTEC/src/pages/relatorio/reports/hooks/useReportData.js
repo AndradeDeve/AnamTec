@@ -1,6 +1,7 @@
 // src/features/reports/hooks/useReportData.js
 import { useState, useEffect, useMemo } from 'react';
-// import { fetchAnamnesisData } from '../../../services/APIService'; 
+import { getFunctionAluno } from '../../../../services/APIService';
+// import { fetchAnamnesisData } from '../../../services/APIService 
 
 // Função auxiliar para agregar dados de distribuição (contagem por categoria)
 const aggregateDistributionData = (data, categoryKey) => {
@@ -30,18 +31,32 @@ export function useReportData() {
   });
 
   // 1. Fetch dos Dados (Simulação)
-  useEffect(() => {
-    // Dados Mockados para Demonstração:
-    const mockData = [
-      { id: 1, date: '2025-09-01', course: 'Engenharia', age: 22, gender: 'M', status: 'completed' },
-      { id: 2, date: '2025-09-15', course: 'Medicina', age: 19, gender: 'F', status: 'pending' },
-      { id: 3, date: '2025-10-05', course: 'Engenharia', age: 25, gender: 'F', status: 'completed' },
-      { id: 4, date: '2025-10-10', course: 'Medicina', age: 30, gender: 'M', status: 'completed' },
-      { id: 5, date: '2025-10-12', course: 'Direito', age: 21, gender: 'F', status: 'pending' },
-      // ... muitos mais dados
-    ];
-    setData(mockData);
-    setLoading(false);
+   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getFunctionAluno();
+        console.log("📊 Dados recebidos da API:", result);
+
+        // 🧩 Normaliza o formato dos dados recebidos do backend
+        const normalized = result.map(item => ({
+          id: item.id,
+          date: item.anamineseData || "Não efetuada",
+          course: item.nome_curso || "Não informado",
+          age: item.dataNascimento || 0,
+          gender: item.genero_aluno || "N/A",
+          status: item.status || "Não informado",
+        }));
+
+        console.log('dados normalizados:', normalized);
+        setData(normalized);
+      } catch (error) {
+        console.error('❌ Erro ao carregar dados:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   // 2. Lógica de Filtragem (Otimizada com useMemo)
@@ -57,14 +72,45 @@ export function useReportData() {
   }, [data, filters]);
 
   // 3. Processamento dos Dados para o Gráfico de Barras/Linhas (Timeframe)
-  const getBarChartData = (data, timeframe) => {
-    // Lógica de agregação por dia, semana ou mês
-    // ... (Mantida a estrutura da implementação anterior)
-    return [
-        { name: 'Set/25', count: 2 },
-        { name: 'Out/25', count: 3 },
-    ];
-  };
+const getBarChartData = (data, timeframe) => {
+  if (!data || data.length === 0) return [];
+
+  // Filtra só os alunos que possuem anamnese feita
+  const validData = data.filter(item => item.date && item.date !== "Não efetuada");
+
+  // Contador por período
+  const counts = {};
+
+  validData.forEach(item => {
+    const date = new Date(item.date);
+    if (isNaN(date)) return; // ignora datas inválidas
+
+    let key = "";
+
+    switch (timeframe) {
+      case "day":
+        key = date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+        break;
+      case "week":
+        // pega o número da semana do ano
+        const week = Math.ceil(date.getDate() / 7);
+        key = `${week}ª Sem/${date.getMonth() + 1}`;
+        break;
+      case "year":
+        key = date.getFullYear().toString();
+        break;
+      default: // "month"
+        key = date.toLocaleDateString("pt-BR", { month: "short", year: "2-digit" });
+        break;
+    }
+
+    counts[key] = (counts[key] || 0) + 1;
+  });
+
+  // Converte em array [{ name, count }]
+  return Object.entries(counts).map(([name, count]) => ({ name, count }));
+};
+
 
   const barChartData = useMemo(() => {
     return getBarChartData(filteredData, filters.timeframe);

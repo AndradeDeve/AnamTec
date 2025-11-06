@@ -11,6 +11,7 @@ const RedefineSenha = ({ show, onClose,  onEnviar }) => {
   const sendEmail = async (e) => {
     e.preventDefault();
     try{
+      console.log(formData)
       const data = await putFunctionEmailReset(formData);
       if(data.status === 200){
         toast.success('Senha enviada para o E-mail.', {

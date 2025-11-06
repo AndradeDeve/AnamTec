@@ -4,7 +4,7 @@ import './StudantTable.css';
 
 export default function StudentTable({ alunosFiltrados = [] }) {
   const navigate = useNavigate();
-
+  console.log(alunosFiltrados);
   // 🔹 Estados para paginação (mesma lógica do ControleAcesso)
   const [correntPage, setCorrentPage] = useState(1);
   const [itensPorPagina] = useState(10);
@@ -83,7 +83,7 @@ export default function StudentTable({ alunosFiltrados = [] }) {
                 <td className="p-3">
                   <button
                     className="btn-table btn-outline-secondary btn-sm"
-                    onClick={() => navigate('/Observacoes')}
+                    onClick={() => navigate('/Observacoes', {state: {aluno}})}
                   >
                     ACESSAR
                   </button>

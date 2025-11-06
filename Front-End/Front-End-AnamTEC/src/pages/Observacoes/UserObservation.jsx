@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'; 
 import { Form, Button, InputGroup } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
+import { getFunctonCurso, getFunctonCursoProfessor } from '../../services/APIService';
+
 import { Send } from 'react-feather'; 
 import './UserObservation.css';
 import Header from "../components/Header/Header"; 
+import { toast } from 'react-toastify';
 
-// ==============================================
-// DADOS
-// ==============================================
+
 const cursos = [
   "Desenvolvimento de Sistemas",
   "Redes de Computadores",
@@ -14,44 +16,44 @@ const cursos = [
 ];
 
 // Dados do Aluno com novos campos (Tarefa 1)
-const aluno = { 
-  nome: "Weslley Samuel Novaes Santana",
-  rm: "202300215",
-  curso: "Desenvolvimento de Sistemas",
-  dataNascimento: "15/05/2006",
-  turma: "3º A",
-  turno: "Vespertino",
-  anamneseLink: "#link-para-anamnese" // Link de exemplo
-};
+// const aluno = { 
+//   nome: "Weslley Samuel Novaes Santana",
+//   rm: "202300215",
+//   curso: "Desenvolvimento de Sistemas",
+//   dataNascimento: "15/05/2006",
+//   turma: "3º A",
+//   turno: "Vespertino",
+//   anamneseLink: "#link-para-anamnese" // Link de exemplo
+// };
 
 // Lista completa de professores com IDs e Cursos
-const todosProfessores = [
-  { id: 1, nome: "Lúcie Épité", curso: "Desenvolvimento de Sistemas" },
-  { id: 2, nome: "Marcos Costa", curso: "Desenvolvimento de Sistemas" },
-  { id: 3, nome: "Marcos Nogueira", curso: "Desenvolvimento de Sistemas" },
-  { id: 4, nome: "Emerson Silva", curso: "Desenvolvimento de Sistemas" },
-  { id: 5, nome: "Aline Francisca", curso: "Desenvolvimento de Sistemas" },
-  { id: 6, nome: "Beatriz Almeida", curso: "Desenvolvimento de Sistemas" },
-  { id: 7, nome: "Carlos Eduardo", curso: "Desenvolvimento de Sistemas" },
-  { id: 8, nome: "Daniela Rocha", curso: "Desenvolvimento de Sistemas" },
-  { id: 9, nome: "Fábio Guedes", curso: "Redes de Computadores" },
-  { id: 10, nome: "Helena Matos", curso: "Redes de Computadores" },
-  { id: 11, nome: "Igor Valente", curso: "Redes de Computadores" },
-  { id: 12, nome: "Juliana Paes", curso: "Redes de Computadores" },
-  { id: 13, nome: "Lucas Mendes", curso: "Redes de Computadores" },
-  { id: 14, nome: "Natália Oliveira", curso: "Redes de Computadores" },
-  { id: 15, nome: "Otávio Bernardes", curso: "Administração" },
-  { id: 16, nome: "Patrícia Lins", curso: "Administração" },
-  { id: 17, nome: "Ricardo Jorge", curso: "Administração" },
-  { id: 18, nome: "Simone Tavares", curso: "Administração" },
-  { id: 19, nome: "Tiago Leifert", curso: "Administração" },
-  { id: 20, nome: "Vanessa Dias", curso: "Administração" },
-  { id: 21, nome: "Wagner Moura", curso: "Administração" },
-  { id: 22, nome: "Zilda Arns", curso: "Administração" },
-  { id: 23, nome: "Bruno Gagliasso", curso: "Redes de Computadores" },
-  { id: 24, nome: "Caio Castro", curso: "Desenvolvimento de Sistemas" },
-  { id: 25, nome: "Débora Secco", curso: "Administração" }
-];
+// const todosProfessores = [
+//   { id: 1, nome: "Lúcie Épité", curso: "Desenvolvimento de Sistemas" },
+//   { id: 2, nome: "Marcos Costa", curso: "Desenvolvimento de Sistemas" },
+//   { id: 3, nome: "Marcos Nogueira", curso: "Desenvolvimento de Sistemas" },
+//   { id: 4, nome: "Emerson Silva", curso: "Desenvolvimento de Sistemas" },
+//   { id: 5, nome: "Aline Francisca", curso: "Desenvolvimento de Sistemas" },
+//   { id: 6, nome: "Beatriz Almeida", curso: "Desenvolvimento de Sistemas" },
+//   { id: 7, nome: "Carlos Eduardo", curso: "Desenvolvimento de Sistemas" },
+//   { id: 8, nome: "Daniela Rocha", curso: "Desenvolvimento de Sistemas" },
+//   { id: 9, nome: "Fábio Guedes", curso: "Redes de Computadores" },
+//   { id: 10, nome: "Helena Matos", curso: "Redes de Computadores" },
+//   { id: 11, nome: "Igor Valente", curso: "Redes de Computadores" },
+//   { id: 12, nome: "Juliana Paes", curso: "Redes de Computadores" },
+//   { id: 13, nome: "Lucas Mendes", curso: "Redes de Computadores" },
+//   { id: 14, nome: "Natália Oliveira", curso: "Redes de Computadores" },
+//   { id: 15, nome: "Otávio Bernardes", curso: "Administração" },
+//   { id: 16, nome: "Patrícia Lins", curso: "Administração" },
+//   { id: 17, nome: "Ricardo Jorge", curso: "Administração" },
+//   { id: 18, nome: "Simone Tavares", curso: "Administração" },
+//   { id: 19, nome: "Tiago Leifert", curso: "Administração" },
+//   { id: 20, nome: "Vanessa Dias", curso: "Administração" },
+//   { id: 21, nome: "Wagner Moura", curso: "Administração" },
+//   { id: 22, nome: "Zilda Arns", curso: "Administração" },
+//   { id: 23, nome: "Bruno Gagliasso", curso: "Redes de Computadores" },
+//   { id: 24, nome: "Caio Castro", curso: "Desenvolvimento de Sistemas" },
+//   { id: 25, nome: "Débora Secco", curso: "Administração" }
+// ];
 
 // Comentários MOCK (Tarefa 3) - Map by Professor ID
 const mockComentariosPorProfessor = {
@@ -72,9 +74,14 @@ const mockComentariosPorProfessor = {
 // ==============================================
 
 export default function TelaObservacoes() {
+
+    const location = useLocation();
+    const aluno = location.state?.aluno;
     
+    const [todosCursos, setTodosCursos] = useState([]);
+    const [todosProfessores, setTodosProfessores] = useState([])
     const [cursoFiltro, setCursoFiltro] = useState("Todos");
-    const [professoresFiltrados, setProfessoresFiltrados] = useState(todosProfessores);
+    const [professoresFiltrados, setProfessoresFiltrados] = useState([todosProfessores]);
     const [professorSelecionado, setProfessorSelecionado] = useState(null); 
     
     const [comentariosPorProfessor, setComentariosPorProfessor] = useState(mockComentariosPorProfessor);
@@ -86,14 +93,42 @@ export default function TelaObservacoes() {
     const [respostasVisiveis, setRespostasVisiveis] = useState({});
 
     // Lógica de filtragem de professores
-    useEffect(() => {
-        let filtrados = todosProfessores;
-        if (cursoFiltro !== "Todos") {
-            filtrados = todosProfessores.filter(p => p.curso === cursoFiltro);
+// 1. Buscar cursos e professores ao montar o componente
+useEffect(() => {
+    const fetchCursos = async () => {
+        try {
+            const professores = await getFunctonCursoProfessor();
+            console.log("professores:", professores.data)
+            if(professores.status === 200){
+                setTodosProfessores(professores.data);
+            }
+
+            const cursos = await getFunctonCurso();
+            if(cursos.status === 200){
+                setTodosCursos(cursos.data);
+            }
+        } catch (error) {
+            console.error("Erro ao buscar cursos:", error);
         }
-        setProfessoresFiltrados(filtrados);
-        setProfessorSelecionado(null); // Limpa seleção ao mudar filtro
-    }, [cursoFiltro]);
+    }
+
+    fetchCursos();
+}, []);
+
+// 2. Filtrar professores sempre que mudar cursoFiltro ou todosProfessores
+useEffect(() => {
+    let filtrados = todosProfessores;
+
+    if (cursoFiltro !== "Todos") {
+        filtrados = todosProfessores.filter(
+            (p) => p.nome_curso === cursoFiltro
+        );
+    }
+
+    setProfessoresFiltrados(filtrados);
+    setProfessorSelecionado(null);
+}, [cursoFiltro, todosProfessores]);
+
 
 
     // Adiciona novo comentário (TAREFA 2: Duplicação resolvida garantindo um único ponto de chamada)
@@ -186,15 +221,16 @@ export default function TelaObservacoes() {
 
                     {/* Filtro por Curso (TAREFA 4: O estilo CSS garantirá a largura total) */}
                     <Form.Group className="mb-3">
-                        <Form.Label>Filtrar por Curso:</Form.Label>
                         <Form.Select 
                             aria-label="Selecionar curso"
                             value={cursoFiltro}
                             onChange={(e) => setCursoFiltro(e.target.value)}
                         >
                             <option value="Todos">Todos os Cursos</option>
-                            {cursos.map((curso, i) => (
-                                <option key={i} value={curso}>{curso}</option>
+                            {todosCursos.map((curso) => (
+                                <option key={curso.id} value={curso.curso}>
+                                    {curso.curso}
+                                </option>
                             ))}
                         </Form.Select>
                     </Form.Group>
@@ -204,11 +240,12 @@ export default function TelaObservacoes() {
                         <div className="lista-professores-cards">
                             {professoresFiltrados.map((prof) => (
                                 <div 
-                                    key={prof.id} 
-                                    className={`professor-card ${professorSelecionado?.id === prof.id ? 'selecionado' : ''}`}
+                                    key={prof.id_professor} 
+                                    className={`professor-card ${professorSelecionado?.id_professor === prof.id_professor ? 'selecionado' : ''}`}
                                     onClick={() => setProfessorSelecionado(prof)}
+                                    value={prof.nome_professor}
                                 >
-                                    {prof.nome}
+                                    {prof.nome_professor}
                                 </div>
                             ))}
                         </div>
@@ -297,13 +334,13 @@ export default function TelaObservacoes() {
                 {/* Painel de dados do aluno */}
                 <div className="painel-direito">
                     <h5>Dados do Aluno</h5>
-                    <p><strong>Nome:</strong> {aluno.nome}</p>
+                    <p><strong>Nome:</strong> {aluno.nome_aluno}</p>
                     <p><strong>RM:</strong> {aluno.rm}</p>
                     <hr/>
-                    <p><strong>Curso:</strong> {aluno.curso}</p>
-                    <p><strong>Turma:</strong> {aluno.turma}</p>
+                    <p><strong>Curso:</strong> {aluno.nome_curso}</p>
+                    <p><strong>Turma:</strong> {aluno.semestre}</p>
                     <p><strong>Turno:</strong> {aluno.turno}</p>
-                    <p><strong>Nascimento:</strong> {aluno.dataNascimento}</p>
+                    <p><strong>Nascimento:</strong> {new Date(aluno.dataNascimento).toLocaleDateString("pt-BR")}</p>
                     <hr/>
                     <a href={aluno.anamneseLink} target="_blank" rel="noopener noreferrer">
                         Acessar Anamnese

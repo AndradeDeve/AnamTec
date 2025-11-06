@@ -11,17 +11,19 @@ routes.get("/", async (req, res) => {
           al.id AS id,  
           al.nome AS nome_aluno,
           al.rm AS rm,
+          al.genero as genero_aluno,
           c.curso AS nome_curso,
           c.semestre AS semestre,
           c.turno AS turno,
-          c.coordenador as coordenador,
+          u.nome as coordenador,
           CASE 
           WHEN al.deletedAt IS NULL THEN 'ativo' 
           ELSE 'inativo' 
           END AS status
           FROM tbl_cadastro_al al
           INNER JOIN juncao_al_curso jac ON al.id = jac.id_aluno
-          INNER JOIN tbl_curso c ON jac.id_curso = c.id;`
+          INNER JOIN tbl_curso c ON jac.id_curso = c.id
+          INNER JOIN tbl_usuario u ON c.id_coordenador = u.id;`
     );
 
     if (!rows || rows.length === 0) {
@@ -74,14 +76,15 @@ routes.get("/controll", async (req, res) => {
           c.curso AS nome_curso,
           c.semestre AS semestre,
           c.turno AS turno,
-          c.coordenador as coordenador,
+          u.nome as coordenador,
           CASE 
           WHEN al.deletedAt IS NULL THEN 'ativo' 
           ELSE 'inativo' 
           END AS status
           FROM tbl_cadastro_al al
           INNER JOIN juncao_al_curso jac ON al.id = jac.id_aluno
-          INNER JOIN tbl_curso c ON jac.id_curso = c.id`;
+          INNER JOIN tbl_curso c ON jac.id_curso = c.id
+          INNER JOIN tbl_usuario u ON c.id_coordenador = u.id`;
     const params = [];
 
     if (turno) {
@@ -95,7 +98,7 @@ routes.get("/controll", async (req, res) => {
     }
 
     if (coordenador) {
-      sql += ` WHERE c.coordenador LIKE ?`;
+      sql += ` WHERE u.nome LIKE ?`;
       params.push(coordenador);
     }
 
@@ -134,7 +137,7 @@ routes.get("/specific", async (req, res) => {
               c.curso AS nome_curso,
               c.semestre AS semestre,
               c.turno AS turno,
-              c.coordenador as coordenador,
+              u.nome as coordenador,
               CASE 
               WHEN dm.id IS NOT NULL THEN 'Concluída' 
               ELSE 'Não' 
@@ -142,6 +145,7 @@ routes.get("/specific", async (req, res) => {
               FROM tbl_cadastro_al al
               INNER JOIN juncao_al_curso jac ON al.id = jac.id_aluno
               INNER JOIN tbl_curso c ON jac.id_curso = c.id
+              INNER JOIN tbl_usuario u ON c.id_coordenador = u.id
               LEFT JOIN tbl_dadosMedicos dm ON al.id = dm.id_aluno
               WHERE al.deletedAt IS NULL  
               AND c.deletedAt IS NULL`;
@@ -158,12 +162,12 @@ routes.get("/specific", async (req, res) => {
     }
 
     if (coordenador) {
-      sql += ` AND c.coordenador LIKE ?`;
+      sql += ` AND u.nome LIKE ?`;
       params.push(coordenador);
     }
 
     if (rm) {
-      sql += ` AND rm = ?`;
+      sql += ` AND al.rm = ?`;
       params.push(rm);
     }
 
@@ -173,7 +177,7 @@ routes.get("/specific", async (req, res) => {
     }
 
     if (nome) {
-      sql += ` AND nome LIKE ?`;
+      sql += ` AND al.nome LIKE ?`;
       params.push(nome);
     }
     if(todos){
@@ -190,7 +194,7 @@ routes.get("/specific", async (req, res) => {
     if (!rows || rows.length === 0) {
       return res.status(404).json({ err: "Aluno não encontrado." });
     }
-
+    console.log("Bom dia");
     return res.status(200).json(rows);
   } catch (err) {
     console.error("Erro ao buscar alunos:", err);
@@ -206,10 +210,13 @@ routes.get("/curso", async (req, res) => {
           al.id AS id,  
           al.nome AS nome_aluno,
           al.rm AS rm,
+          al.data_nasc AS dataNascimento,
+          al.genero as genero_aluno,
           c.curso AS nome_curso,
           c.semestre AS semestre,
           c.turno AS turno,
-          c.coordenador as coordenador,
+          dm.createAt as anamineseData,
+          u.nome as coordenador,
           CASE 
           WHEN dm.id IS NOT NULL THEN 'Concluída' 
           ELSE 'Não' 
@@ -217,6 +224,7 @@ routes.get("/curso", async (req, res) => {
           FROM tbl_cadastro_al al
           INNER JOIN juncao_al_curso jac ON al.id = jac.id_aluno
           INNER JOIN tbl_curso c ON jac.id_curso = c.id
+          INNER JOIN tbl_usuario u ON c.id_coordenador = u.id
           LEFT JOIN tbl_dadosMedicos dm ON al.id = dm.id_aluno
           WHERE al.deletedAt IS NULL  
           AND c.deletedAt IS NULL;`
@@ -323,7 +331,7 @@ routes.post("/", async (req, res) => {
     );
 
     const [alunoCadastrado] = await pool.query(
-      `SELECT d iFROM tbl_cadastro_al WHERE rm = ? AND deletedAt IS NULL`,
+      `SELECT * FROM tbl_cadastro_al WHERE rm = ? AND deletedAt IS NULL`,
       [rm]
     );
     const id_aluno = alunoCadastrado[0]?.id;

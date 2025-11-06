@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Define a URL base da API. Tenta pegar do arquivo .env (variável de ambiente), se não encontrar usa localhost como padrão
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = "http://localhost:3332" ;
 
 
 export async function getFunctionAlunoSpecific(specific, value){
@@ -112,8 +112,27 @@ export async function putFunctionResetSenha(dados ) {
 }
 
 export async function putFunctionEmailReset(dados ) {
-  const response = await axios.put(`${apiUrl}/login/emailReset`, encodeURIComponent(dados), { 
+  const response = await axios.put(`${apiUrl}/login/emailReset`, dados, { 
     headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
   return response;
 }
 
+export async function getFunctonCurso() {
+  try {
+    const response = await axios.get(`${apiUrl}/curso`, { 
+      headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+    return response;
+  }catch (error) {
+    console.error("Erro ao buscar cursos:", error);
+  }
+}
+
+export async function getFunctonCursoProfessor() {
+  try {
+    const response = await axios.get(`${apiUrl}/curso/professores`, { 
+      headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+    return response;
+  }catch (error) {
+    console.error("Erro ao buscar professores:", error);
+  }
+}

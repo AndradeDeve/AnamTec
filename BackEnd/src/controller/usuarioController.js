@@ -9,23 +9,24 @@ routes.get("/", async (req, res) => {
     try{
         const [rows] = await pool.query(
             `SELECT 
-            u.id as id,
-            u.nome as nome_user,
-            u.RM as rm,
-            u.disciplina as disciplina, 
-            c.curso as curso_prof,
-            t.tipo as entidade,
-            c.curso as curso_user,
-            c.coordenador, 
-            CASE
-            WHEN u.deletedAt IS NULL  THEN 'ativo'
-            ELSE 'inativo'
-            END AS status
-            FROM tbl_usuario u
-            INNER JOIN juncao_curso_user juc ON u.id = juc.id_user
-            INNER JOIN tbl_curso c ON juc.id_curso = c.id
-            INNER JOIN juncao_type_user jut ON u.id = jut.id_user
-            INNER JOIN tbl_type t ON jut.id_type = t.id`
+                u.id AS id,
+                u.nome AS nome_user,
+                u.RM AS rm,
+                u.disciplina AS disciplina, 
+                c.curso AS nome_curso,
+                t.tipo AS entidade,
+                coord.nome AS coordenador,
+                CASE    
+                WHEN u.deletedAt IS NULL THEN 'ativo'
+                ELSE 'inativo'
+                END AS status
+                FROM tbl_usuario u
+                INNER JOIN juncao_curso_user juc ON u.id = juc.id_user
+                INNER JOIN tbl_curso c ON juc.id_curso = c.id
+                INNER JOIN juncao_type_user jut ON u.id = jut.id_user
+                INNER JOIN tbl_type t ON jut.id_type = t.id
+                LEFT JOIN tbl_usuario coord ON c.id_coordenador = coord.id;
+            `
         );
 
         if(!rows && rows.length === 0){
@@ -47,10 +48,10 @@ routes.get("/specific", async (request, response) => {
             u.nome as nome_user,
             u.RM as rm,
             u.disciplina as disciplina, 
-            c.curso as curso_prof,
+            c.curso as nome_curso,
             t.tipo as entidade,
             c.curso as curso_user,
-            c.coordenador, 
+            coord.nome as coordenador, 
             CASE
             WHEN u.deletedAt IS NULL  THEN 'ativo'
             ELSE 'inativo'
@@ -59,7 +60,8 @@ routes.get("/specific", async (request, response) => {
             INNER JOIN juncao_curso_user juc ON u.id = juc.id_user  
             INNER JOIN tbl_curso c ON juc.id_curso = c.id
             INNER JOIN juncao_type_user jut ON u.id = jut.id_user
-            INNER JOIN tbl_type t ON jut.id_type = t.id`;
+            INNER JOIN tbl_type t ON jut.id_type = t.id
+            LEFT JOIN tbl_usuario coord ON c.id_coordenador = coord.id`;
         const params = [];
 
         if (turno) {
@@ -73,7 +75,7 @@ routes.get("/specific", async (request, response) => {
         }
 
         if (coordenador) {
-        sql += ` WHERE c.coordenador LIKE ?`;
+        sql += ` WHERE coord.nome LIKE ?`;
         params.push(coordenador);
         }
 
@@ -104,11 +106,10 @@ routes.get("/specific", async (request, response) => {
 routes.post("/", async (request, response) => {
     const {cpf, nome, email, senha, curso} = request.body;
     let {rm, cargo, disciplina} = request.body;
-    console.log(rm)
     try{
         const cpfsemPontuacao = cpf.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"?]/g, "");
         const disciplinaRegex = /^[\p{L}\s\-']{2,35}$/u;
-        if(disciplina && cargo.toLowerCase() === "professor" || cargo.toLowerCase() === "coordenador de curso"){
+        if(disciplina && cargo.toLowerCase() === "professor"){
             if(!disciplinaRegex.test(disciplina.trim())){
                 return response.status(400).json({err: "Disciplina inválida"});
             }
@@ -181,8 +182,16 @@ routes.post("/", async (request, response) => {
             await pool.query(
                 `INSERT INTO juncao_curso_user (id_curso, id_user) VALUES(?, ?)`,
                 [id_curso, id_user.id]
-      );
-    }
+             );
+        }
+
+        if(cargo.toLowerCase() === "coordenador de curso"){
+            const id_coord = await pool.query("select * from tbl_curso where curso = ? and id_coordenador is null", [curso]);
+                if(id_coord[0].length === 0){
+                    return response.status(400).json({err: "Curso inválido para coordenador."});
+                }
+                await pool.query(`update tbl_curso set id_coordenador = (select id from tbl_usuario where RM = ?) where curso = ?`, [rm, curso]);
+            }
 
         await pool.query(`INSERT INTO juncao_type_user (id_type, id_user) VALUES(?, ?)`, [id_tipo, id_user.id])
 
