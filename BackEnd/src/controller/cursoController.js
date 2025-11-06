@@ -44,12 +44,38 @@ routes.get("/curso", async (req, res) => {
   }
 });
 
+routes.get("/professores", async (req, res) =>{
+  try{
+    const [rows_professores] = await pool.query(
+      `SELECT
+        c.id AS id_curso,
+        c.curso AS nome_curso,
+        c.modalidade,
+        c.semestre,
+        c.turno,
+        u.id AS id_professor,
+        u.nome AS nome_professor
+        FROM tbl_curso c
+        INNER JOIN juncao_curso_user jcu ON c.id = jcu.id_curso
+        INNER JOIN tbl_usuario u ON jcu.id_user = u.id
+        WHERE c.deletedAt IS NULL
+        AND u.deletedAt IS NULL;
+      `);
+      if(!rows_professores || rows_professores.length === 0){
+        return res.status(404).json({err: "Professore não encontrado."})
+      }
+      return res.status(200).json(rows_professores)
+  }catch(err){
+    console.error("Erro: ", err);
+    return res.status(500).json({err: "Erro no servidor."})
+  }
+});
+
 routes.get("/", async (req, res) => {
 
   try {
     const [rows_curso] = await pool.query(
-      `SELECT * FROM tbl_curso `
-    );
+      `SELECT * FROM tbl_curso WHERE deletedAt IS NULL;`);
 
     
     if (!rows_curso || rows_curso.length === 0) {
@@ -63,16 +89,12 @@ routes.get("/", async (req, res) => {
 });
 
 routes.post("/", async (req, res) => {
-  let { curso, turno, semestre, modalidade, coordenador } = req.body;
+  const { curso, turno, semestre, modalidade } = req.body;
 
   try {
-    if (!curso || curso.trim().length < 2 || curso.trim().length > 35) {
+    console.log(curso)
+    if (!curso || curso.trim().length < 2) {
       return res.status(400).json({ err: "Nome do curso inválido." });
-    }
-
-    const coordenadorRegex = /^[\p{L}\s\-']{2,45}$/u;
-    if (!coordenador || !coordenadorRegex.test(coordenador.trim())) {
-      return res.status(400).json({ err: "Nome inválido." });
     }
 
     const turnosValidos = ["manhã", "tarde", "noite"];
@@ -91,9 +113,9 @@ routes.post("/", async (req, res) => {
     }
 
     await pool.query(
-      `INSERT INTO tbl_curso (curso, turno, semestre, modalidade, coordenador)
-       VALUES (?, ?, ?, ?, ?)`,
-      [curso, turno, semestre, modalidade, coordenador]
+      `INSERT INTO tbl_curso (curso, turno, semestre, modalidade)
+       VALUES (?, ?, ?, ?)`,
+      [curso, turno, semestre, modalidade]
     );
 
     return res.status(201).json({ msg: "Curso cadastrado com sucesso." });

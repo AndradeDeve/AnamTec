@@ -62,14 +62,14 @@ function isValidEmail(email){
   
   // [Validação 3] - Verifica se a senha está vazia
   if (!formData.senha) {
-      toast.warn('O campo senha é obrigatório.', { 
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined, theme: "dark" });
+        toast.warn('O campo senha é obrigatório.', { 
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined, theme: "dark" });
       return;
   }
   

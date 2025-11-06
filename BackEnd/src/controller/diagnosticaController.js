@@ -8,7 +8,7 @@ const opcoesValidas = ['sim', 'não'];
 routes.get("/", async (req, res) => {
   const { id } = req.query;
   try {
-    let sql = `SELECT * FROM tbl_diagnostica`;
+    let sql = `SELECT * FROM tbl_diagnostico`;
     const params = [];
     if (id) {
       if (isNaN(id)) return res.status(400).json({ err: "Id inválido." });
@@ -28,7 +28,7 @@ routes.get("/:id", async (req, res) => {
   if (isNaN(id)) return res.status(400).json({ err: "Id inválido." });
   try {
     const [rows] = await pool.query(
-      `SELECT * FROM tbl_diagnostica WHERE id = ?`,
+      `SELECT * FROM tbl_diagnostico WHERE id = ?`,
       [id]
     );
     if (!rows.length) return res.status(404).json({ err: "Diagnóstico não encontrado." });
@@ -48,7 +48,7 @@ routes.post("/", async (req, res) => {
       return res.status(400).json({ err: "Tipo de diagnóstico inválido." });
     }
     await pool.query(
-      `INSERT INTO tbl_diagnostica ( diagnostico, tp_diag) VALUES (?, ?)`,
+      `INSERT INTO tbl_diagnostico ( diagnostico, tp_diag) VALUES (?, ?)`,
       [ diagnostico.toLowerCase(), tp_diag || null]
     );
     return res.status(201).json({ response: "Diagnóstico cadastrado com sucesso." });
@@ -70,7 +70,7 @@ routes.put("/:id", async (req, res) => {
       return res.status(400).json({ err: "Tipo de diagnóstico inválido." });
     }
     const [result] = await pool.query(
-      `UPDATE tbl_diagnostica SET diagnostico = ?, tp_diag = ? WHERE id = ?`,
+      `UPDATE tbl_diagnostico SET diagnostico = ?, tp_diag = ? WHERE id = ?`,
       [diagnostico.toLowerCase(), tp_diag || null, id]
     );
     if (result.affectedRows === 0) {

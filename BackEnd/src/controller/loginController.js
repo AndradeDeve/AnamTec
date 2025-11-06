@@ -49,7 +49,6 @@ routes.post("/", async(request, response) => {
 
 routes.put("/emailReset", async(request, response) => {
     const {email} = request.body;
-
     try{
         const [rows] = await pool.query(
             `SELECT * FROM tbl_usuario WHERE deletedAt IS NULL AND email = ?`,[email]

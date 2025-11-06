@@ -1,175 +1,352 @@
-import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
-import './UserObservation.css'; // Estilos personalizados
+import React, { useState, useEffect } from 'react'; 
+import { Form, Button, InputGroup } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
+import { getFunctonCurso, getFunctonCursoProfessor } from '../../services/APIService';
+
+import { Send } from 'react-feather'; 
+import './UserObservation.css';
 import Header from "../components/Header/Header"; 
+import { toast } from 'react-toastify';
+
+
+const cursos = [
+  "Desenvolvimento de Sistemas",
+  "Redes de Computadores",
+  "Administração"
+];
+
+// Dados do Aluno com novos campos (Tarefa 1)
+// const aluno = { 
+//   nome: "Weslley Samuel Novaes Santana",
+//   rm: "202300215",
+//   curso: "Desenvolvimento de Sistemas",
+//   dataNascimento: "15/05/2006",
+//   turma: "3º A",
+//   turno: "Vespertino",
+//   anamneseLink: "#link-para-anamnese" // Link de exemplo
+// };
+
+// Lista completa de professores com IDs e Cursos
+// const todosProfessores = [
+//   { id: 1, nome: "Lúcie Épité", curso: "Desenvolvimento de Sistemas" },
+//   { id: 2, nome: "Marcos Costa", curso: "Desenvolvimento de Sistemas" },
+//   { id: 3, nome: "Marcos Nogueira", curso: "Desenvolvimento de Sistemas" },
+//   { id: 4, nome: "Emerson Silva", curso: "Desenvolvimento de Sistemas" },
+//   { id: 5, nome: "Aline Francisca", curso: "Desenvolvimento de Sistemas" },
+//   { id: 6, nome: "Beatriz Almeida", curso: "Desenvolvimento de Sistemas" },
+//   { id: 7, nome: "Carlos Eduardo", curso: "Desenvolvimento de Sistemas" },
+//   { id: 8, nome: "Daniela Rocha", curso: "Desenvolvimento de Sistemas" },
+//   { id: 9, nome: "Fábio Guedes", curso: "Redes de Computadores" },
+//   { id: 10, nome: "Helena Matos", curso: "Redes de Computadores" },
+//   { id: 11, nome: "Igor Valente", curso: "Redes de Computadores" },
+//   { id: 12, nome: "Juliana Paes", curso: "Redes de Computadores" },
+//   { id: 13, nome: "Lucas Mendes", curso: "Redes de Computadores" },
+//   { id: 14, nome: "Natália Oliveira", curso: "Redes de Computadores" },
+//   { id: 15, nome: "Otávio Bernardes", curso: "Administração" },
+//   { id: 16, nome: "Patrícia Lins", curso: "Administração" },
+//   { id: 17, nome: "Ricardo Jorge", curso: "Administração" },
+//   { id: 18, nome: "Simone Tavares", curso: "Administração" },
+//   { id: 19, nome: "Tiago Leifert", curso: "Administração" },
+//   { id: 20, nome: "Vanessa Dias", curso: "Administração" },
+//   { id: 21, nome: "Wagner Moura", curso: "Administração" },
+//   { id: 22, nome: "Zilda Arns", curso: "Administração" },
+//   { id: 23, nome: "Bruno Gagliasso", curso: "Redes de Computadores" },
+//   { id: 24, nome: "Caio Castro", curso: "Desenvolvimento de Sistemas" },
+//   { id: 25, nome: "Débora Secco", curso: "Administração" }
+// ];
+
+// Comentários MOCK (Tarefa 3) - Map by Professor ID
+const mockComentariosPorProfessor = {
+    2: [ // Comentários para Marcos Costa (ID 2)
+        {
+            autor: "Marcos Costa",
+            texto: "Aluno com boa presença e participa bem das atividades.",
+            data: "20/09/2023",
+            respostas: [{ autor: "Professor Atual", texto: "Contudo, precisamos observar mais nas aulas práticas.", data: "20/09/2023" }]
+        }
+    ],
+    1: [ // Comentários para Lúcie Épité (ID 1)
+        { autor: "Lúcie Épité", texto: "Excelente desenvolvimento em lógica de programação.", data: "10/10/2023", respostas: [] }
+    ],
+};
+// ==============================================
+// FIM DADOS
+// ==============================================
 
 export default function TelaObservacoes() {
-  // Lista de professores
-  const professores = [
-    "Lúcie Épité",
-    "Marcos Costa",
-    "Marcos Nogueira",
-    "Emerson Silva",
-    "Aline Francisca"
-  ];
 
-  // Dados do aluno atual
-  const aluno = {
-    nome: "Welisely Samuel Novaes Santana",
-    rm: "202300215"
-  };
+    const location = useLocation();
+    const aluno = location.state?.aluno;
+    
+    const [todosCursos, setTodosCursos] = useState([]);
+    const [todosProfessores, setTodosProfessores] = useState([])
+    const [cursoFiltro, setCursoFiltro] = useState("Todos");
+    const [professoresFiltrados, setProfessoresFiltrados] = useState([todosProfessores]);
+    const [professorSelecionado, setProfessorSelecionado] = useState(null); 
+    
+    const [comentariosPorProfessor, setComentariosPorProfessor] = useState(mockComentariosPorProfessor);
+    
+    const comentariosAtuais = professorSelecionado ? (comentariosPorProfessor[professorSelecionado.id] || []) : [];
 
-  // Comentários principais com respostas
-  const [comentarios, setComentarios] = useState([
-    {
-      autor: "Marcos Costa",
-      texto: "Aluno com boa presença e participa bem das atividades.",
-      data: "20/09/2023",
-      respostas: [
-        {
-          autor: "Professor Atual",
-          texto: "Contudo, precisamos observar mais nas aulas práticas.",
-          data: "20/09/2023"
+    const [novoComentario, setNovoComentario] = useState("");
+    const [respostasTemp, setRespostasTemp] = useState({});
+    const [respostasVisiveis, setRespostasVisiveis] = useState({});
+
+    // Lógica de filtragem de professores
+// 1. Buscar cursos e professores ao montar o componente
+useEffect(() => {
+    const fetchCursos = async () => {
+        try {
+            const professores = await getFunctonCursoProfessor();
+            console.log("professores:", professores.data)
+            if(professores.status === 200){
+                setTodosProfessores(professores.data);
+            }
+
+            const cursos = await getFunctonCurso();
+            if(cursos.status === 200){
+                setTodosCursos(cursos.data);
+            }
+        } catch (error) {
+            console.error("Erro ao buscar cursos:", error);
         }
-      ]
     }
-  ]);
 
-  // Novo comentário principal
-  const [novoComentario, setNovoComentario] = useState("");
+    fetchCursos();
+}, []);
 
-  // Respostas temporárias por índice
-  const [respostasTemp, setRespostasTemp] = useState({});
+// 2. Filtrar professores sempre que mudar cursoFiltro ou todosProfessores
+useEffect(() => {
+    let filtrados = todosProfessores;
 
-  // Visibilidade das respostas por comentário
-  const [respostasVisiveis, setRespostasVisiveis] = useState({});
+    if (cursoFiltro !== "Todos") {
+        filtrados = todosProfessores.filter(
+            (p) => p.nome_curso === cursoFiltro
+        );
+    }
 
-  // Adiciona novo comentário principal
-  const adicionarComentario = () => {
-    if (!novoComentario.trim()) return;
+    setProfessoresFiltrados(filtrados);
+    setProfessorSelecionado(null);
+}, [cursoFiltro, todosProfessores]);
 
-    const novo = {
-      autor: "Professor Atual",
-      texto: novoComentario,
-      data: new Date().toLocaleDateString("pt-BR"),
-      respostas: []
+
+
+    // Adiciona novo comentário (TAREFA 2: Duplicação resolvida garantindo um único ponto de chamada)
+    const adicionarComentario = () => {
+        if (!novoComentario.trim() || !professorSelecionado) return;
+
+        const novo = {
+            autor: "Professor Atual",
+            texto: novoComentario,
+            data: new Date().toLocaleDateString("pt-BR"),
+            respostas: []
+        };
+
+        const professorId = professorSelecionado.id;
+        
+        // Atualiza o mapa de comentários (imutabilidade)
+        setComentariosPorProfessor(prev => ({
+            ...prev,
+            [professorId]: [...(prev[professorId] || []), novo]
+        }));
+        setNovoComentario("");
     };
 
-    setComentarios([...comentarios, novo]);
-    setNovoComentario("");
-  };
-
-  // Adiciona resposta a comentário específico
-  const adicionarResposta = (index) => {
-    const textoResposta = respostasTemp[index];
-    if (!textoResposta || !textoResposta.trim()) return;
-
-    const novaResposta = {
-      autor: "Professor Atual",
-      texto: textoResposta,
-      data: new Date().toLocaleDateString("pt-BR")
+    const handleEnterPress = (e) => {
+        // Envia apenas se for a tecla Enter e se for o input principal
+        if (e.key === 'Enter' && e.target.id === 'input-comentario-principal') {
+            e.preventDefault(); 
+            adicionarComentario();
+        }
     };
 
-    const atualizados = [...comentarios];
-    atualizados[index].respostas.push(novaResposta);
-    setComentarios(atualizados);
-    setRespostasTemp({ ...respostasTemp, [index]: "" });
+    // Adiciona resposta a comentário específico
+    const adicionarResposta = (index) => {
+        const textoResposta = respostasTemp[index];
+        if (!textoResposta || !textoResposta.trim() || !professorSelecionado) return;
+
+        const novaResposta = {
+            autor: "Professor Atual",
+            texto: textoResposta,
+            data: new Date().toLocaleDateString("pt-BR")
+        };
+        
+        setComentariosPorProfessor(prev => {
+            const professorId = professorSelecionado.id;
+
+        // Clona os comentários do professor
+        const comentariosDoProfessor = prev[professorId]
+            ? prev[professorId].map(c => ({ ...c, respostas: [...c.respostas] }))
+            : [];
+
+        // Adiciona a nova resposta de forma imutável
+        comentariosDoProfessor[index].respostas = [
+            ...comentariosDoProfessor[index].respostas,
+            novaResposta
+        ];
+
+        return {
+            ...prev,
+            [professorId]: comentariosDoProfessor
+        };
+    });
+
+    setRespostasTemp(prev => ({ ...prev, [index]: "" }));
   };
 
-  // Alterna visibilidade das respostas
-  const alternarRespostas = (index) => {
-    setRespostasVisiveis((prev) => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
-  };
+    // Enviar com ENTER no Input de Resposta (TAREFA 3: Nova Lógica)
+    const handleRespostaEnterPress = (e, index) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); 
+            adicionarResposta(index);
+        }
+    };
 
-  return (
-    <>
-     <Header />
-    <div className="tela-observacoes">
-      {/* Painel de professores */}
-      <div className="painel-esquerdo">
-        <h5>Professores</h5>
-        <ul>
-          {professores.map((nome, i) => (
-            <li key={i}>{nome}</li>
-          ))}
-        </ul>
-      </div>
+    // Alterna visibilidade das respostas
+    const alternarRespostas = (index) => {
+        setRespostasVisiveis((prev) => ({
+            ...prev,
+            [index]: !prev[index]
+        }));
+    };
 
-      {/* Área central com rolagem */}
-      <div className="conteudo-central">
-        <div className="comentarios-scroll">
-          <h4>Observações dos Professores</h4>
+    return (
+        <>
+            <Header />
+            <div className="tela-observacoes">
+                
+                {/* Painel de professores */}
+                <div className="painel-esquerdo">
+                    <h5>Professores</h5>
 
-          {/* Campo para novo comentário */}
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Escreva uma nova observação..."
-              value={novoComentario}
-              onChange={(e) => setNovoComentario(e.target.value)}
-            />
-            <Button variant="primary" className="mt-2" onClick={adicionarComentario}>
-              Adicionar Comentário
-            </Button>
-          </Form.Group>
+                    {/* Filtro por Curso (TAREFA 4: O estilo CSS garantirá a largura total) */}
+                    <Form.Group className="mb-3">
+                        <Form.Select 
+                            aria-label="Selecionar curso"
+                            value={cursoFiltro}
+                            onChange={(e) => setCursoFiltro(e.target.value)}
+                        >
+                            <option value="Todos">Todos os Cursos</option>
+                            {todosCursos.map((curso) => (
+                                <option key={curso.id} value={curso.curso}>
+                                    {curso.curso}
+                                </option>
+                            ))}
+                        </Form.Select>
+                    </Form.Group>
+                    
+                    {/* Lista de professores filtrados - Cards */}
+                    {cursoFiltro !== "Todos" && (
+                        <div className="lista-professores-cards">
+                            {professoresFiltrados.map((prof) => (
+                                <div 
+                                    key={prof.id_professor} 
+                                    className={`professor-card ${professorSelecionado?.id_professor === prof.id_professor ? 'selecionado' : ''}`}
+                                    onClick={() => setProfessorSelecionado(prof)}
+                                    value={prof.nome_professor}
+                                >
+                                    {prof.nome_professor}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                
+                </div> 
 
-          {/* Lista de comentários */}
-          {comentarios.map((comentario, index) => (
-            <div key={index} className="comentario">
-              <p className="texto">{comentario.texto}</p>
-              <span className="autor">{comentario.autor} ({comentario.data})</span>
+                {/* Área central com rolagem */}
+                <div className="conteudo-central">
+                    {professorSelecionado ? (
+                        <>
+                            <div className="comentarios-scroll">
+                                <h4>Observações de {professorSelecionado.nome}</h4>
 
-              {/* Botão para mostrar/ocultar respostas */}
-              {comentario.respostas.length > 0 && (
-                <Button
-                  variant="link"
-                  className="toggle-respostas"
-                  onClick={() => alternarRespostas(index)}
-                >
-                  {respostasVisiveis[index]
-                    ? "Ocultar respostas"
-                    : `Ver respostas (${comentario.respostas.length})`}
-                </Button>
-              )}
+                                {/* Lista de comentários */}
+                                {comentariosAtuais.map((comentario, index) => (
+                                    <div key={index} className="comentario">
+                                        <p className="texto">{comentario.texto}</p>
+                                        <span className="autor">{comentario.autor} ({comentario.data})</span>
 
-              {/* Respostas visíveis */}
-              {respostasVisiveis[index] &&
-                comentario.respostas.map((resposta, i) => (
-                  <div key={i} className="resposta">
-                    <p className="texto">{resposta.texto}</p>
-                    <span className="autor">{resposta.autor} ({resposta.data})</span>
-                  </div>
-                ))}
+                                        {/* Botão para mostrar/ocultar respostas */}
+                                        {comentario.respostas.length > 0 && ( 
+                                            <Button
+                                                variant="link"
+                                                className="toggle-respostas"
+                                                onClick={() => alternarRespostas(index)}
+                                            >
+                                                {respostasVisiveis[index] ? "Ocultar respostas" : `Ver respostas (${comentario.respostas.length})`}
+                                            </Button>
+                                        )}
 
-              {/* Campo para nova resposta */}
-              <Form.Group className="mt-2">
-                <Form.Control
-                  type="text"
-                  placeholder="Responder a este comentário..."
-                  value={respostasTemp[index] || ""}
-                  onChange={(e) =>
-                    setRespostasTemp({ ...respostasTemp, [index]: e.target.value })
-                  }
-                />
-                <Button variant="secondary" className="mt-1" onClick={() => adicionarResposta(index)}>
-                  Responder
-                </Button>
-              </Form.Group>
+                                        {/* Respostas visíveis */}
+                                        {respostasVisiveis[index] &&
+                                            comentario.respostas.map((resposta, i) => ( 
+                                                <div key={i} className="resposta">
+                                                    <p className="texto">{resposta.texto}</p>
+                                                    <span className="autor">{resposta.autor} ({resposta.data})</span>
+                                                </div>
+                                            ))} 
+
+                                        
+                                        <InputGroup className="mt-2">
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="Responder a este comentário..."
+                                                value={respostasTemp[index] || ""} 
+                                                onChange={(e) =>
+                                                    setRespostasTemp({ ...respostasTemp, [index]: e.target.value })
+                                                }
+                                                onKeyDown={(e) => handleRespostaEnterPress(e, index)}
+                                            />
+                                            <Button variant="secondary" onClick={() => adicionarResposta(index)}>
+                                                Responder
+                                            </Button>
+                                        </InputGroup>
+                                    </div>
+                                ))}
+                                {/* Mensagem quando não há comentários */}
+                                {comentariosAtuais.length === 0 && (
+                                    <p className="text-center">Ainda não há observações para {professorSelecionado.nome}.</p>
+                                )}
+                            </div>
+
+                            {/* Input principal (TAREFA 1: Largura total garantida pelo CSS) */}
+                            <InputGroup className="mt-3 input-comentario-principal-container">
+                                <Form.Control
+                                    type="text"
+                                    id="input-comentario-principal" 
+                                    placeholder={`Comentário para ${professorSelecionado.nome}...`}
+                                    value={novoComentario}
+                                    onChange={(e) => setNovoComentario(e.target.value)}
+                                    onKeyDown={handleEnterPress} 
+                                />
+                                <Button variant="primary" onClick={adicionarComentario}>
+                                    <Send size={20} />
+                                </Button>
+                            </InputGroup>
+                        </>
+                    ) : (
+                        <div className="mensagem-central">
+                            <p>Selecione um curso no painel lateral, e depois um professor para visualizar e adicionar observações.</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Painel de dados do aluno */}
+                <div className="painel-direito">
+                    <h5>Dados do Aluno</h5>
+                    <p><strong>Nome:</strong> {aluno.nome_aluno}</p>
+                    <p><strong>RM:</strong> {aluno.rm}</p>
+                    <hr/>
+                    <p><strong>Curso:</strong> {aluno.nome_curso}</p>
+                    <p><strong>Turma:</strong> {aluno.semestre}</p>
+                    <p><strong>Turno:</strong> {aluno.turno}</p>
+                    <p><strong>Nascimento:</strong> {new Date(aluno.dataNascimento).toLocaleDateString("pt-BR")}</p>
+                    <hr/>
+                    <a href={aluno.anamneseLink} target="_blank" rel="noopener noreferrer">
+                        Acessar Anamnese
+                    </a>
+                </div>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Painel de dados do aluno */}
-      <div className="painel-direito">
-        <h5>Dados do Aluno</h5>
-        <p><strong>Nome:</strong> {aluno.nome}</p>
-        <p><strong>RM:</strong> {aluno.rm}</p>
-      </div>
-    </div>
-    </>
-  );
+        </>
+    );
 }

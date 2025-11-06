@@ -17,7 +17,7 @@ async function startServer() {
         console.log("Banco conectado com sucesso!");
 
         server.listen(3332, ()=>{
-            console.log("O servidor está funcionando 😎");
+            console.log("O servidor está funcionando 😎 port: 3332");
         })
         connection.release()
     }catch (error){

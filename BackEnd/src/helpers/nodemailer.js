@@ -1,8 +1,7 @@
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 
-
-function sendEmail(newPassword, userEmail){
+function sendEmail(newPassword, userEmail) {
     const transporter = nodemailer.createTransport({
         service: process.env.SERVICO,
         auth: {
@@ -19,21 +18,24 @@ function sendEmail(newPassword, userEmail){
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-        if(err){
+        if (err) {
             console.log("Erro ao enviar e-mail:", err);
-        }else{
-            console.log("E-mail enviado" + info.response);
+        } else {
+            console.log("E-mail enviado: " + info.response);
         }
     });
 }
 
 const getEmailTemplate = (newPassword) => {
     const today = new Date();
-    const yaer = today.getFullYear();
-    const htmlTemplate = fs.readFileSync("./src/template/senha.html", "utf-8");
-    htmlTemplate.replace('{{newPassword}}',  newPassword);
-    htmlTemplate.replace('{{yaer}}', yaer );
+    const year = today.getFullYear();  // Corrigido de 'yaer' para 'year'
+    let htmlTemplate = fs.readFileSync("./src/template/senha.html", "utf-8");
+    
+    // Substitui os placeholders e atribui de volta à variável
+    htmlTemplate = htmlTemplate.replaceAll('{{newPassword}}', newPassword);
+    htmlTemplate = htmlTemplate.replaceAll('{{year}}', year); 
+    
     return htmlTemplate;
 };
 
-export {sendEmail};
+export { sendEmail };
