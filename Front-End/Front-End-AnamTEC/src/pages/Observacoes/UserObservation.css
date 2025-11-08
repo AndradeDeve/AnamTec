@@ -1,6 +1,4 @@
-/* ============================================== */
 /* Transições para tema dinâmico */
-/* ============================================== */
 .tela-observacoes,
 .painel-esquerdo,
 .painel-direito,
@@ -10,9 +8,7 @@
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* ============================================== */
 /* Estrutura principal */
-/* ============================================== */
 .tela-observacoes {
   display: flex;
   gap: 20px;
@@ -22,9 +18,8 @@
   box-sizing: border-box;
 }
 
-/* ============================================== */
+
 /* Painéis laterais */
-/* ============================================== */
 .painel-esquerdo,
 .painel-direito {
   width: 280px;
@@ -39,8 +34,7 @@
   overflow-y: auto;
 }
 
-.painel-esquerdo h5,
-.painel-direito h5 {
+.painel-esquerdo h5, .painel-direito h5 {
   text-align: center;
 }
 
@@ -55,9 +49,6 @@
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* ============================================== */
-/* Dropdown de cursos - Ajuste de visibilidade */
-/* ============================================== */
 .painel-esquerdo select.form-select {
   display: block;
   width: 100%;
@@ -85,9 +76,7 @@
   color: #000; /* mantém legibilidade dentro do dropdown */
 }
 
-/* ============================================== */
 /* Lista de professores - Cards */
-/* ============================================== */
 .lista-professores-cards {
   display: flex;
   flex-direction: column;
@@ -119,9 +108,7 @@
   font-weight: bold;
 }
 
-/* ============================================== */
 /* Área central */
-/* ============================================== */
 .conteudo-central {
   display: flex;
   flex-direction: column;
@@ -146,9 +133,8 @@
   background-color: var(--cor-fundo-principal);
 }
 
-/* ============================================== */
+
 /* Comentários */
-/* ============================================== */
 .comentario {
   background-color: var(--cor-fundo-secundario);
   padding: 15px;
@@ -181,9 +167,8 @@
   font-size: 0.85rem;
 }
 
-/* ============================================== */
+
 /* Input principal (nova observação) */
-/* ============================================== */
 .input-comentario-principal-container {
   display: flex;
   justify-content: center;
@@ -205,9 +190,8 @@
   border-radius: 8px;
 }
 
-/* ============================================== */
+
 /* Mensagem Central */
-/* ============================================== */
 .mensagem-central {
   display: flex;
   justify-content: center;
@@ -219,9 +203,8 @@
   padding: 10px;
 }
 
-/* ============================================== */
+
 /* Responsividade */
-/* ============================================== */
 @media (max-width: 768px) {
   .tela-observacoes {
     flex-direction: column;

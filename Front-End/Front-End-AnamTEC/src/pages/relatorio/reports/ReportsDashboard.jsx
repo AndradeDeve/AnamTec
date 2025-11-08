@@ -32,40 +32,33 @@ export default function ReportsDashboard() {
   if (loading) {
     return <div className="text-center p-5">Carregando dados...</div>;
   }
-  return (
-    <>
-       <Header />
 
+return (
+  <>
+  <Header />
     <div className="container-fluid p-4">
-   
-      
       <h1 className="mb-4 text-center">Relatórios de Anamneses</h1>
-      
-      {/* Linha de Filtros */}
-      <div className="row mb-4">
-        <div className="col-12">
-          <FilterControls 
-            filters={filters} 
-            onFilterChange={handleFilterChange} 
-          />
+        <div className="row mb-4">
+          <div className="col-12">
+            <FilterControls filters={filters} 
+                            onFilterChange={handleFilterChange} 
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Linha de Gráficos */}
       <div className="row">
-        {/* Gráfico 1 */}
         <div className="col-12 col-lg-6 mb-4">
           <div className="card shadow-sm">
             <div className="card-header">
-              Anamneses Realizadas por {filters.timeframe === 'day' ? 'Dia' : filters.timeframe === 'week' ? 'Semana' : 'Mês'}
+              Anamneses Realizadas por 
+              {filters.timeframe === 'day' ? 'Dia' : filters.timeframe === 'week' ? 'Semana' : 'Mês'}
             </div>
             <div className="card-body" style={{ height: '300px' }}>
               <AnamnseBarGrafico data={barChartData} /> 
             </div>
           </div>
         </div>
-
-        {/* Gráfico 2 */}
+        
         <div className="col-12 col-lg-6 mb-4">
           <div className="card shadow-sm">
             <div className="card-header">

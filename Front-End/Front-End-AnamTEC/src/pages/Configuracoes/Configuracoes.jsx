@@ -9,7 +9,7 @@ export default function Configuracoes() {
 
     const [abaAtiva, setAbaAtiva] = useState("usuario");
     const navegar = useNavigate();
-    // Novos estados para o Modal de Confirmação
+
     const [showModal, setShowModal] = useState(false);
     const [pendingTheme, setPendingTheme] = useState(null);
 
@@ -30,14 +30,11 @@ export default function Configuracoes() {
         confirmarSenha: "",
     });
 
-    // Função para aplicar o tema visualmente e salvar no localStorage
     const applyTheme = (novoTema) => {
         const root = document.documentElement;
         
-        // Limpa as classes existentes
         root.classList.remove('tema-claro', 'tema-escuro'); 
 
-        // Aplica a nova classe
         if (novoTema === 'escuro') {
             root.classList.add('tema-escuro');
         } else {
@@ -58,14 +55,12 @@ export default function Configuracoes() {
         // Sempre limpa classes antigas para evitar conflitos
         root.classList.remove('tema-claro', 'tema-escuro');
 
-        // Aplica o tema escuro se estiver salvo
         if (temaSalvo === 'escuro') {
             root.classList.add('tema-escuro');
         } else {
-            root.classList.add('tema-claro'); // Explícito para consistência
+            root.classList.add('tema-claro');
         }
 
-        // Atualiza o estado para que o select reflita a preferência salva
         setFormData(prev => ({
             ...prev,
             tema: temaSalvo || prev.tema 
@@ -83,7 +78,7 @@ export default function Configuracoes() {
     }, []);
 
     const navPrincipal = () => {
-        navegar("/Home");
+        navegar(-1);
     };
 
     function handleChange(e) {
@@ -96,7 +91,7 @@ export default function Configuracoes() {
                 [name]: novoValor 
             }));
         } else {
-            // Caso contrário, pertence ao formulário GERAL (inclui o tema)
+
             setFormData(prev => ({ 
                 ...prev, 
                 [name]: novoValor 
@@ -108,16 +103,15 @@ export default function Configuracoes() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        if (abaAtiva === "preferencias") {
-            const temaSelecionado = formData.tema;
-            const temaAtual = localStorage.getItem('temaPreferido') || 'claro';
-            
-            if (temaSelecionado !== temaAtual) {
-                setPendingTheme(temaSelecionado);
-                setShowModal(true);
-                return; 
-            } 
-    
+    if (abaAtiva === "preferencias") {
+        const temaSelecionado = formData.tema;
+        const temaAtual = localStorage.getItem('temaPreferido') || 'claro';
+        
+        if (temaSelecionado !== temaAtual) {
+            setPendingTheme(temaSelecionado);
+            setShowModal(true);
+            return; 
+        } 
             showToast("success","Configurações salvas!");
             console.log("Configurações salvas (sem tema):", formData); 
             return;
@@ -144,174 +138,135 @@ export default function Configuracoes() {
             }
             return;
         }
-        // 3. Lógica para ABA USUÁRIO (e outras que não sejam seguranca/preferencias)
         showToast("success","Configurações salvas!");
         console.log("Configurações salvas:", formData); 
         return;
     }
 
-    const ConfirmationModal = () => {
-        if (!showModal) return null;
-        return (
-            <div className="modal-overlay">
-                <div className="modal-content">
-                    <h3>Confirmação de Tema</h3>
-                    <p>Você tem certeza que deseja alterar o tema para (<strong>{pendingTheme === 'escuro' ? 'Escuro' : 'Claro'}</strong>)?</p>
-                    <div className="modal-actions">
-                        <button 
-                            type="button"
-                            className="btn-salvar btn-cancel" 
+const ConfirmationModal = () => {
+    if (!showModal) return null;
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <h3>Confirmação de Tema</h3>
+                <p>Você tem certeza que deseja alterar o tema para 
+                    (<strong>{pendingTheme === 'escuro' ? 'Escuro' : 'Claro'}</strong>)?
+                </p>
+                <div className="modal-actions">
+                    <button type="button"className="btn-salvar btn-cancel" 
                             onClick={() => setShowModal(false)}
-                        >
-                            Cancelar
-                        </button>
-                        <button 
-                            type="button"
-                            className="btn-salvar btn-confirm" 
+                    >
+                        Cancelar
+                    </button>
+                    <button type="button" className="btn-salvar btn-confirm" 
                             onClick={() => applyTheme(pendingTheme)}
-                        >
-                            Confirmar e Aplicar
-                        </button>
-                    </div>
+                    >
+                        Confirmar e Aplicar
+                    </button>
                 </div>
             </div>
-        );
-    };
-    // --- Fim Componente Modal ---
-
-    return (
-        <div className="config-wrapper">
-            <h2 className="config-title">Configurações</h2>
-            <div className="config-container">
-                <aside className="config-menu">
-                    <ul>
-                        <li 
-                            className={abaAtiva === "usuario" ? "ativo" : ""} 
-                            onClick={() => setAbaAtiva("usuario")}
-                        >
-                            Usuário
-                        </li>
-                        <li 
-                            className={abaAtiva === "preferencias" ? "ativo" : ""} 
-                            onClick={() => setAbaAtiva("preferencias")}
-                        >
-                            Preferências
-                        </li>
-                        <li 
-                            className={abaAtiva === "seguranca" ? "ativo" : ""} 
-                            onClick={() => setAbaAtiva("seguranca")}
-                        >
-                            Segurança
-                        </li>
-                    </ul>
-                </aside>
-
-                <main className="config-content">
-                    <form className="config-form" onSubmit={handleSubmit}>
-                        
-                        {/* === Aba Usuário === */}
-                        {abaAtiva === "usuario" && (
-                            <>
-                                <label>Nome:</label>
-                                <input 
-                                    type="text" 
-                                    name="nome" 
-                                    value={formData.nome} 
-                                    onChange={handleChange} 
-                                />
-
-                                <label>Email:</label>
-                                <input 
-                                    type="email" 
-                                    name="email" 
-                                    value={formData.email} 
-                                    onChange={handleChange} 
-                                />
-
-                                <label>Cargo:</label>
-                                <input 
-                                    type="text" 
-                                    value={formData.type} 
-                                    disabled
-                                />
-                            </>
-                        )}
-
-                        {/* === Aba Preferências === */}
-                        {abaAtiva === "preferencias" && (
-                            <>
-                                <label>Tema:</label>
-                                <select 
-                                    name="tema" 
-                                    value={formData.tema} 
-                                    onChange={handleChange}
-                                >
-                                    <option value="claro">Claro</option>
-                                    <option value="escuro">Escuro</option>
-                                </select>
-
-                                <label className="checkbox-label">
-                                    <input 
-                                        type="checkbox" 
-                                        name="notificacoes" 
-                                        checked={formData.notificacoes} 
-                                        onChange={handleChange} 
-                                    />
-                                    Receber notificações por e-mail
-                                </label>
-                            </>
-                        )}
-                        {/* === Aba Segurança === */}
-                        {abaAtiva === "seguranca" && (
-                            <>
-                            <label>Senha atual:</label>
-                            <input 
-                                type="password" 
-                                name="senhaAtual" 
-                                placeholder="Informe sua senha atual"
-                                value={formSeg.senhaAtual}
-                                onChange={handleChange}
-                                required
-                            />
-                                <label>Nova senha:</label>
-                                <input 
-                                    type="password" 
-                                    name="novaSenha" 
-                                    value={formSeg.novaSenha} 
-                                    onChange={handleChange} 
-                                />
-
-                            <label>Confirmar nova senha:</label>
-                            <input 
-                                type="password" 
-                                name="confirmarSenha" 
-                                placeholder="Confirme sua nova senha"
-                                value={formSeg.confirmarSenha}
-                                onChange={handleChange}
-                                required
-                            />
-                            </>
-                        )}
-                        {/* BOTÃO DE SALVAR */}
-                        <div className="actions">
-                            <button 
-                                type="button" 
-                                className="btn-salvar"
-                                onClick={navPrincipal}
-                            >
-                                Voltar
-                            </button>
-
-                            <button type="submit" className="btn-salvar">
-                                Salvar Alterações
-                            </button>
-                        </div>
-                    </form>
-                </main>
-            </div>
-            
-            {/* Renderiza o Modal de Confirmação */}
-            <ConfirmationModal />
         </div>
+    );
+};
+
+return (
+    <div className="config-wrapper">
+        <h2 className="config-title">Configurações</h2>
+            <div className="config-container">
+            <aside className="config-menu">
+                <ul>
+                    <li className={abaAtiva === "usuario" ? "ativo" : ""} 
+                        onClick={() => setAbaAtiva("usuario")}
+                    >
+                        Usuário
+                    </li>
+                    <li className={abaAtiva === "preferencias" ? "ativo" : ""} 
+                        onClick={() => setAbaAtiva("preferencias")}
+                    >
+                        Preferências
+                    </li>
+                    <li className={abaAtiva === "seguranca" ? "ativo" : ""} 
+                        onClick={() => setAbaAtiva("seguranca")}
+                    >
+                        Segurança
+                    </li>
+                </ul>
+            </aside>
+
+            <main className="config-content">
+                <form className="config-form" onSubmit={handleSubmit}>
+                    {abaAtiva === "usuario" && (
+                        <>
+                        <label>Nome:</label>
+                            <input type="text" name="nome" value={formData.nome} 
+                                    onChange={handleChange} 
+                            />
+                            <label>Email:</label>
+                            <input type="email" name="email" value={formData.email} 
+                                    onChange={handleChange} 
+                            />
+                            <label>Cargo:</label>
+                            <input type="text" value={formData.type} 
+                                    disabled
+                            />
+                        </>
+                    )}
+
+                    {abaAtiva === "preferencias" && (
+                        <>
+                        <label>Tema:</label>
+                            <select name="tema" value={formData.tema} 
+                                    onChange={handleChange}
+                            >
+                                <option value="claro">Claro</option>
+                                <option value="escuro">Escuro</option>
+                            </select>
+
+                            <label className="checkbox-label">
+                                <input type="checkbox" name="notificacoes" 
+                                        checked={formData.notificacoes} onChange={handleChange} 
+                                />
+                                    Receber notificações por e-mail
+                            </label>
+                        </>
+                    )}
+                       
+                    {abaAtiva === "seguranca" && (
+                        <>
+                        <label>Senha atual:</label>
+                        <input type="password" name="senhaAtual" 
+                                placeholder="Informe sua senha atual"
+                                value={formSeg.senhaAtual} onChange={handleChange}
+                                required
+                        />
+                        <label>Nova senha:</label>
+                        <input type="password" name="novaSenha" 
+                                value={formSeg.novaSenha} onChange={handleChange} 
+                        />
+                        <label>Confirmar nova senha:</label>
+                        <input type="password" name="confirmarSenha" 
+                                placeholder="Confirme sua nova senha"
+                                value={formSeg.confirmarSenha} onChange={handleChange}
+                                required
+                        />
+                        </>
+                    )}
+                    
+                    <div className="actions">
+                        <button type="button" className="btn-salvar"
+                                onClick={navPrincipal}
+                        >
+                            Voltar
+                        </button>
+
+                        <button type="submit" className="btn-salvar">
+                            Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </main>
+        </div>
+        <ConfirmationModal />
+    </div>
     );
 };

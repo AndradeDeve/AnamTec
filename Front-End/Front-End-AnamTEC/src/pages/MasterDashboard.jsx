@@ -6,7 +6,7 @@ import { postEmailAlunosPendentes } from './../services/APIService.js';
 import FilterBar from './components/SearchBar/FilterBar';
 import StudentTable from './components/StudantTable/StudantTable';
 import ButtonGrid from './components/ButtonGrid/ButtonGrid';
-import { toast } from 'react-toastify';
+import { showToast } from "../Utils/toast.js";
 
 export default function MasterDashboard() {
   const [showModal, setShowModal] = useState(false);
@@ -71,11 +71,11 @@ export default function MasterDashboard() {
     try {
       const response = await postEmailAlunosPendentes();
       if (response.status === 200) {
-        toast.success("E-mails enviados para alunos pendentes");
+        showToast("success", 'E-mails enviados para alunos pendentes');
       } else if (response.status === 404) {
-        toast.error("Nenhum aluno encontrado.");
+        showToast("error", 'Nenhum aluno encontrado.');
       } else {
-        toast.error("Erro ao enviar e-mail para alunos");
+        showToast ("error", 'Erro ao enviar e-mail para alunos.');
       }
     } catch (err) {
       console.log("Erro: ", err);
@@ -83,20 +83,20 @@ export default function MasterDashboard() {
     setShowModal(false);
   };
 
-  return (
-    <header>
-      <Header />
-      <main>
-        <div className="row my-3 justify-content-center">
-          <div className="col-12 col-md-10">
-            <DashboardCards onCardClick={handleCardClick} />
-          </div>
+return (
+  <>
+  <Header />
+    <main>
+      <div className="row my-3 justify-content-center">
+        <div className="col-12 col-md-10">
+          <DashboardCards onCardClick={handleCardClick} />
         </div>
+      </div>
 
-        <div className="container">
-          <div className="row">
-            <div className="col-11 col-md-5">
-              <ButtonGrid
+      <div className="container">
+        <div className="row">
+          <div className="col-11 col-md-5">
+            <ButtonGrid
                 onCadastrar={() => console.log("Cadastrar")}
                 onPesquisar={() => console.log("Pesquisar")}
                 onEnviarEmail={abrirModal}
@@ -104,16 +104,15 @@ export default function MasterDashboard() {
                 setShowModal={setShowModal}
                 alunosPendentes={alunosPendentes}
                 onEnviar={enviarLembretes}
-              />
-            </div>
+            />
+          </div>
             <div className="col-11 col-md-7">
               <FilterBar onSearch={handleSearch} />
             </div>
-          </div>
         </div>
-
+      </div>
         <StudentTable alunosFiltrados={alunosFiltrados} />
       </main>
-    </header>
+    </>
   );
 }

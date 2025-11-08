@@ -1,7 +1,5 @@
-// src/features/reports/hooks/useReportData.js
 import { useState, useEffect, useMemo } from 'react';
 import { getFunctionAluno } from '../../../../services/APIService';
-// import { fetchAnamnesisData } from '../../../services/APIService 
 
 // Função auxiliar para agregar dados de distribuição (contagem por categoria)
 const aggregateDistributionData = (data, categoryKey) => {
@@ -11,7 +9,6 @@ const aggregateDistributionData = (data, categoryKey) => {
     return acc;
   }, {});
 
- 
   return Object.keys(counts).map(key => ({
     name: key,
     value: counts[key],
@@ -19,7 +16,7 @@ const aggregateDistributionData = (data, categoryKey) => {
 };
 
 export function useReportData() {
-  const [data, setData] = useState([]); // Dados brutos da API
+  const [data, setData] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     course: 'all',
@@ -37,7 +34,6 @@ export function useReportData() {
         const result = await getFunctionAluno();
         console.log("📊 Dados recebidos da API:", result);
 
-        // 🧩 Normaliza o formato dos dados recebidos do backend
         const normalized = result.map(item => ({
           id: item.id,
           date: item.anamineseData || "Não efetuada",
@@ -59,26 +55,21 @@ export function useReportData() {
     fetchData();
   }, []);
 
-  // 2. Lógica de Filtragem (Otimizada com useMemo)
   const filteredData = useMemo(() => {
     return data.filter(item => {
-      // Aplique todos os filtros (course, ageRange, gender, status)
       const matchesCourse = filters.course === 'all' || item.course === filters.course;
       const matchesGender = filters.gender === 'all' || item.gender === filters.gender;
       const matchesStatus = filters.status === 'all' || item.status === filters.status;
-      // ... outros filtros aqui
+
       return matchesCourse && matchesGender && matchesStatus; 
     });
   }, [data, filters]);
 
-  // 3. Processamento dos Dados para o Gráfico de Barras/Linhas (Timeframe)
 const getBarChartData = (data, timeframe) => {
   if (!data || data.length === 0) return [];
 
-  // Filtra só os alunos que possuem anamnese feita
   const validData = data.filter(item => item.date && item.date !== "Não efetuada");
 
-  // Contador por período
   const counts = {};
 
   validData.forEach(item => {
@@ -92,7 +83,7 @@ const getBarChartData = (data, timeframe) => {
         key = date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
         break;
       case "week":
-        // pega o número da semana do ano
+    
         const week = Math.ceil(date.getDate() / 7);
         key = `${week}ª Sem/${date.getMonth() + 1}`;
         break;

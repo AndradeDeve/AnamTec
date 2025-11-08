@@ -9,13 +9,13 @@ import {
 } from "../../services/APIService.js";
 import BtnSearch from '../../assets/search-icon.png';
 import "./ControllAcess.css";
-import { toast } from "react-toastify";
+import { showToast } from "../../Utils/toast";
 
 export default function ControleAcesso() {
   const [correntPage, setCorrentPage] = useState(1);
   const [itensPorPagina] = useState(6);
-  const [filtroStatus, setFiltroStatus] = useState("");   // "" | "ativo" | "inativo"
-  const [filtroAlunoProf, setFiltroAlunoProf] = useState("") // "" | "Aluno" | "Professor"
+  const [filtroStatus, setFiltroStatus] = useState("");   
+  const [filtroAlunoProf, setFiltroAlunoProf] = useState("");
   const [tipoPesquisa, setTipoPesquisa] = useState("rm");
   const [valorPesquisa, setValorPesquisa] = useState("");
   const [usuarios, setUsuarios] = useState([]);
@@ -28,7 +28,6 @@ export default function ControleAcesso() {
   const indexPrimeiroItem = indexUltimoItem - itensPorPagina;
   const itensPagina = dadosParaExibir.slice(indexPrimeiroItem, indexUltimoItem);
   const totalPaginas = Math.ceil(dadosParaExibir.length / itensPorPagina);
-
 
   const irParaPagina = (numero) =>{
     if(numero < 1 || numero > totalPaginas) return;
@@ -53,15 +52,7 @@ export default function ControleAcesso() {
           setAlunos(responseAl.data);
       }catch(err){
         console.log("Erro: ", err);
-        toast.warn('Erro ao buscar usuários.', {  
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark" });
+        showToast("warn", 'Erro ao buscar usuários.');
       }
     }
     fetchUser()
@@ -73,28 +64,13 @@ export default function ControleAcesso() {
         if (status === "ativo") {
           const deletedAluno = await deleteFunctionAluno(id);
           if (deletedAluno.status === 200){
-            toast.success('Aluno deletado com sucesso.', {  
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark" });
+              showToast("success",'Aluno inativado com sucesso.');
+
           };
         } else {
           const ativarAluno = await ativarFunctionAluno(id);
           if (ativarAluno.status === 200){
-            toast.success('Aluno Ativo com sucesso.', {  
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark" });
+            showToast("success", 'Aluno ativo com sucesso.');
           };
         }
 
@@ -107,28 +83,13 @@ export default function ControleAcesso() {
         if (status === "ativo") {
           const deletedUser = await deleteFunctionUser(id);
           if (deletedUser.status === 200){
-            toast.success('Usuário deletado com sucesso.', {  
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark" });
+            showToast("success", 'Usuário inativado com sucesso.');
+
           };
         } else {
           const ativarUser = await ativarFunctionUser(id);
           if (ativarUser.status === 200){
-            toast.success('Usuário ativo com sucesso.', {  
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark" });
+            showToast("success", 'Usuário ativado com sucesso.');
           };
         }
 
@@ -148,35 +109,17 @@ export default function ControleAcesso() {
 
     } catch (err) {
       console.error("Erro: ", err);
-      toast.error('Erro ao atualizar status da entidade.', {  
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark" });
+      showToast("error", 'Erro ao atualizar status da entidade.');
     }
   };
-
 
   const handlePesquisar = async () => {
     try{
       let resultado = [...dadosCombindados];
       
       if (valorPesquisa.trim() !== "") {
-
         if(valorPesquisa.length < 3){
-          toast.warn(`O ${tipoPesquisa.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`, {  
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark" });
+          showToast("warn", `O ${tipoPesquisa.toLocaleUpperCase()} deve conter no mínimo 3 caracteres.`)
           return
         }
 
@@ -206,15 +149,7 @@ export default function ControleAcesso() {
         }
         resultado = [...alunosRes, ...usersRes];
         if(!resultado || resultado.length === 0 ){
-          toast.warn("Nenhuma entidade encontrada.", {  
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark" });
+          showToast("warn", 'Nenhuma entidade encontrada.');
         }
       }
       if (filtroStatus) {
@@ -222,15 +157,7 @@ export default function ControleAcesso() {
           (u) => u.status && u.status.toLowerCase() === filtroStatus.toLowerCase()
         );
         if(resultado.length === 0){
-          toast.warn("Nenhuma entidade encontrada com esse status.", {  
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark" });
+          showToast("warn",'Nenhuma entidade encontrada com esse status.');
         }
       }
       const normalizarEntidade = (tipo) => {
@@ -248,131 +175,107 @@ export default function ControleAcesso() {
       setUsuariosFiltrados(resultado);
     }catch(err){
       console.log("Erro: ", err);
-      toast.error("Erro ao buscar entidade(s).", {  
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark" });
+      showToast("error", 'Erro ao buscar entidades(s).');
     }
 
-    // Já estamos integrando 🥲
   };
   
   return (
     <>
       <Header />
-  <Container fluid className="controle-wrapper">
-    {/* Linha 2: Pesquisa organizada */}
-<Row className="mb-4 pesquisa-row">
-    <h1 className="titulo-controle">Controle de Acesso</h1>
-  <Col xs={12} md={11}>
-    <div className="d-flex filtros-container align-items-center">
-      <Form.Select
-        value={tipoPesquisa}
-        onChange={(e) => setTipoPesquisa(e.target.value)}
-      >
-        <option value="rm">RM</option>
-        <option value="nome">Nome</option>
-        <option value="curso">Curso</option>
-        <option value="coordenador">Coordenador</option>
-      </Form.Select>
-    <InputGroup className="input-group-search">
+        <Container fluid className="controle-wrapper">
+          <Row className="mb-4 pesquisa-row">
+            <h1 className="titulo-controle">Controle de Acesso</h1>
+            <Col xs={12} md={11}>
+              <div className="d-flex filtros-container align-items-center">
+                <Form.Select
+                  value={tipoPesquisa} onChange={(e) => setTipoPesquisa(e.target.value)}
+                >
+                  <option value="rm">RM</option>
+                  <option value="nome">Nome</option>
+                  <option value="curso">Curso</option>
+                  <option value="coordenador">Coordenador</option>
+                </Form.Select>
 
-      <Form.Control
-        type="text"
-        placeholder={`Pesquisar por ${labelPorTipo[tipoPesquisa]}`}
-        value={valorPesquisa}
-        onChange={(e) => setValorPesquisa(e.target.value)}
-        onKeyDown={(e) => { 
-            if (e.key === 'Enter') handlePesquisar(); {/*Pesquisar pela tecla Enter*/}
-        }}
+      <InputGroup className="input-group-search">
+
+        <Form.Control type="text" placeholder={`Pesquisar por ${labelPorTipo[tipoPesquisa]}`}
+                    value={valorPesquisa} onChange={(e) => setValorPesquisa(e.target.value)}
+                    onKeyDown={(e) => { 
+                    if (e.key === 'Enter') handlePesquisar(); 
+                    }}
       />
-      <Button 
-          className="btn-lupa" 
-          onClick={handlePesquisar}
-        >
-          <img src={BtnSearch} alt="Pesquisar" /> 
-        </Button>
-    </InputGroup>
-      <Form.Select
-        value={filtroStatus}
-        onChange={(e) => setFiltroStatus(e.target.value)}
-      >
+
+      <Button className="btn-lupa" onClick={handlePesquisar}>
+        <img src={BtnSearch} alt="Pesquisar" /> 
+      </Button>
+      </InputGroup>
+
+      <Form.Select value={filtroStatus} onChange={(e) => setFiltroStatus(e.target.value)} >
         <option value="">Status</option>
         <option value="ativo">Ativos</option>
         <option value="inativo">Inativos</option>
       </Form.Select>
 
-      <Form.Select
-        value={filtroAlunoProf}
-        onChange={(e) => setFiltroAlunoProf(e.target.value)}
-      >
-        <option value="">Todos</option>
-        <option value="aluno">Aluno</option>
-        <option value="professor">Professor</option>
-      </Form.Select>
-    </div>
-  </Col>
+        <Form.Select value={filtroAlunoProf} onChange={(e) => setFiltroAlunoProf(e.target.value)}>
+            <option value="">Todos</option>
+            <option value="aluno">Aluno</option>
+            <option value="professor">Professor</option>
+        </Form.Select>
+      </div>
+    </Col>
 </Row>
 
 <Row className="justify-content-center">
-          <Col xs={12} md={11}>
-            <Card className="p-3">
-              <Table striped bordered hover responsive className="tabela-custom">
-                <thead>
-                  <tr>
-                    <th>RM</th>
-                    <th>Nome</th>
-                    <th>Entidade</th>
-                    <th>Disciplina</th>
-                    <th>Curso</th>
-                    <th>Coordenador</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                 {itensPagina.map((user, index) => (
+  <Col xs={12} md={11}>
+    <Card className="p-3">
+      <Table striped bordered hover responsive className="tabela-custom">
+        <thead>
+          <tr>
+            <th>RM</th>
+            <th>Nome</th>
+            <th>Entidade</th>
+            <th>Disciplina</th>
+            <th>Curso</th>
+            <th>Coordenador</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {itensPagina.map((user, index) => (
 
-                    <tr key={index}>
-                      <td>{user.rm || "Não se aplica"}</td>
-                      <td>{user.nome_user || user.nome_aluno}</td>
-                      <td>{user.entidade || "Aluno"}</td>
-                      <td>{user.disciplina || "Não se aplica"}</td>
-                      <td>{user.curso_user || user.nome_curso}</td>
-                      <td>{user.coordenador}</td>
-                      <td>
-                        <button
-                          className={`status-badge ${
-                            user.status.toLowerCase() === "ativo" ? "ativo" : "inativo"
-                          }`} onClick={() =>deleteAtUser(user.id, user.entidade || "aluno", user.status)}
-                          
-                        >
-                          {user.status}
-                        </button> 
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-              <div className="d-flex justify-content-center align-items-center mt-3 gap-2">
-                <button className="btn-pages" onClick={paginaAnterior} disabled={correntPage === 1}>
-                  Anterior
-                </button>
-                {[...Array(totalPaginas)].map((_, i) => (
-                  <button
-                    key={i}
-                    className={`btn ${correntPage === i + 1 ? "btn-primary" : "btn-light"}`}
-                    onClick={() => irParaPagina(i + 1)}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-                <button className="btn-pages" onClick={proximaPagina} disabled={correntPage === totalPaginas}>
-                  Próximo
+            <tr key={index}>
+              <td>{user.rm || "Não se aplica"}</td>
+              <td>{user.nome_user || user.nome_aluno}</td>
+              <td>{user.entidade || "Aluno"}</td>
+              <td>{user.disciplina || "Não se aplica"}</td>
+              <td>{user.curso_user || user.nome_curso}</td>
+              <td>{user.coordenador}</td>
+              <td>
+                <button className={`status-badge ${ user.status.toLowerCase() === "ativo" ? "ativo" : "inativo"
+                  }`} onClick={() =>deleteAtUser(user.id, user.entidade || "aluno", user.status)}
+                >
+                  {user.status}
+                </button> 
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+        <div className="d-flex justify-content-center align-items-center mt-3 gap-2">
+          <button className="btn-pages" onClick={paginaAnterior} disabled={correntPage === 1}>
+            Anterior
+          </button>
+              {[...Array(totalPaginas)].map((_, i) => (
+                <button key={i} className={`btn ${correntPage === i + 1 ? "btn-primary" : "btn-light"}`} onClick={() => irParaPagina(i + 1)}
+                >
+                {i + 1}
+              </button>
+            ))}
+                <button className="btn-pages" onClick={proximaPagina} 
+                        disabled={correntPage === totalPaginas}
+                >
+                    Próximo
                 </button>
               </div>
             </Card>

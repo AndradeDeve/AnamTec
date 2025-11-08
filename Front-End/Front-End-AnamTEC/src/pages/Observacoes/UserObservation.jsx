@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import { getFunctonCurso, getFunctonCursoProfessor } from '../../services/APIService';
-
 import { Send } from 'react-feather'; 
 import './UserObservation.css';
 import Header from "../components/Header/Header"; 
-import { toast } from 'react-toastify';
+
 
 
 const cursos = [
@@ -15,7 +14,7 @@ const cursos = [
   "Administração"
 ];
 
-// Dados do Aluno com novos campos (Tarefa 1)
+// // Dados do Aluno com novos campos (Tarefa 1)
 // const aluno = { 
 //   nome: "Weslley Samuel Novaes Santana",
 //   rm: "202300215",
@@ -26,7 +25,7 @@ const cursos = [
 //   anamneseLink: "#link-para-anamnese" // Link de exemplo
 // };
 
-// Lista completa de professores com IDs e Cursos
+// // Lista completa de professores com IDs e Cursos
 // const todosProfessores = [
 //   { id: 1, nome: "Lúcie Épité", curso: "Desenvolvimento de Sistemas" },
 //   { id: 2, nome: "Marcos Costa", curso: "Desenvolvimento de Sistemas" },
@@ -69,9 +68,6 @@ const mockComentariosPorProfessor = {
         { autor: "Lúcie Épité", texto: "Excelente desenvolvimento em lógica de programação.", data: "10/10/2023", respostas: [] }
     ],
 };
-// ==============================================
-// FIM DADOS
-// ==============================================
 
 export default function TelaObservacoes() {
 
@@ -92,8 +88,8 @@ export default function TelaObservacoes() {
     const [respostasTemp, setRespostasTemp] = useState({});
     const [respostasVisiveis, setRespostasVisiveis] = useState({});
 
-    // Lógica de filtragem de professores
-// 1. Buscar cursos e professores ao montar o componente
+
+
 useEffect(() => {
     const fetchCursos = async () => {
         try {
@@ -111,7 +107,6 @@ useEffect(() => {
             console.error("Erro ao buscar cursos:", error);
         }
     }
-
     fetchCursos();
 }, []);
 
@@ -129,9 +124,7 @@ useEffect(() => {
     setProfessorSelecionado(null);
 }, [cursoFiltro, todosProfessores]);
 
-
-
-    // Adiciona novo comentário (TAREFA 2: Duplicação resolvida garantindo um único ponto de chamada)
+    // Adiciona novo comentário ()
     const adicionarComentario = () => {
         if (!novoComentario.trim() || !professorSelecionado) return;
 
@@ -153,7 +146,6 @@ useEffect(() => {
     };
 
     const handleEnterPress = (e) => {
-        // Envia apenas se for a tecla Enter e se for o input principal
         if (e.key === 'Enter' && e.target.id === 'input-comentario-principal') {
             e.preventDefault(); 
             adicionarComentario();
@@ -194,7 +186,7 @@ useEffect(() => {
     setRespostasTemp(prev => ({ ...prev, [index]: "" }));
   };
 
-    // Enviar com ENTER no Input de Resposta (TAREFA 3: Nova Lógica)
+    // Enviar com ENTER no Input de Resposta
     const handleRespostaEnterPress = (e, index) => {
         if (e.key === 'Enter') {
             e.preventDefault(); 
@@ -210,37 +202,29 @@ useEffect(() => {
         }));
     };
 
-    return (
-        <>
-            <Header />
-            <div className="tela-observacoes">
-                
-                {/* Painel de professores */}
-                <div className="painel-esquerdo">
-                    <h5>Professores</h5>
-
-                    {/* Filtro por Curso (TAREFA 4: O estilo CSS garantirá a largura total) */}
+return (
+    <>
+    <Header />
+        <div className="tela-observacoes">
+            <div className="painel-esquerdo">
+                <h5>Professores</h5>
                     <Form.Group className="mb-3">
-                        <Form.Select 
-                            aria-label="Selecionar curso"
-                            value={cursoFiltro}
-                            onChange={(e) => setCursoFiltro(e.target.value)}
+                        <Form.Select aria-label="Selecionar curso" value={cursoFiltro}
+                                        onChange={(e) => setCursoFiltro(e.target.value)}
                         >
-                            <option value="Todos">Todos os Cursos</option>
+                        <option value="Todos">Todos os Cursos</option>
                             {todosCursos.map((curso) => (
-                                <option key={curso.id} value={curso.curso}>
-                                    {curso.curso}
-                                </option>
+                            <option key={curso.id} value={curso.curso}>
+                                {curso.curso}
+                            </option>
                             ))}
                         </Form.Select>
                     </Form.Group>
                     
-                    {/* Lista de professores filtrados - Cards */}
                     {cursoFiltro !== "Todos" && (
                         <div className="lista-professores-cards">
                             {professoresFiltrados.map((prof) => (
-                                <div 
-                                    key={prof.id_professor} 
+                                <div key={prof.id_professor} 
                                     className={`professor-card ${professorSelecionado?.id_professor === prof.id_professor ? 'selecionado' : ''}`}
                                     onClick={() => setProfessorSelecionado(prof)}
                                     value={prof.nome_professor}
@@ -253,73 +237,69 @@ useEffect(() => {
                 
                 </div> 
 
-                {/* Área central com rolagem */}
                 <div className="conteudo-central">
                     {professorSelecionado ? (
                         <>
-                            <div className="comentarios-scroll">
-                                <h4>Observações de {professorSelecionado.nome}</h4>
+                        <div className="comentarios-scroll">
+                            <h4>Observações de {professorSelecionado.nome}</h4>
 
-                                {/* Lista de comentários */}
-                                {comentariosAtuais.map((comentario, index) => (
-                                    <div key={index} className="comentario">
-                                        <p className="texto">{comentario.texto}</p>
-                                        <span className="autor">{comentario.autor} ({comentario.data})</span>
+                        {comentariosAtuais.map((comentario, index) => (
+                            <div key={index} className="comentario">
+                                <p className="texto">{comentario.texto} </p>
+                                    <span className="autor">
+                                        {comentario.autor} ({comentario.data})
+                                    </span>
 
-                                        {/* Botão para mostrar/ocultar respostas */}
-                                        {comentario.respostas.length > 0 && ( 
-                                            <Button
-                                                variant="link"
-                                                className="toggle-respostas"
+                                    {comentario.respostas.length > 0 && ( 
+                                        <Button variant="link" className="toggle-respostas"
                                                 onClick={() => alternarRespostas(index)}
-                                            >
-                                                {respostasVisiveis[index] ? "Ocultar respostas" : `Ver respostas (${comentario.respostas.length})`}
-                                            </Button>
-                                        )}
+                                        >
+                                        {respostasVisiveis[index] ? "Ocultar respostas" : `Ver respostas (${comentario.respostas.length})`}
+                                        </Button>
+                                    )}
 
-                                        {/* Respostas visíveis */}
-                                        {respostasVisiveis[index] &&
-                                            comentario.respostas.map((resposta, i) => ( 
-                                                <div key={i} className="resposta">
-                                                    <p className="texto">{resposta.texto}</p>
-                                                    <span className="autor">{resposta.autor} ({resposta.data})</span>
-                                                </div>
-                                            ))} 
+                        {respostasVisiveis[index] &&
+                            comentario.respostas.map((resposta, i) => ( 
+                                <div key={i} className="resposta">
+                                    <p className="texto">{resposta.texto}</p>
+                                    <span className="autor">
+                                        {resposta.autor} ({resposta.data})
+                                    </span>
+                                </div>
+                        ))} 
 
-                                        
-                                        <InputGroup className="mt-2">
-                                            <Form.Control
-                                                type="text"
+                            <InputGroup className="mt-2">
+                                <Form.Control type="text"
                                                 placeholder="Responder a este comentário..."
                                                 value={respostasTemp[index] || ""} 
-                                                onChange={(e) =>
-                                                    setRespostasTemp({ ...respostasTemp, [index]: e.target.value })
+                                                onChange={(e) => setRespostasTemp({ ...respostasTemp, [index]: e.target.value })
                                                 }
                                                 onKeyDown={(e) => handleRespostaEnterPress(e, index)}
-                                            />
-                                            <Button variant="secondary" onClick={() => adicionarResposta(index)}>
-                                                Responder
-                                            </Button>
-                                        </InputGroup>
-                                    </div>
-                                ))}
-                                {/* Mensagem quando não há comentários */}
-                                {comentariosAtuais.length === 0 && (
-                                    <p className="text-center">Ainda não há observações para {professorSelecionado.nome}.</p>
-                                )}
-                            </div>
-
-                            {/* Input principal (TAREFA 1: Largura total garantida pelo CSS) */}
-                            <InputGroup className="mt-3 input-comentario-principal-container">
-                                <Form.Control
-                                    type="text"
-                                    id="input-comentario-principal" 
-                                    placeholder={`Comentário para ${professorSelecionado.nome}...`}
-                                    value={novoComentario}
-                                    onChange={(e) => setNovoComentario(e.target.value)}
-                                    onKeyDown={handleEnterPress} 
                                 />
-                                <Button variant="primary" onClick={adicionarComentario}>
+                                <Button variant="secondary" 
+                                        onClick={() => adicionarResposta(index)}
+                                >
+                                    Responder
+                                </Button>
+                            </InputGroup>
+                            </div>
+                        ))}
+                                {/* Mensagem quando não há comentários */}
+                        {comentariosAtuais.length === 0 && (
+                            <p className="text-center">Ainda não há observações para {professorSelecionado.nome}.</p>
+                        )}
+                        </div>
+
+                            <InputGroup className="mt-3 input-comentario-principal-container">
+                                <Form.Control type="text" id="input-comentario-principal" 
+                                                placeholder={`Comentário para ${professorSelecionado.nome}...`}
+                                                value={novoComentario}
+                                                onChange={(e) => setNovoComentario(e.target.value)}
+                                                onKeyDown={handleEnterPress} 
+                                />
+                                <Button variant="primary" 
+                                        onClick={adicionarComentario}
+                                >
                                     <Send size={20} />
                                 </Button>
                             </InputGroup>
@@ -345,8 +325,8 @@ useEffect(() => {
                     <a href={aluno.anamneseLink} target="_blank" rel="noopener noreferrer">
                         Acessar Anamnese
                     </a>
-                </div>
             </div>
-        </>
+        </div>
+    </>
     );
 }
