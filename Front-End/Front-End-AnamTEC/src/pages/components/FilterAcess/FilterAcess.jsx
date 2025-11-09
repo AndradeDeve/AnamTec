@@ -13,14 +13,12 @@ const handleAcess = () =>{
   }
   onSearch(pesquisa,termo)
 }
-  return (
-    <div className="d-flex align-items-center justify-content-center container-fluid">
+return (
+  <div className="d-flex align-items-center justify-content-center container-fluid">
     <div className="d-flex row g-3 align-items-center">
       <div className='col-12 col-sm-6 col-md-3'>
-        <select
-          className='form-select'
-          value={pesquisa}
-          onChange={(e) => setPesquisa(e.target.value)}
+        <select className='form-select' value={pesquisa}
+                onChange={(e) => setPesquisa(e.target.value)}
         >
           <option value="RM">RM</option>
           <option value="nome">Nome do Aluno</option>
@@ -29,12 +27,9 @@ const handleAcess = () =>{
         </select>
       </div>
       <div className='col-12 col-sm-6 col-md-3'>
-        <input 
-          type="text" 
-          className="form-control"
-          placeholder={`Pesquisar por ${pesquisa.toLocaleLowerCase()}`}
-          value={termo}
-          onChange={(e) => setTermo(e.target.value)} 
+        <input type="text" className="form-control"
+                placeholder={`Pesquisar por ${pesquisa.toLocaleLowerCase()}`}
+                value={termo} onChange={(e) => setTermo(e.target.value)} 
           />
       </div>
       <div className="col-12 col-sm-12-col-md-4 d-grid">
@@ -43,8 +38,7 @@ const handleAcess = () =>{
       </button>
       </div>
     </div>
-    </div>
+  </div>
   );
 };
-
 export default FilterAcess;

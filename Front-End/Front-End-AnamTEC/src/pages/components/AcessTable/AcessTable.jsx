@@ -33,5 +33,4 @@ const AccessTable = () => {
     </div>
   );
 };
-
 export default AccessTable;

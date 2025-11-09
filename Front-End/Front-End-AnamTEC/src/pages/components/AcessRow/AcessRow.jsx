@@ -21,5 +21,4 @@ const AccessRow = ({ data }) => {
     </tr>
   );
 };
-
 export default AccessRow;

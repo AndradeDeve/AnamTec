@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { Send } from 'react-feather';
 
+// Subcomponente: Comentário e Respostas
 const ComentarioItem = ({ 
     comentario, index, respostasTemp, respostasVisiveis,
     alternarRespostas, setRespostasTemp, handleRespostaEnterPress, adicionarResposta
@@ -45,6 +46,7 @@ const ComentarioItem = ({
         </div>
     );
 };
+
 
 export default function ConteudoCentral({
     professorSelecionado, comentariosAtuais, novoComentario, 

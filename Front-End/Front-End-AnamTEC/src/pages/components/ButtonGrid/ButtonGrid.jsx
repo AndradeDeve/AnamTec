@@ -21,5 +21,4 @@ const ButtonGrid = ({ onCadastrar, onEnviarEmail, showModal, setShowModal, aluno
  
   );
 };
-
 export default ButtonGrid;
