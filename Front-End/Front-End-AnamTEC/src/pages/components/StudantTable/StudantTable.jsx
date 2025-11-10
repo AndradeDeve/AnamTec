@@ -4,7 +4,6 @@ import './StudantTable.css';
 
 export default function StudentTable({ alunosFiltrados = [] }) {
   const navigate = useNavigate();
-  console.log(alunosFiltrados);
   // 🔹 Estados para paginação (mesma lógica do ControleAcesso)
   const [correntPage, setCorrentPage] = useState(1);
   const [itensPorPagina] = useState(10);

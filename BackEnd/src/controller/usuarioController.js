@@ -1,7 +1,8 @@
-import express, { request, response } from 'express';
+import express, { request, response, Router } from 'express';
 import pool from '../database/data-source.js';
 import {validarCPF} from '../utils/cpfValidator.js';
 import { hash } from 'bcrypt';
+import { VerificarSenha } from '../utils/jwt.js';
 
 const routes = express.Router();
 
@@ -41,7 +42,7 @@ routes.get("/", async (req, res) => {
 })
 
 routes.get("/specific", async (request, response) => {
-    const { curso, rm, nome, coordenador, turno} = request.query;
+    const { id, curso, rm, nome, coordenador, turno} = request.query;
     try{
         let sql = `SELECT 
             u.id as id,
@@ -83,12 +84,15 @@ routes.get("/specific", async (request, response) => {
         sql += ` WHERE u.RM = ?`;
         params.push(rm);
         }
+        if (id) {
+        sql += ` WHERE u.id = ?`;
+        params.push(id);
+        }
 
         if (nome) {
         sql += ` WHERE u.nome LIKE ?`;
         params.push(nome);
         }
-
         const [rows] = await pool.query(sql, params);
 
         if (!Array.isArray(rows) || rows.length === 0) {
@@ -204,26 +208,17 @@ routes.post("/", async (request, response) => {
 
 routes.put("/:id", async (request, response) => {
     const {id} = request.params;
-    const {cpf, nome, email, senha, id_type, id_curso} = request.body;
-
+    const {nome, email, senha} = request.body;
 
     try{
-        if(!validarCPF(cpf)){
-            return response.status(400).json({err: "Cpf inválido."});
+        const userExists = await pool.query(
+            `SELECT senha FROM tbl_usuario WHERE deletedAt IS NULL AND id = ?`, [id]
+        );
+        const senhaUser = userExists[0][0].senha;
+        const senhaAtual = await VerificarSenha(senha, senhaUser);
+        if(!senhaAtual){
+            return response.status(400).json({err: "A senha atual não confere."});
         }
-
-         const [cursoExiste] = await pool.query(`SELECT * FROM tbl_curso WHERE id = ?`, [id_curso]);
-
-        if(cursoExiste.length === 0){
-            return response.status(400).json({err: "Curso inválido"});
-        }
-
-        const [tipoExiste] =  await pool.query(`SELECT * FROM tbl_type WHERE id = ?`, [id_type]);
-
-        if (tipoExiste.length === 0) {
-            return res.status(400).json({ erro: "Tipo de usuário inválido." });
-        }
-
         const nomeRegex = /^[\p{L}\s\-']{2,45}$/u;
         if(!nome || !nomeRegex.test(nome.trim())){
             return response.status(400).json({err: "Nome inválido."});
@@ -234,14 +229,10 @@ routes.put("/:id", async (request, response) => {
             return response.status(400).json({erro: "E-mail inválido"});
         }
 
-        if(senha.length < 6){
-            return response.status(400).json({err: "A senha deve conter no minimo 6 caracteres."});
-        }
-
 
         const [rows] = await pool.query(
-            `UPDATE tbl_usuario SET CPF = ?, nome = ?, email = ?, senha = ?, id_type = ?, id_curso = ? WHERE deletedAt IS NULL AND id = ?`,
-            [cpf, nome, email, senha, id_type, id_curso, id]
+            `UPDATE tbl_usuario set nome = ?, email = ? WHERE deletedAt IS NULL AND id = ?`,
+            [nome, email, id]
         );
 
         if(rows.length === 0){
