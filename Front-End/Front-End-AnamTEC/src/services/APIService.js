@@ -71,7 +71,7 @@ export async function postFunctionaluno(dados) {
 
 export async function getFunctionUser(specific, value) {
   if(value){
-    const response = await axios.get(`${apiUrl}/user/specific?${specific}=${encodeURIComponent(value)}`, { 
+    const response = await axios.get(`${apiUrl}/user/count?${specific}=${encodeURIComponent(value)}`, { 
     headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
     console.log("Resposta da contagem de usuários:", response.data);
     return response.data;

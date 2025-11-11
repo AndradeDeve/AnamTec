@@ -41,6 +41,23 @@ routes.get("/", async (req, res) => {
     }
 })
 
+routes.get("/count", async (request, response) => {
+    try{
+        const {id} = request.query;
+        const [rows] = await pool.query(
+            `SELECT nome, email FROM tbl_usuario WHERE id = ? AND deletedAt IS NULL`, [id]
+        );
+
+        if(!rows || rows.length === 0){
+            return response.status(404).json({err: "Usuário não encontrado."});
+        }
+        return response.status(200).json(rows);
+    }catch(err){
+        console.log("Erro ao contar usuários:", err);
+        return response.status(500).json({err: "Erro no servidor."});
+    }
+});
+
 routes.get("/specific", async (request, response) => {
     const { id, curso, rm, nome, coordenador, turno} = request.query;
     try{

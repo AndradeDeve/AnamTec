@@ -57,7 +57,7 @@ export default function ReportsDashboard() {
         <div className="col-12 col-lg-6 mb-4">
           <div className="card shadow-sm">
             <div className="card-header">
-              Anamneses Realizadas por {filters.timeframe === 'day' ? 'Dia' : filters.timeframe === 'week' ? 'Semana' : 'Mês'}
+              Anamneses Realizadas por {filters.timeframe === 'day' ? ' Dia' : filters.timeframe === 'week' ? ' Semana' : ' Mês'}
             </div>
             <div className="card-body" style={{ height: '300px' }}>
               <AnamnseBarGrafico data={barChartData} /> 
