@@ -18,7 +18,6 @@ import dadosMedicosController from './controller/dadosMedicosController.js'
 import resetSenhaController from './controller/resetSenhaController.js'
 import { authenticate } from "./utils/jwt.js";
 import { authorizationRoles } from './utils/jwt.js';
-//   Exemplo de como usar 
 
 const routes = express();   
 
@@ -29,7 +28,7 @@ routes.use("/alergias", alergiaController);
 routes.use("/comentarios", comentariosController);
 routes.use("/responsavel", responsavelController);
 routes.use("/aluno", alunoController);
-routes.use("/user",usuarioController);
+routes.use("/user", authenticate, usuarioController);
 routes.use("/login", loginController);
 routes.use('/curso', cursoController);
 routes.use("/type", typeController);

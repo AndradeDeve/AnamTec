@@ -7,7 +7,6 @@ function genereteToken(payload){
 
 function authenticate( request, response, next){
     const {authorization} = request.headers;
-
     if(!authorization){
         return response.status(401).json({err: "Token não informado."});
     }

@@ -1,28 +1,30 @@
 import React from 'react';
-import './FilterControls.css'
+import './FilterControls.css';
 
 const cursosDisponiveis = [
-    "Administração",
-    "Recursos Humanos",
-    "Contabilidade",
-    "Administração (Ensino médio)",
-    "Desenvolvimento de Sistemas",
-    "Redes de Computadores",
-    "Redes de Computadores (Ensino médio)",
-    "Desenvolvimento de Sistemas (Ensino médio)",
-    "Informática",
-    "Eletroeletrônica",
-    "Automação Industrial (Ensino Médio)",
-    "Agenciamento de viagens",
+  "Administração",
+  "Recursos Humanos",
+  "Contabilidade",
+  "Administração (Ensino médio)",
+  "Desenvolvimento de Sistemas",
+  "Redes de Computadores",
+  "Redes de Computadores (Ensino médio)",
+  "Desenvolvimento de Sistemas (Ensino médio)",
+  "Informática",
+  "Eletroeletrônica",
+  "Automação Industrial (Ensino Médio)",
+  "Agenciamento de viagens",
 ];
+
 const idade = [
   "Entre: 14 a 16",
   "Entre 17 a 20",
   "Entre 21 a 25",
   "Entre 26 a 30",
   "Entre 30+"
-]
-const FilterControls = ({ filters, onFilterChange, ageOptions }) => {
+];
+
+const FilterControls = ({ filters, onFilterChange }) => {
   return (
     <div className="p-3 border rounded bg-light">
       <div className="row g-4">
@@ -30,19 +32,16 @@ const FilterControls = ({ filters, onFilterChange, ageOptions }) => {
         <div className="col-md-5">
           <label className="form-label small">Curso</label>
           <select 
-            className="form-select course-select-override" 
+            className="form-select" 
             value={filters.course} 
             onChange={(e) => onFilterChange('course', e.target.value)}
           >
-            <option  value="all">Todos os Cursos</option>
-            
-            {/* 🚨 Renderiza options usando a lista cursosDisponiveis */}
+            <option value="all">Todos os Cursos</option>
             {cursosDisponiveis.map((curso) => (
               <option key={curso} value={curso}>
                 {curso}
               </option>
             ))}
-            
           </select>
         </div>
 
@@ -54,18 +53,16 @@ const FilterControls = ({ filters, onFilterChange, ageOptions }) => {
             value={filters.ageRange} 
             onChange={(e) => onFilterChange('ageRange', e.target.value)}
           >
-            <option value="all">Faixa Etaria</option>
-            {idade.map((faixaEtaria) => (
-              <option key={faixaEtaria} value={faixaEtaria}>
-                {faixaEtaria}
+            <option value="all">Todas</option>
+            {idade.map((faixa) => (
+              <option key={faixa} value={faixa}>
+                {faixa}
               </option>
             ))}
-         
-            {/* ... Renderizar options dinamicamente a partir de ageOptions, se necessário ... */}
           </select>
         </div>
-        
-        {/* Filtro por Período (timeframe) */}
+
+        {/* Filtro por Período */}
         <div className="col-md-3">
           <label className="form-label small">Agrupar por</label>
           <select 
@@ -78,8 +75,6 @@ const FilterControls = ({ filters, onFilterChange, ageOptions }) => {
             <option value="month">Mês</option>
           </select>
         </div>
-        
-        {/* ... Adicionar filtros para Sexo... */}
       </div>
     </div>
   );

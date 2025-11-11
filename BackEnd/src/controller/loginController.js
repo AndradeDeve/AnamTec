@@ -22,6 +22,7 @@ routes.post("/", async(request, response) => {
             u.nome as nome,
             u.senha as senha,
             u.email as email,
+            u.id as id,
             t.tipo as type
             FROM tbl_usuario u
             INNER JOIN juncao_type_user jut ON u.id = jut.id_user
@@ -36,11 +37,12 @@ routes.post("/", async(request, response) => {
         const user = rows[0];       
         
         const senhaValida = await VerificarSenha(senha, user.senha);
+        console.log("Senha válida:", user.id);
         if(!senhaValida){
             return response.status(401).json({err: "Senha inválida."});
         }        
-        const token = genereteToken({user:user.nome, email:user.email, type:user.type});
-        return response.status(200).json({response: "Login efetuado com sucesso.", token, typeUser:user.type, email:user.email});
+        const token = genereteToken({user:user.nome, email:user.email, type:user.type, id:user.id});
+        return response.status(200).json({response: "Login efetuado com sucesso.", token, typeUser:user.type, email:user.email, nome:user.nome, id:user.id });
     }catch(err){
         console.log("Erro ao efetuar o login:", err);
         return response.status(500).json({err: "Erro no servidor."});

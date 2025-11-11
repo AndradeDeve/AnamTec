@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { showToast } from "../../Utils/toast";
 import { putFunctionResetSenha } from "../../services/APIService";
 import "./Config.css";
+import { getFunctionUser } from "../../services/APIService.js";
 import { getUser } from "../../helpers/auth";
+import RedefineInfo from "../components/Pop-Up-Senha";
+import { use } from "react";
 
 export default function Configuracoes() {
 
@@ -11,7 +14,13 @@ export default function Configuracoes() {
     const navegar = useNavigate();
     // Novos estados para o Modal de Confirmação
     const [showModal, setShowModal] = useState(false);
+    const [ showModalInf, setShowModalInf ] = useState(false);
     const [pendingTheme, setPendingTheme] = useState(null);
+    const [originalUserData, setOriginalUserData] = useState({
+        nome: "",
+        email: "",
+    });
+
 
     const [formData, setFormData] = useState({
         nome: "",
@@ -50,8 +59,26 @@ export default function Configuracoes() {
     };
     
     useEffect(() => {
-        const userdata = getUser();
-        
+        const handUser = async () => {
+            const userdata = getUser(); 
+            const user = await getFunctionUser("id", userdata.id);
+            console.log("Dados do usuário obtidos:", user);
+            if (userdata) {
+            setFormData(prev => ({
+                ...prev,
+                nome: user[0].nome || prev.user,
+                email: user[0].email || prev.email,
+                type: userdata.type || prev.type,
+                tema: temaSalvo || prev.tema
+            }));
+
+            setOriginalUserData({
+                nome: userdata.nome || "",
+                email: userdata.email || "",
+            });
+        }
+        }
+        handUser();
         const temaSalvo = localStorage.getItem('temaPreferido') || 'claro';
         const root = document.documentElement;
 
@@ -71,15 +98,7 @@ export default function Configuracoes() {
             tema: temaSalvo || prev.tema 
         }));
 
-        if (userdata) {
-            setFormData(prev => ({
-                ...prev,
-                nome: userdata.user || prev.user,
-                email: userdata.email || prev.email,
-                type: userdata.type || prev.type,
-                tema: temaSalvo || prev.tema
-            }));
-        }
+        
     }, []);
 
     const navPrincipal = () => {
@@ -117,9 +136,9 @@ export default function Configuracoes() {
                 setShowModal(true);
                 return; 
             } 
-    
-            showToast("success","Configurações salvas!");
-            console.log("Configurações salvas (sem tema):", formData); 
+            
+            
+            showToast("success","Configurações salvas!"); 
             return;
         }
 
@@ -144,7 +163,18 @@ export default function Configuracoes() {
             }
             return;
         }
-        // 3. Lógica para ABA USUÁRIO (e outras que não sejam seguranca/preferencias)
+        if (abaAtiva === "usuario") {
+            const nomeAlterado = formData.nome !== originalUserData.nome;
+            const emailAlterado = formData.email !== originalUserData.email;
+
+            if (nomeAlterado || emailAlterado) {
+                setShowModalInf(true);
+                return;
+            }
+
+            showToast("success", "Nenhuma alteração em nome ou e-mail detectada.");
+            return
+        }
         showToast("success","Configurações salvas!");
         console.log("Configurações salvas:", formData); 
         return;
@@ -309,7 +339,14 @@ export default function Configuracoes() {
                     </form>
                 </main>
             </div>
-            
+            <div>
+                <RedefineInfo 
+                    show={showModalInf} 
+                    onClose={() => setShowModalInf(false)} 
+                    emailUser={formData.email}
+                    NomeUser={formData.nome}
+                />
+            </div>
             {/* Renderiza o Modal de Confirmação */}
             <ConfirmationModal />
         </div>

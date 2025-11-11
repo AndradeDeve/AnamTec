@@ -152,6 +152,7 @@
 }
 
 .modal-content {
+    margin-bottom: 75%;
     background: var(--cor-fundo-secundario); 
     padding: 30px;
     border-radius: 10px;

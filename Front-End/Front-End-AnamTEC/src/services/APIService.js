@@ -69,7 +69,14 @@ export async function postFunctionaluno(dados) {
   return response;
 }
 
-export async function getFunctionUser() {
+export async function getFunctionUser(specific, value) {
+  if(value){
+    const response = await axios.get(`${apiUrl}/user/count?${specific}=${encodeURIComponent(value)}`, { 
+    headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+    console.log("Resposta da contagem de usuários:", response.data);
+    return response.data;
+
+  }
   const response = await axios.get(`${apiUrl}/user`, { 
     headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
   return response;
@@ -107,6 +114,12 @@ export async function postFunctionLogin(dados) {
 
 export async function putFunctionResetSenha(dados ) {
   const response = await axios.put(`${apiUrl}/resetSenha/`, dados , { 
+    headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+  return response;
+}
+
+export async function putFunctionUsuario(id, dados ) {
+  const response = await axios.put(`${apiUrl}/user/${id}`, dados , { 
     headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
   return response;
 }

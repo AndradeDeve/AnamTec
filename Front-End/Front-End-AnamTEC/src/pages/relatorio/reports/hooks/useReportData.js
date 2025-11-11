@@ -1,7 +1,6 @@
 // src/features/reports/hooks/useReportData.js
 import { useState, useEffect, useMemo } from 'react';
 import { getFunctionAluno } from '../../../../services/APIService';
-// import { fetchAnamnesisData } from '../../../services/APIService 
 
 // Função auxiliar para agregar dados de distribuição (contagem por categoria)
 const aggregateDistributionData = (data, categoryKey) => {
@@ -11,7 +10,6 @@ const aggregateDistributionData = (data, categoryKey) => {
     return acc;
   }, {});
 
- 
   return Object.keys(counts).map(key => ({
     name: key,
     value: counts[key],
@@ -19,35 +17,31 @@ const aggregateDistributionData = (data, categoryKey) => {
 };
 
 export function useReportData() {
-  const [data, setData] = useState([]); // Dados brutos da API
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     course: 'all',
     ageRange: 'all',
-    gender: 'all',
-    status: 'all',
     timeframe: 'month',
-    distributionCategory: 'gender', // Novo filtro para o gráfico de pizza: 'gender' ou 'status'
+    distributionCategory: 'gender',
   });
 
-  // 1. Fetch dos Dados (Simulação)
-   useEffect(() => {
+  // 1. Buscar dados da API
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getFunctionAluno();
         console.log("📊 Dados recebidos da API:", result);
 
-        // 🧩 Normaliza o formato dos dados recebidos do backend
         const normalized = result.map(item => ({
           id: item.id,
           date: item.anamineseData || "Não efetuada",
           course: item.nome_curso || "Não informado",
-          age: item.dataNascimento || 0,
+          age: item.dataNascimento || null,
           gender: item.genero_aluno || "N/A",
           status: item.status || "Não informado",
         }));
 
-        console.log('dados normalizados:', normalized);
         setData(normalized);
       } catch (error) {
         console.error('❌ Erro ao carregar dados:', error);
@@ -59,67 +53,72 @@ export function useReportData() {
     fetchData();
   }, []);
 
-  // 2. Lógica de Filtragem (Otimizada com useMemo)
+  // 2. Filtragem de dados (incluindo faixa etária)
   const filteredData = useMemo(() => {
     return data.filter(item => {
-      // Aplique todos os filtros (course, ageRange, gender, status)
       const matchesCourse = filters.course === 'all' || item.course === filters.course;
-      const matchesGender = filters.gender === 'all' || item.gender === filters.gender;
-      const matchesStatus = filters.status === 'all' || item.status === filters.status;
-      // ... outros filtros aqui
-      return matchesCourse && matchesGender && matchesStatus; 
+
+      // Calcula idade a partir da data de nascimento
+      let matchesAgeRange = true;
+      if (filters.ageRange !== 'all' && item.age) {
+        const birthYear = new Date(item.age).getFullYear();
+        const currentYear = new Date().getFullYear();
+        const age = currentYear - birthYear;
+
+        matchesAgeRange =
+          (filters.ageRange === 'Entre: 14 a 16' && age >= 14 && age <= 16) ||
+          (filters.ageRange === 'Entre 17 a 20' && age >= 17 && age <= 20) ||
+          (filters.ageRange === 'Entre 21 a 25' && age >= 21 && age <= 25) ||
+          (filters.ageRange === 'Entre 26 a 30' && age >= 26 && age <= 30) ||
+          (filters.ageRange === 'Entre 30+' && age >= 30);
+      }
+
+      return matchesCourse && matchesAgeRange;
     });
   }, [data, filters]);
 
-  // 3. Processamento dos Dados para o Gráfico de Barras/Linhas (Timeframe)
-const getBarChartData = (data, timeframe) => {
-  if (!data || data.length === 0) return [];
+  // 3. Processamento dos dados para o gráfico de barras
+  const getBarChartData = (data, timeframe) => {
+    if (!data || data.length === 0) return [];
 
-  // Filtra só os alunos que possuem anamnese feita
-  const validData = data.filter(item => item.date && item.date !== "Não efetuada");
+    const validData = data.filter(item => item.date && item.date !== "Não efetuada");
+    const counts = {};
 
-  // Contador por período
-  const counts = {};
+    validData.forEach(item => {
+      const date = new Date(item.date);
+      if (isNaN(date)) return;
 
-  validData.forEach(item => {
-    const date = new Date(item.date);
-    if (isNaN(date)) return; // ignora datas inválidas
+      let key = "";
+      switch (timeframe) {
+        case "day":
+          key = date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+          break;
+        case "week":
+          const week = Math.ceil(date.getDate() / 7);
+          key = `${week}ª Sem/${date.getMonth() + 1}`;
+          break;
+        case "year":
+          key = date.getFullYear().toString();
+          break;
+        default:
+          key = date.toLocaleDateString("pt-BR", { month: "short", year: "2-digit" });
+          break;
+      }
 
-    let key = "";
+      counts[key] = (counts[key] || 0) + 1;
+    });
 
-    switch (timeframe) {
-      case "day":
-        key = date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
-        break;
-      case "week":
-        // pega o número da semana do ano
-        const week = Math.ceil(date.getDate() / 7);
-        key = `${week}ª Sem/${date.getMonth() + 1}`;
-        break;
-      case "year":
-        key = date.getFullYear().toString();
-        break;
-      default: // "month"
-        key = date.toLocaleDateString("pt-BR", { month: "short", year: "2-digit" });
-        break;
-    }
-
-    counts[key] = (counts[key] || 0) + 1;
-  });
-
-  // Converte em array [{ name, count }]
-  return Object.entries(counts).map(([name, count]) => ({ name, count }));
-};
-
+    return Object.entries(counts).map(([name, count]) => ({ name, count }));
+  };
 
   const barChartData = useMemo(() => {
     return getBarChartData(filteredData, filters.timeframe);
   }, [filteredData, filters.timeframe]);
 
-  // 4. Processamento dos Dados para o Gráfico de Pizza (Distribuição)
+  // 4. Processamento dos dados para o gráfico de pizza
   const pieChartData = useMemo(() => {
     return aggregateDistributionData(filteredData, filters.distributionCategory);
-  }, [filteredData, filters.distributionCategory]); // Depende do filtro e da categoria escolhida
+  }, [filteredData, filters.distributionCategory]);
 
   return { 
     loading, 
@@ -127,6 +126,6 @@ const getBarChartData = (data, timeframe) => {
     setFilters, 
     filteredData, 
     barChartData, 
-    pieChartData // Expondo os dados do gráfico de pizza
+    pieChartData 
   };
 }

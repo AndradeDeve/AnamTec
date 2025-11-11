@@ -20,7 +20,6 @@ export default function MasterDashboard() {
     const fetchAlunos = async () => {
       try {
         const dados = await getFunctionAluno();
-        console.log("Dados dos alunos:", dados);
         setTodosAlunos(dados || []);
         setAlunosFiltrados(dados || []);
       } catch (error) {
