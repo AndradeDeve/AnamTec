@@ -18,6 +18,7 @@ async function startServer() {
 
         server.listen(3332, ()=>{
             console.log("O servidor está funcionando 😎");
+            // console.log(dotenv.config());
         })
         connection.release()
     }catch (error){
