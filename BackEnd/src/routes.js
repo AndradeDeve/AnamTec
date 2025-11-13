@@ -16,11 +16,13 @@ import registroAulasController from './controller/registroAulasController.js'
 import medicamentosController from './controller/medicamentosController.js'
 import dadosMedicosController from './controller/dadosMedicosController.js'
 import resetSenhaController from './controller/resetSenhaController.js'
+import formularioAnamneseController from './controller/formularioAnamneseController.js';
 import { authenticate } from "./utils/jwt.js";
 import { authorizationRoles } from './utils/jwt.js';
 
 const routes = express();   
 
+routes.use("/formularioAnamnese", formularioAnamneseController);
 routes.use("/cirurgias", cirurgiasController);
 routes.use('/resetSenha', authenticate, resetSenhaController);
 routes.use("/deficiencia", deficienciaController);

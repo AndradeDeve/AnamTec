@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { FormProvider } from "./Context/FormContext";
 import Home from "./Pages/Home";
+import Sucesso from "./Pages/Sucesso";
 import FormInform from "./Pages/FormInform";
 import FormResp from "./Pages/FormResp";
 import FormSaude from "./Pages/FormSaude";
@@ -15,6 +16,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/Sucesso" element={<Sucesso />} />
           <Route path="/FormInform" element={<FormInform />} />
           <Route path="/FormResp" element={<FormResp />} />
           <Route path="/FormSaude" element={<FormSaude />} />
