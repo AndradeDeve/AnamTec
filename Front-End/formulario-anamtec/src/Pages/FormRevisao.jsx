@@ -17,7 +17,6 @@ function FormRevisao() {
   const [sucesso, setSucesso] = useState("");
 
   const informacoes = dadosFormulario?.informacoesPrincipais || {};
-  // 🌟 CORREÇÃO: Usando 'responsaveis' (definido no Context) ao invés de 'infoResponsaveis'
   const responsaveis = dadosFormulario?.responsaveis || []; 
 console.log(responsaveis)
   const saude = dadosFormulario?.saude || {};
@@ -104,7 +103,7 @@ console.log(responsaveis)
                 <Form.Control type="text" value={safe(informacoes.email)} readOnly />
               </Form.Group>
                 
-             {/* 🌟 CAMPO DE TELEFONE ADICIONADO AQUI */}
+             {/*CAMPO DE TELEFONE ADICIONADO AQUI */}
               <Form.Group className="mt-2">
                 <Form.Label>Telefone</Form.Label>
                 <Form.Control type="text" value={safe(informacoes.telefone)} readOnly />
@@ -148,9 +147,7 @@ console.log(responsaveis)
                       <Form.Label>Telefone</Form.Label>
                       <Form.Control type="text" value={safe(resp.telefone)} readOnly />
                     </Form.Group>
-                    {/* Note: Os campos 'estadoCivil' e 'email' abaixo podem estar vazios 
-                           se você não os preencheu no formulário de responsável, 
-                           mas foram mantidos aqui conforme seu código original.*/}
+                    {}
                     <Form.Group className="mt-2">
                       <Form.Label>Estado Civil</Form.Label>
                       <Form.Control type="text" value={safe(resp.estadoCivil)} readOnly />

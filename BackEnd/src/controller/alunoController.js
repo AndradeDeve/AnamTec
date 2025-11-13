@@ -29,7 +29,6 @@ routes.get("/", async (req, res) => {
     if (!rows || rows.length === 0) {
       return res.status(404).json({ err: "Aluno não encontrado." });
     }
-
     return res.status(200).json(rows);
   }catch(err){
     console.error("Erro: ", err);
@@ -229,7 +228,7 @@ routes.get("/curso", async (req, res) => {
           WHERE al.deletedAt IS NULL  
           AND c.deletedAt IS NULL;`
     );
-
+    console.log(rows);
     if (!rows || rows.length === 0) {
       return res.status(404).json({ err: "Aluno não encontrado." });
     }

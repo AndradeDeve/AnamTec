@@ -26,6 +26,7 @@ function FormInform() {
     "modulo",
     "email",
     "cep",
+    "cpf" 
   ];
 
   const handleChange = (field, value) => {
@@ -173,6 +174,24 @@ function FormInform() {
             <Col md={3}>
               <Form.Group>
                 <Form.Label>
+                  CPF:<span className="text-danger">*</span>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Digite o CPF"
+                  value={informacoes.cpf || ""}
+                  isInvalid={!!erros.cpf}
+                  onChange={(e) => handleChange("cpf", e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">{erros.cpf}</Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col md={4}>
+              <Form.Group>
+                <Form.Label>
                   Data de Nascimento:<span className="text-danger">*</span>
                 </Form.Label>
                 <Form.Control
@@ -186,9 +205,7 @@ function FormInform() {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-          </Row>
 
-          <Row className="mb-3">
             <Col md={4}>
               <Form.Group>
                 <Form.Label>
@@ -216,8 +233,10 @@ function FormInform() {
                 />
               </Form.Group>
             </Col>
+          </Row>
 
-            <Col md={2}>
+          <Row className="mb-3">
+            <Col md={4}>
               <Form.Group>
                 <Form.Label>Gênero:</Form.Label>
                 <Form.Select
@@ -233,7 +252,7 @@ function FormInform() {
               </Form.Group>
             </Col>
 
-            <Col md={2}>
+            <Col md={4}>
               <Form.Group>
                 <Form.Label>Reside com:</Form.Label>
                 <Form.Control
@@ -243,7 +262,26 @@ function FormInform() {
                 />
               </Form.Group>
             </Col>
+
+            <Col md={4}>
+              <Form.Group>
+                <Form.Label>Estado Civil:</Form.Label>
+                <Form.Select
+                  value={informacoes.estadoCivil || ""}
+                  onChange={(e) => handleChange("estadoCivil", e.target.value)}
+                >
+                  <option value="">Selecione</option>
+                  <option value="Solteiro(a)">Solteiro(a)</option>
+                  <option value="Casado(a)">Casado(a)</option>
+                  <option value="Divorciado(a)">Divorciado(a)</option>
+                  <option value="Viúvo(a)">Viúvo(a)</option>
+                  <option value="Separado(a)">Separado(a)</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
           </Row>
+
+          <h5 className="mt-4 mb-3">Curso</h5>
 
           <Row className="mb-3">
             <Col md={4}>
@@ -309,7 +347,7 @@ function FormInform() {
             </Col>
           </Row>
 
-          <h5 className="mt-5 mb-3">Endereço Residencial</h5>
+          <h5 className="mt-4 mb-3">Endereço Residencial</h5>
 
           <Row className="mb-3">
             <Col md={3}>
