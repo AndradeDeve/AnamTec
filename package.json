@@ -1,9 +1,9 @@
 {
-  "name": "mongodbB-tcc",
+  "name": "tcc",
   "version": "1.0.0",
   "main": "comentarios.js",
   "scripts": {
-    "dev": "nodemon comentarios.js"
+    "dev": "nodemon index.js"
   },
   "type": "module",
   "author": "Nathasha Gama",
