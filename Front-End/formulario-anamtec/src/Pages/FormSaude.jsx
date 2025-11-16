@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col, Form, Toast } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
@@ -69,8 +69,11 @@ function FormSaude() {
       />
 
       <Form className="form-box p-4 shadow rounded">
+
+        <h5 className="mb-3">Histórico de Saúde Pessoal</h5>
+
           <Row className="mb-3">
-            <Col xs={12} md={3}>
+            <Col xs={12} md={4}>
             <Form.Group>
               <Form.Label>Tipo Sanguíneo:</Form.Label>
                 <Form.Select 
@@ -91,7 +94,7 @@ function FormSaude() {
             </Form.Group>
             </Col>
 
-            <Col xs={12} md={3}>
+            <Col xs={12} md={4}>
               <Form.Group>
                 <Form.Label>Peso:</Form.Label>
                 <Form.Control 
@@ -102,7 +105,7 @@ function FormSaude() {
               </Form.Group>
             </Col>
 
-            <Col xs={12} md={3}>
+            <Col xs={12} md={4}>
               <Form.Group>
                 <Form.Label>Altura:</Form.Label>
                 <Form.Control 
@@ -112,8 +115,10 @@ function FormSaude() {
               />
               </Form.Group>
             </Col>
+          </Row>
 
-            <Col xs={12} md={3}>
+          <Row className="mb-3">
+            <Col xs={12} md={4}>
               <SelectYesNo
               label="Fumante:"
               value={saude.fumante}
@@ -121,27 +126,34 @@ function FormSaude() {
               controlId="fumante"
             />
             </Col>
-          </Row> 
 
-          <Row className="mb-3">
-            <Col xs={12} md={3}>
-              <SelectYesNo
-              label="Consome álcool:"
-              value={saude.alcool}
-              onChange={(e) => handleChange(e.target.value)}
-              controlId="alcool"
-            />
+            <Col xs={12} md={4}>
+              <Form.Group>
+              <Form.Label>Consome bebidas alcoolicas?</Form.Label>
+                <Form.Select 
+                value={saude.alcool} 
+                onChange={(e) => handleChange("alcool", e.target.value)} 
+                className="border p-2 rounded"
+              >
+                  <option value="">Selecione</option>
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                  <option value="eventualmente">Eventualmente</option>
+                </Form.Select>
+            </Form.Group>
             </Col>
 
-            <Col xs={12} md={3}>
+            <Col xs={12} md={4}>
               <SelectYesNo
               label="Drogas ilícitas:"
               value={saude.drogas}
               onChange={(e) => handleChange(e.target.value)}
               controlId="drogas"/>
             </Col>
+          </Row>
 
-            <Col xs={12} md={3}>
+          <Row className="mb-3">
+            <Col xs={12} md={4}>
               <SelectYesNo
               label="Gravidez:"
               value={saude.gravidez}
@@ -149,7 +161,7 @@ function FormSaude() {
               controlId="gravidez"/>
             </Col>
 
-            <Col xs={12} md={3}>
+            <Col xs={12} md={8}>
               <Form.Group>
                 <Form.Label>Se sim quantas?</Form.Label>
                 <Form.Control 
@@ -174,27 +186,7 @@ function FormSaude() {
             </Col>
           </Row>
 
-          <Row className="mb-3">            
-            <Col xs={12} md={4}>
-              <SelectYesNo
-              label="Possui alguma alergia:"
-              value={saude.possuiAlergia}
-              onChange={(e) => handleChange("possuiAlergia", e.target.value)}
-              controlId="possuiAlergia"
-              />
-            </Col>
-
-            <Col xs={12} md={8}>
-              <Form.Group>
-                <Form.Label>Se sim quais?</Form.Label>
-                <Form.Control 
-                type="text"
-                value={saude.quaisAlergias || ""}
-                onChange={(e) => handleChange("quaisAlergias", e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
+          <h5 className="mb-3">Medicamentos e Alergias</h5>
 
           <Row className="mb-3">
             <Col xs={12} md={4}>
@@ -213,6 +205,28 @@ function FormSaude() {
                 type="text" 
                 value={saude.quaisMedicamentos || ""}
                 onChange={(e) => handleChange("quaisMedicamentos", e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          
+          <Row className="mb-3">            
+            <Col xs={12} md={4}>
+              <SelectYesNo
+              label="Possui alguma alergia:"
+              value={saude.possuiAlergia}
+              onChange={(e) => handleChange("possuiAlergia", e.target.value)}
+              controlId="possuiAlergia"
+              />
+            </Col>
+
+            <Col xs={12} md={8}>
+              <Form.Group>
+                <Form.Label>Se sim quais?</Form.Label>
+                <Form.Control 
+                type="text"
+                value={saude.quaisAlergias || ""}
+                onChange={(e) => handleChange("quaisAlergias", e.target.value)}
                 />
               </Form.Group>
             </Col>

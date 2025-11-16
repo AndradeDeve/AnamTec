@@ -6,6 +6,7 @@ import { useContext } from "react";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
 import ProgressBar from "../Components/ProgressBar/ProgressBar";
+import InputMask from "react-input-mask";
 import "../Styles/FormInform.css";
 
 function FormInform() {
@@ -19,6 +20,7 @@ function FormInform() {
 
   const camposObrigatorios = [
     "nome",
+    "cpf",
     "rm", 
     "curso", 
     "dataNascimento", 
@@ -39,8 +41,8 @@ function FormInform() {
     setShowToast(false);
   };
     
- /* useEffect(() => {
-    fetch("http://localhost:5000/api/form")
+  useEffect(() => {
+    fetch("http://localhost:4000/api/form")
     .then((res) => res.json())
     .then((data) => setDadosFormulario(data || {}))
     .catch((err) => console.error("Error ao carregar dados:", err)); 
@@ -52,7 +54,7 @@ function FormInform() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({data: dados }),
     }).catch((err) => console.error("Erro ao salvar:", err));
-  };*/
+  };
 
   const buscarCEP = async (cep) => {
     const cepLimpo = cep.replace(/\D/g, "");
@@ -113,7 +115,6 @@ function FormInform() {
     }
 
     console.log("Enviando para o banco:", informacoes);
-
     navigate("/FormResp");
   };
 
@@ -142,8 +143,8 @@ function FormInform() {
         }}
       >
 
-        <ToastContainer className="p-3" position="top-center">
-          <Toast 
+      <ToastContainer className="p-3" position="top-center">
+        <Toast 
           onClose={() => setShowToast(false)} 
           show={showToast} 
           delay={4000} 
@@ -151,14 +152,14 @@ function FormInform() {
           bg="danger"
         >
         
-            <Toast.Body className="text-white">{toastMessage}</Toast.Body>
+        <Toast.Body className="text-white">{toastMessage}</Toast.Body>
           </Toast>
         </ToastContainer>
 
-          <h5 className="mb-3">Dados Pessoais</h5>
+        <h5 className="mb-3">Dados Pessoais</h5>
 
           <Row className="mb-3">
-          <Col xs={12} md={6}>
+          <Col xs={12} md={7}>
             <Form.Group>
               <Form.Label>Nome:<span style={{ color: "red"}}>*</span></Form.Label>
               <Form.Control 
@@ -171,32 +172,28 @@ function FormInform() {
               <Form.Control.Feedback type="invalid">{erros.nome}</Form.Control.Feedback>
             </Form.Group>
             </Col>
-          
-            <Col xs={12} md={3}>
+
+            <Col xs={12} md={5}>
               <Form.Group>
-                <Form.Label>RM:<span style={{ color: "red" }}>*</span></Form.Label>
-                <Form.Control
-                type="text"
-                placeholder="Digite o RM"
-                value={informacoes.rm || ""}
-                isInvalid={!!erros.rm}
-                onChange={(e) => handleChange("rm", e.target.value)}
-              />
-                <Form.Control.Feedback type="invalid">{erros.rm}</Form.Control.Feedback>
+                <Form.Label>CPF:<span style={{ color: "red"}}>*</span></Form.Label>
+
+                <InputMask mask="999.999.999-99" value={informacoes.cpf || ""} onChange={(e) => handleChange("cpf", e.target.value)}
+              >
+                {(inputProps) => (
+                  <Form.Control {...inputProps} type="text" placeholder="000.000.000-00" isInvalid={!!erros.cpf} 
+                  />
+                )}
+                </InputMask>
+
+                <Form.Control.Feedback type="invalid">
+                  {erros.cpf}
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
-
-            <Col xs={12} md={3}>
-             <Form.Group>
-              <Form.Label>Data de Nascimento:<span style={{ color: "red" }}>*</span></Form.Label>
-              <Form.Control type="date" value={informacoes.dataNascimento} isInvalid={!!erros.dataNascimento} onChange={(e) => handleChange("dataNascimento", e.target.value)}/>
-              <Form.Control.Feedback type="invalid">{erros.dataNascimento}</Form.Control.Feedback>
-            </Form.Group>
-            </Col>
-          </Row>
-
+          </Row>  
+          
           <Row className="mb-3">
-            <Col xs={12} md={6}>
+            <Col xs={12} md={7}>
             <Form.Group>
               <Form.Label>Email:<span style={{ color: "red" }}>*</span></Form.Label>
               <Form.Control type="email" placeholder="Digite o e-mail" value={informacoes.email} isInvalid={!!erros.email} onChange={(e) => handleChange("email", e.target.value)} />
@@ -204,7 +201,53 @@ function FormInform() {
             </Form.Group>
             </Col>
 
-            <Col xs={12} md={3}>
+            <Col xs={12} md={5}>
+             <Form.Group>
+              <Form.Label>Data de Nascimento:<span style={{ color: "red" }}>*</span></Form.Label>
+              <Form.Control type="date" value={informacoes.dataNascimento} isInvalid={!!erros.dataNascimento} onChange={(e) => handleChange("dataNascimento", e.target.value)}/>
+              <Form.Control.Feedback type="invalid">{erros.dataNascimento}</Form.Control.Feedback>
+            </Form.Group>
+            </Col>
+          </Row>
+          
+          <Row className="mb-3">
+            <Col xs={12} md={7}>
+            <Form.Group>
+              <Form.Label>Reside com:</Form.Label>
+              <Form.Control type="text" value={informacoes.resideCom} onChange={(e) => handleChange("resideCom", e.target.value)} />
+            </Form.Group>
+            </Col>
+
+            <Col xs={12} md={5}>
+            <Form.Group>
+              <Form.Label>Telefone:<span style={{ color: "red" }}>*</span></Form.Label>
+              <Form.Control 
+              type="text" 
+              placeholder="Digite o telefone:" 
+              value={informacoes.telefone} 
+              isInvalid={!!erros.telefone} 
+              onChange={(e) => handleChange("telefone", e.target.value)} />
+              <Form.Control.Feedback type="invalid"> {erros.telefone} </Form.Control.Feedback>
+            </Form.Group>
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col xs={12} md={7}>
+              <Form.Group>
+                <Form.Label>Etnia:</Form.Label>
+                <Form.Select value={informacoes.etnia} onChange={(e) => handleChange("etnia", e.target.value)}>
+                  <option value="">Selecione a etnia</option>
+                  <option value="Negro">Negro(a)</option>
+                  <option value="Pardo">Pardo(a)</option>
+                  <option value="Branco">Branco(a)</option>
+                  <option value="Amarelo">Amarelo(a)</option>
+                  <option value="Indígena">Indígena</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={5}>
             <Form.Group>
               <Form.Label>Gênero:</Form.Label>
               <Form.Select value={informacoes.genero} onChange={(e) => handleChange("genero", e.target.value)}>
@@ -216,17 +259,12 @@ function FormInform() {
               </Form.Select>
             </Form.Group>
             </Col>
+          </Row>    
 
-            <Col xs={12} md={3}>
-            <Form.Group>
-              <Form.Label>Reside com:</Form.Label>
-              <Form.Control type="text" value={informacoes.resideCom} onChange={(e) => handleChange("resideCom", e.target.value)} />
-            </Form.Group>
-            </Col>
-          </Row>
+          <h5 className="mt-5 mb-3">Informações do Curso</h5>      
 
           <Row className="mb-3">
-            <Col xs={12} md={6}>
+            <Col xs={12} md={7}>
               <Form.Group>
               <Form.Label>Curso:<span style={{ color: "red" }}>*</span></Form.Label>
               <Form.Select value={informacoes.curso}  isInvalid={!!erros.curso} onChange={(e) => handleChange("curso", e.target.value)}>
@@ -245,20 +283,23 @@ function FormInform() {
             </Form.Group>
             </Col>
 
-            <Col xs={12} md={3}>
-            <Form.Group>
-              <Form.Label>Turno:<span style={{ color: "red" }}>*</span></Form.Label>
-              <Form.Select value={informacoes.turno} isInvalid={!!erros.turno} onChange={(e) => handleChange("turno", e.target.value)}>
-                <option value="">Selecione o curso</option>
-                <option value="Manhã">Manhã</option>
-                <option value="Tarde">Tarde</option>
-                <option value="Noite">Noite</option>
-              </Form.Select>
-              <Form.Control.Feedback type="invalid"> {erros.turno} </Form.Control.Feedback>
-            </Form.Group>
+            <Col xs={12} md={5}>
+              <Form.Group>
+                <Form.Label>RM:<span style={{ color: "red" }}>*</span></Form.Label>
+                <Form.Control
+                type="text"
+                placeholder="Digite o RM"
+                value={informacoes.rm || ""}
+                isInvalid={!!erros.rm}
+                onChange={(e) => handleChange("rm", e.target.value)}
+              />
+                <Form.Control.Feedback type="invalid">{erros.rm}</Form.Control.Feedback>
+              </Form.Group>
             </Col>
-
-            <Col xs={12} md={3}>
+          </Row>
+            
+          <Row className="mb-3">  
+            <Col xs={12} md={7}>
             <Form.Group>
               <Form.Label>Módulo:<span style={{ color: "red" }}>*</span></Form.Label>
               <Form.Select value={informacoes.modulo} isInvalid={!!erros.modulo} onChange={(e) => handleChange("modulo", e.target.value)}>
@@ -271,12 +312,32 @@ function FormInform() {
               <Form.Control.Feedback type="invalid"> {erros.modulo} </Form.Control.Feedback>
             </Form.Group>
             </Col>
+
+            <Col xs={12} md={5}>
+            <Form.Group>
+              <Form.Label>Turno:<span style={{ color: "red" }}>*</span></Form.Label>
+              <Form.Select value={informacoes.turno} isInvalid={!!erros.turno} onChange={(e) => handleChange("turno", e.target.value)}>
+                <option value="">Selecione o curso</option>
+                <option value="Manhã">Manhã</option>
+                <option value="Tarde">Tarde</option>
+                <option value="Noite">Noite</option>
+              </Form.Select>
+              <Form.Control.Feedback type="invalid"> {erros.turno} </Form.Control.Feedback>
+            </Form.Group>
+            </Col>
           </Row>
 
           <h5 className="mt-5 mb-3">Endereço Residencial</h5>
 
           <Row className="mb-3">
-            <Col xs={12} md={3}>
+            <Col xs={12} md={7}>
+              <Form.Group>
+                <Form.Label>Logradouro:</Form.Label>
+                <Form.Control type="text" value={informacoes.logradouro} onChange={(e) => handleChange("logradouro", e.target.value)}/>
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={5}>
               <Form.Group>
                 <Form.Label>CEP:<span style={{ color: "red" }}>*</span></Form.Label>
               <Form.Control type="text" value={informacoes.cep} isInvalid={!!erros.cep} onChange={(e) => handleChange("cep", e.target.value)} onBlur={(e) => buscarCEP(e.target.value)}
@@ -289,45 +350,33 @@ function FormInform() {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-
-             <Col xs={12} md={7}>
-              <Form.Group>
-                <Form.Label>Logradouro:</Form.Label>
-                <Form.Control type="text" value={informacoes.logradouro} onChange={(e) => handleChange("logradouro", e.target.value)}/>
-              </Form.Group>
-            </Col>
-
-            <Col xs={12} md={2}>
-              <Form.Group>
-                <Form.Label>Número:</Form.Label>
-                <Form.Control type="text" value={informacoes.numero} onChange={(e) => handleChange("numero", e.target.value)} />
-              </Form.Group>
-            </Col>
           </Row>
 
           <Row className="mb-3">
-            <Col xs={12} md={3}>
+            <Col xs={12} md={7}>
               <Form.Group>
-                <Form.Label>Complemento:</Form.Label>
-                <Form.Control type="text" value={informacoes.complemento} onChange={(e) => handleChange("complemento", e.target.value)}/>
+                <Form.Label>Número/Complemento:</Form.Label>
+                <Form.Control type="text" value={informacoes.numero} onChange={(e) => handleChange("numero", e.target.value)} />
               </Form.Group>
             </Col>
 
-            <Col xs={12} md={3}>
+            <Col xs={12} md={5}>
               <Form.Group>
                 <Form.Label>Bairro:</Form.Label>
                 <Form.Control type="text" value={informacoes.bairro} onChange={(e) => handleChange("bairro", e.target.value)}/>
               </Form.Group>
             </Col>
+          </Row>
 
-            <Col xs={12} md={4}>
+          <Row className="mb-3">
+            <Col xs={12} md={7}>
               <Form.Group>
                 <Form.Label>Cidade:</Form.Label>
                 <Form.Control type="text"  value={informacoes.cidade} onChange={(e) => handleChange("cidade", e.target.value )}/>
               </Form.Group>
             </Col>
 
-            <Col xs={12} md={2}>
+            <Col xs={12} md={5}>
               <Form.Group>
                 <Form.Label>UF:</Form.Label>
                 <Form.Control type="text" value={informacoes.uf} onChange={(e) => handleChange("uf", e.target.value)}/>

@@ -1,124 +1,164 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: var(--fonte-principal);
+  height: 100%;
+}
+
 .home-container {
-    display: flex;
-    height: 100vh;
-    flex-wrap: wrap;
-    font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  align-items: stretch;
+  padding: 0;
+  background-color: var(--cor-fundo-principal);
 }
 
 .home-left {
-    flex: 1;
-    background-color: #044654;
-    width: 50%;
-    height: 100vh;
-    position: relative;
-    min-height: 300px;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-}
-
-
-.home-logo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60%;
-    max-width: 500px;
-    height: auto;
-}
-
-.home-right {
-    width: 50%;
-    padding: 40px;
+    flex: 1.2;
+    background-color: var(--cor-destaque);
     display: flex;
     flex-direction: column;
     justify-content: center;
+    color: var(--branco);
+    text-align: center;
+    padding: 2rem;
+}
+
+.header-logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.header-logo h1 {
+  font-weight: 800;
+  font-size: 3rem;
+  color: var(--branco);
+  margin: 0;
+  flex-direction: row;
+}
+
+.home-logo {
+  width: 100px;
+  height: auto;
+}
+
+.slogan {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-top: 1rem;
+    line-height: 1.4;
+    position: relative;
+    z-index: 1;
+}
+
+.home-right {
+    flex: 1.3; /* aumenta o lado direito */
+    background-color: var(--cor-fundo-principal); /* fundo claro */
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--cor-texto-principal)
 }
 
 .home-right h1 {
-    margin-bottom: 2.5rem;
-    color: #044654;
     text-align: center;
-    font-weight: bold;
+    color: var(--cor-destaque);
     font-size: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .home-right h2 {
-    margin-bottom: 1rem;
     text-align: center;
-    font-size: 1.4rem;
+    color: var(--cor-texto-principal);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
 }
 
 .home-right p {
+    color: var(--cor-texto-principal);
+    line-height: 1.6;
     margin-bottom: 1rem;
-    line-height: 1.5;
+    text-align: justify;
 }
 
 .consentimento {
     margin: 1.5rem 0;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
+    font-size: 0.95rem;
 }
 
 .btn-iniciar {
-    background-color: #044654;
-    color: white;
+    background-color: var(--cor-destaque);
+    color: var(--branco);
     border: none;
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
+    padding: 0.9rem 2rem;
+    font-size: 1.2rem;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
     transition: 0.3s;
 }
 
 .btn-iniciar:hover:not(:disabled) {
-    background-color: #044654;
+    background-color: var(--azulHover);
 }
 
 .btn-iniciar:disabled {
-    background-color: #044654;
+    background-color: var(--cor-destaque);
     cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
-    .home-container {
-        flex-direction: column;
-        height: auto;
-    }
+  .home-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+      to top,
+      var(--cor-fundo-principal) 50%,
+      var(--cor-destaque) 50%
+    );
+  }
 
-    .home-left {
-        width: 100%;
-        height: auto;
-        padding: 2rem 0;
-    }
+  .header-logo h1 {
+    font-size: 2rem;
+  }
 
-    .home-logo {
-        width: 70%;
-        max-width: 300px;
-    }
+  .home-logo {
+    width: 60px;
+  }
 
-    .home-right {
-        width: 100%;
-        padding: 20px;
-    }
+  .home-right {
+    margin: 2rem auto;
+    width: 90%;
+    padding: 2rem;
+  }
+}
 
-    .home-right h1 {
-        font-size: 1.6rem;
-    }
+@media (max-width: 480px) {
+  .header-logo h1 {
+    font-size: 1.6rem;
+  }
 
-    .home-left h2 {
-        font-size: 1.2rem;
-    }
+  .slogan {
+    font-size: 1rem;
+  }
 
-    .home-right p {
-        font-size: 0.95rem;
-    }
+  .home-right {
+    padding: 1.5rem;
+  }
 
-    .btn-iniciar {
-        width: 100%;
-        padding: 1rem;
-        font-size: 1rem;
-    }
+  .btn-iniciar {
+    width: 100%;
+    padding: 1rem;
+  }
 }

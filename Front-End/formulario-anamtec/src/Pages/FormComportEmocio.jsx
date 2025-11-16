@@ -1,60 +1,79 @@
 import React, { useContext, useState } from "react";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col, Form, Toast, ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
 import ProgressBar from "../Components/ProgressBar/ProgressBar";
+import SelectYesNo from "../Components/SelectYesNo/SelectYesNo";
 import { FormContext } from "../Context/FormContext";
 import "../Styles/FormComportEmocio.css";
+import "../Styles/Paletas.css";
 
 function FormComportEmocio() {
   const navigate = useNavigate();
-
   const { dadosFormulario, setDadosFormulario } = useContext(FormContext);
-    
+
   const [erros, setErros] = useState({});
-
-  const camposObrigatorios = ["dificuldadesAprendizagem"];
-
-  const comportEmocio = dadosFormulario.comportamento || {
-    dificuldadesAprendizagem: "",
-    comportamento: "",
-    emocionais: "",
-  };
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const handleChange = (field, value) => {
-    setDadosFormulario((prev) => ({ 
-    ...prev, 
-    comportamento: {
-      ...prev.comportEmocio,
-      [field]: value,
-    },
-  }));
-  setErros((prev) => ({ ...prev, [field]: ""}));
+    setDadosFormulario((prev) => ({
+      ...prev,
+      comportamento: {
+        ...prev.comportamento,
+        [field]: value || "",
+      },
+    }));
+    setErros((prev) => ({ ...prev, [field]: "" }));
   };
 
   const validarFormulario = () => {
     let valid = true;
     let novosErros = {};
+    const comportamento = dadosFormulario.comportamento;
 
-    camposObrigatorios.forEach((campo) => {
-      if (!comportEmocio[campo] || comportEmocio[campo].trim() === "") {
+    // Campos sim/não obrigatórios
+    const obrigatorios = ["dificulAprendizagem", "acompPsi", "acesInternet", "pratAtiv"];
+    obrigatorios.forEach((campo) => {
+      if (!comportamento[campo] || comportamento[campo].trim() === "") {
         valid = false;
-        novosErros[campo]  = "Campo obrigatório";
+        novosErros[campo] = "Campo obrigatório";
       }
     });
 
+    // Campos "detalhes" obrigatórios se marcado "sim"
+    if (comportamento.dificulAprendizagem === "sim" && !comportamento.quaisAprendizagens.trim()) {
+      valid = false;
+      novosErros.quaisAprendizagens = "Campo obrigatório";
+    }
+
+    if (comportamento.acompPsi === "sim" && !comportamento.qualAcompPsi.trim()) {
+      valid = false;
+      novosErros.qualAcompPsi = "Campo obrigatório";
+    }
+
+    if (comportamento.acesInternet === "sim" && !comportamento.quaisAcessos.trim()) {
+      valid = false;
+      novosErros.quaisAcessos = "Campo obrigatório";
+    }
+
+    if (comportamento.pratAtiv === "sim" && !comportamento.quaisAtividades.trim()) {
+      valid = false;
+      novosErros.quaisAtividades = "Campo obrigatório";
+    }
+
     setErros(novosErros);
     return valid;
-  }
+  };
 
   const handleProximo = () => {
     if (!validarFormulario()) {
-      alert("Preencha todos os campos obrigatórios");
+      setToastMessage("⚠️ Preencha todos os campos obrigatórios corretamente!");
+      setShowToast(true);
       return;
     }
 
-    console.log("Enviando dados:", comportEmocio);
     navigate("/FormRevisao");
   };
 
@@ -64,8 +83,20 @@ function FormComportEmocio() {
     <>
       <Header />
 
+      <ToastContainer position="top-end" className="p-3">
+        <Toast
+          onClose={() => setShowToast(false)}
+          show={showToast}
+          delay={3500}
+          autohide
+          bg="warning"
+        >
+          <Toast.Body>{toastMessage}</Toast.Body>
+        </Toast>
+      </ToastContainer>
+
       <Container className="mt-4">
-        <ProgressBar 
+        <ProgressBar
           etapas={[
             "Informações principais",
             "Dados do Responsável",
@@ -76,50 +107,117 @@ function FormComportEmocio() {
           etapaAtual={3}
         />
 
-        <Form className="form-box shadow rounded p-4">
+        <Form className="form-box p-4 shadow rounded">
+          <h5 className="mb-3">Aspectos Comportamentais e Emocionais</h5>
+
           <Row className="mb-3">
-            <Col md={6}>
+            <Col xs={12} md={5}>
+              <SelectYesNo
+                label="Apresenta dificuldades de aprendizagem?"
+                value={dadosFormulario.comportamento.dificulAprendizagem || ""}
+                onChange={(e) => handleChange("dificulAprendizagem", e.target.value)}
+                controlId="dificulAprendizagem"
+              />
+            </Col>
+            <Col xs={12} md={7}>
               <Form.Group>
-                <Form.Label>O aluno apresenta dificuldades de aprendizagem:<span style={{ color: "red" }}>*</span></Form.Label>
-                  <Form.Control 
-                  type="text" 
-                  placeholder="Digite aqui" 
-                  value={comportEmocio.dificuldadesAprendizagem} 
-                  isInvalid={!!erros.dificuldadesAprendizagem} 
-                  onChange={(e) => handleChange("dificuldadesAprendizagem", e.target.value)}
-                  />
-                <Form.Control.Feedback type="invalid">{erros.dificuldadesAprendizagem}</Form.Control.Feedback>    
+                <Form.Label>Se sim, quais?</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Digite aqui"
+                  value={dadosFormulario.comportamento.quaisAprendizagens || ""}
+                  isInvalid={!!erros.quaisAprendizagens}
+                  onChange={(e) => handleChange("quaisAprendizagens", e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {erros.quaisAprendizagens}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          {/* Repetir para os outros campos de forma similar */}
+          {/* acompanhamento psicológico */}
+          <Row className="mb-3">
+            <Col xs={12} md={5}>
+              <SelectYesNo
+                label="Faz acompanhamento psicológico ou psiquiátrico?"
+                value={dadosFormulario.comportamento.acompPsi || ""}
+                onChange={(e) => handleChange("acompPsi", e.target.value)}
+                controlId="acompPsi"
+              />
+            </Col>
+            <Col xs={12} md={7}>
+              <Form.Group>
+                <Form.Label>Se sim, qual?</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Digite aqui"
+                  value={dadosFormulario.comportamento.qualAcompPsi || ""}
+                  isInvalid={!!erros.qualAcompPsi}
+                  onChange={(e) => handleChange("qualAcompPsi", e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {erros.qualAcompPsi}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          {/* Internet e atividades físicas */}
+          <Row className="mb-3">
+            <Col xs={12} md={5}>
+              <SelectYesNo
+                label="Tem acesso à internet e dispositivos para estudo?"
+                value={dadosFormulario.comportamento.acesInternet || ""}
+                onChange={(e) => handleChange("acesInternet", e.target.value)}
+                controlId="acesInternet"
+              />
+            </Col>
+            <Col xs={12} md={7}>
+              <Form.Group>
+                <Form.Label>Se sim, quais?</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Digite aqui"
+                  value={dadosFormulario.comportamento.quaisAcessos || ""}
+                  isInvalid={!!erros.quaisAcessos}
+                  onChange={(e) => handleChange("quaisAcessos", e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {erros.quaisAcessos}
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
 
           <Row className="mb-3">
-            <Col xs={12} md={6}>
-              <Form.Group>
-                <Form.Label>Comportamento do aluno:</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Digite aqui"
-                  value={comportEmocio.comportamento}
-                  onChange={(e) => handleChange("comportamento", e.target.value)}
-                />
-              </Form.Group>
+            <Col xs={12} md={5}>
+              <SelectYesNo
+                label="Pratica atividades físicas regularmente?"
+                value={dadosFormulario.comportamento.pratAtiv || ""}
+                onChange={(e) => handleChange("pratAtiv", e.target.value)}
+                controlId="pratAtiv"
+              />
             </Col>
-
-            <Col xs={12} md={6} className="mt-3">
+            <Col xs={12} md={7}>
               <Form.Group>
-                <Form.Label>Aspectos emocionais:</Form.Label>
+                <Form.Label>Se sim, quais e com que frequência?</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Digite aqui"
-                  value={comportEmocio.emocionais}
-                  onChange={(e) => handleChange("emocionais", e.target.value)}
+                  value={dadosFormulario.comportamento.quaisAtividades || ""}
+                  isInvalid={!!erros.quaisAtividades}
+                  onChange={(e) => handleChange("quaisAtividades", e.target.value)}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {erros.quaisAtividades}
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
 
-        <NavButtons onVoltar={handleVoltar} onProximo={handleProximo} />
+          <NavButtons onVoltar={handleVoltar} onProximo={handleProximo} />
         </Form>
       </Container>
     </>
@@ -127,4 +225,3 @@ function FormComportEmocio() {
 }
 
 export default FormComportEmocio;
-               

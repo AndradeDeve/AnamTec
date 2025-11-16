@@ -1,20 +1,35 @@
 .custom-header {
-    background-color: #044654 !important;
-    padding: 0.3rem 1rem ;
-    font-family: 'roboto', sans-serif;
+    background-color: var(--cor-destaque);
+    padding: 0.5rem 2rem ;
     height: 60px;
     position: relative;
-}
-
-.custom-header .container{
     display: flex;
     align-items: center;
-    height: 100%;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
     position: relative;
 }
 
-.logo-left {
-    width: 100px;
+.brand-left {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+.brand-name {
+    color: var(--cor-fundo-principal);
+    font-size: 1rem;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.brand-logo {
+    width: 30px;
     height: auto;
     flex-shrink: 0;
 }
@@ -24,16 +39,12 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 1.4rem !important;
+    font-size: 1.5rem !important;
     font-weight: bold;
     color: #e4e4e4 !important;
     white-space: nowrap;
     margin: 0;
-    text-align: center;
-}
-
-.navbar-title:hover {
-    color: #E4EDF1;
+    pointer-events: none;
 }
 
 

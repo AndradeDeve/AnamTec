@@ -24,18 +24,22 @@ export function FormProvider({ children}) {
         uf: "",
     },
 
-    responsaveis: [{
+    responsavel: [
+    {
         nome: "",
-        telefone: "",
+        cpf: "",
         parentesco: "",
+        telefone: "",
+        estadoCivil: "",
         email: "",
-        endereco: "",
-    }],
+    }
+],
+
 
     saude: {
         tipoSanguineo: "",
         possuiLaudo: "",
-        possiAlergia: "",
+        possiuAlergia: "",
         fumante: "",
         alcool: "",
         medicamentos: "",
@@ -46,9 +50,14 @@ export function FormProvider({ children}) {
     },
 
     comportamento: {
-        dificuldadesAprendizagem: "",
-        comportamento: "",
-        emocionais: "",
+        dificulAprendizagem: "",
+        quaisAprendizagens: "",
+        acomPsi: "",
+        qualAcompPsi: "",
+        acesInternet: "",
+        quaisAcessos: "",
+        pratAtiv: "",
+        quaisAtividades: "",
     }
 });
 

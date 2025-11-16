@@ -12,3 +12,57 @@
     background-color: #033341 !important;
     color: #ffffff !important;
 }
+
+.btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+
+@media (max-width: 480px) {
+    .btn-wrapper .custom-btn-resp {
+        width: 100%;
+    }
+}
+
+
+.form-box {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+}
+
+/* Padding em telas menores */
+@media (max-width: 768px) {
+    .form-box {
+        padding: 16px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-box {
+        padding: 10px !important;
+    }
+}
+
+
+.form-box .form-control,
+.form-box .form-select {
+    width: 100% !important;
+    min-height: 42px;
+}
+
+
+@media (max-width: 600px) {
+    .form-box h3 {
+        font-size: 1.15rem;
+        text-align: center;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+}
