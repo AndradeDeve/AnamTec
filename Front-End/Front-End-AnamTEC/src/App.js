@@ -26,7 +26,8 @@ function App() {
         <Route path="/Cadastro" element={
             <ProtectedRouter roles={['coordenador pedagógico']}>  
                 <Cadastro /> 
-            </ProtectedRouter>} />
+            </ProtectedRouter>
+          } />
         <Route path="/ResetarSenha" element={<ResetPassW />} />
        <Route path="/Home" element={
         <ProtectedRouter>

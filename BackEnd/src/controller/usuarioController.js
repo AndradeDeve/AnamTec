@@ -211,7 +211,7 @@ routes.post("/", async (request, response) => {
                 if(id_coord[0].length === 0){
                     return response.status(400).json({err: "Curso inválido para coordenador."});
                 }
-                await pool.query(`update tbl_curso set id_coordenador = (select id from tbl_usuario where RM = ?) where curso = ?`, [rm, curso]);
+                await pool.query(`update tbl_curso set id_coordenador = (select id from tbl_usuario where RM = ?) where deletedAt is null and curso = ?`, [rm, curso]);
             }
 
         await pool.query(`INSERT INTO juncao_type_user (id_type, id_user) VALUES(?, ?)`, [id_tipo, id_user.id])

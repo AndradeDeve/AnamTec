@@ -77,7 +77,7 @@ export default function StudentTable({ alunosFiltrados = [] }) {
                   {aluno.status}
                 </td>
                 <td className="p-3">
-                  <button className="btn-table btn-outline-primary btn-sm">ACESSAR</button>
+                  <a href="http://localhost:3001/" target='_blanck'><button className="btn-table btn-outline-primary btn-sm">ACESSAR</button></a>
                 </td>
                 <td className="p-3">
                   <button

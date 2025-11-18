@@ -1,50 +1,46 @@
-import express from "express";
+import express, { response } from "express";
 import pool from "../database/data-source.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  const connection = await pool.getConnection();
+router.post("/", async (req, res) => {;
   try {
     const dados = req.body;
     const info = dados.informacoesPrincipais;
     const saude = dados.saude;
     const comportamento = dados.comportamento;
     const infoResponsaveis = dados.infoResponsaveis;
-
-    await connection.beginTransaction();
-
-    console.log("📘 Verificando curso...");
-    const [cursoExistente] = await connection.execute(
+    console.log("Dados: ", dados);
+    console.log("inf:", info);
+    console.log("saude: ", saude);
+    console.log("Comportamento: ", comportamento);
+    console.log("InfoResp", infoResponsaveis);
+    const [cursoExistente] = await pool.query(
       `SELECT id FROM tbl_curso WHERE curso = ? AND turno = ? LIMIT 1`,
       [info.curso, info.turno]
     );
-
     let id_curso;
-    if (cursoExistente.length > 0) {
-      id_curso = cursoExistente[0].id;
-      console.log(`📗 Curso já existe: ${info.curso} (id: ${id_curso})`);
-    } else {
-      const [cursoResult] = await connection.execute(
-        `INSERT INTO tbl_curso (curso, turno, semestre, modalidade)
-         VALUES (?, ?, ?, ?)`,
-        [info.curso, info.turno, info.modulo || 1, info.modalidade || "presencial"]
-      );
-      id_curso = cursoResult.insertId;
-      console.log(`✅ Novo curso salvo: ${info.curso} (id: ${id_curso})`);
+    if (cursoExistente.length < 0) {
+      return res.status(400).json({err: "Curso não existente."})
     }
-
-    console.log("🏠 Inserindo endereço...");
-    const [enderecoResult] = await connection.execute(
+    const [enderecoResult] = await pool.query(
       `INSERT INTO tbl_endereco (CEP, logradouro, bairro, cidade, numero, UF)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [info.cep, info.logradouro, info.bairro, info.cidade, info.numero, info.uf]
     );
+    const rmAlunoExist = await pool.query(
+      `SELECT rm FROM tbl_cadastro_al where rm = ? `,
+      [dados.rm]
+    );
+
+    if( rmAlunoExist.length !== 0){
+      return res.status(400).json({err: "O Rm já está sendo utilizado."})
+    }
     const id_endereco = enderecoResult.insertId;
     console.log(`✅ Endereço salvo (id: ${id_endereco})`);
 
     console.log("👤 Salvando aluno...");
-    const [alunoResult] = await connection.execute(
+    const [alunoResult] = await pool.query(
       `INSERT INTO tbl_cadastro_al (rm, nome, data_nasc, genero, email, telefone, id_endereco)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -61,7 +57,7 @@ router.post("/", async (req, res) => {
     console.log(`✅ Aluno salvo (id: ${id_aluno})`);
 
     console.log("🔗 Relacionando aluno ao curso...");
-    await connection.execute(
+    await pool.query(
       `INSERT INTO juncao_al_curso (id_aluno, id_curso) VALUES (?, ?)`,
       [id_aluno, id_curso]
     );
@@ -74,9 +70,9 @@ router.post("/", async (req, res) => {
           // Se CPF estiver vazio, gera um valor temporário único
           const cpfSeguro = responsavel.CPF && responsavel.CPF.trim() !== ""
             ? responsavel.CPF
-            : `sem-cpf1-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+            : `sem-cpf5180-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-          const [responsavelResult] = await connection.execute(
+          const [responsavelResult] = await pool.query(
             `INSERT INTO tbl_responsavel (nome, CPF, telefone, estado_civil, email) 
              VALUES (?, ?, ?, ?, ?)`,
             [
@@ -88,7 +84,7 @@ router.post("/", async (req, res) => {
             ]
           );
           const idResponsavel = responsavelResult.insertId;
-          await connection.execute(
+          await pool.query(
             `INSERT INTO juncao_al_responsaveis (id_aluno, id_responsaveis) VALUES (?, ?)`,
             [id_aluno, idResponsavel]
           );
@@ -100,7 +96,7 @@ router.post("/", async (req, res) => {
     }
 
     console.log("💉 Inserindo dados de saúde...");
-    const [alergiaResult] = await connection.execute(
+    const [alergiaResult] = await pool.query(
       `INSERT INTO tbl_alergias (alergias, tp_alergia) VALUES (?, ?)`,
       [saude.possuiAlergia || "não", saude.quaisAlergias || null]
     );
@@ -113,42 +109,42 @@ router.post("/", async (req, res) => {
       console.log(`📄 Laudo recebido e armazenado em: ${laudoUrl}`);
     }
 
-    const [diagResult] = await connection.execute(
+    const [diagResult] = await pool.query(
       `INSERT INTO tbl_diagnostico (diagnostico, tp_diag) VALUES (?, ?)`,
       [saude.possuiLaudo || "não", laudoUrl]
     );
     const id_diagnostico = diagResult.insertId;
     console.log(`✅ Diagnóstico salvo (id: ${id_diagnostico})`);
 
-    const [defiResult] = await connection.execute(
+    const [defiResult] = await pool.query(
       `INSERT INTO tbl_deficiencias (deficiencia, tp_defi) VALUES (?, ?)`,
       ["não", ""]
     );
     const id_deficiencias = defiResult.insertId;
     console.log(`✅ Deficiências salvas (id: ${id_deficiencias})`);
 
-    const [restriResult] = await connection.execute(
+    const [restriResult] = await pool.query(
       `INSERT INTO tbl_restricoes (restri_alimentar, tp_restricao) VALUES (?, ?)`,
       [saude.restricaoAlimentar || "não", saude.quaisRestricoes || null]
     );
     const id_restricoes = restriResult.insertId;
     console.log(`✅ Restrições salvas (id: ${id_restricoes})`);
 
-    const [medResult] = await connection.execute(
+    const [medResult] = await pool.query(
       `INSERT INTO tbl_medicamentos (medicamento, tp_medi) VALUES (?, ?)`,
       [saude.medicamentos || "não", saude.quaisMedicamentos || null]
     );
     const id_medicamentos = medResult.insertId;
     console.log(`✅ Medicamentos salvos (id: ${id_medicamentos})`);
 
-    const [cirurgiaResult] = await connection.execute(
+    const [cirurgiaResult] = await pool.query(
       `INSERT INTO tbl_cirurgias (internacao_cirurgia, tp_cirurgia) VALUES (?, ?)`,
       [saude.cirurgia || "não", saude.quaisCirurgias || null]
     );
     const id_cirurgias = cirurgiaResult.insertId;
     console.log(`✅ Cirurgias salvas (id: ${id_cirurgias})`);
 
-    const [difResult] = await connection.execute(
+    const [difResult] = await pool.query(
       `INSERT INTO tbl_dificuldades_educacionais (dificuldades, tp_dificuldades) VALUES (?, ?)`,
       [
         comportamento.dificuldadesAprendizagem === "sim" ? "sim" : "não",
@@ -159,7 +155,7 @@ router.post("/", async (req, res) => {
     console.log(`✅ Dificuldades educacionais salvas (id: ${id_dificuldades})`);
 
     console.log("💊 Inserindo dados médicos...");
-    await connection.execute(
+    await pool.query(
       `INSERT INTO tbl_dadosMedicos (
         sexo, tp_sangue, peso, altura, gravidez, idade, alcool, fumo, drogas, 
         obs, laudo, id_alergias, id_diagnostico, id_deficiencias, id_restricoes, 
@@ -190,15 +186,11 @@ router.post("/", async (req, res) => {
     );
     console.log("🎉 Dados médicos e de saúde salvos com sucesso!");
 
-    await connection.commit();
     console.log("✅ Formulário completo salvo com sucesso!");
     res.status(201).json({ message: "Formulário completo salvo com sucesso!" });
-  } catch (error) {
-    await connection.rollback();
-    console.error("❌ Erro ao salvar formulário:", error);
-    res.status(500).json({ error: "Erro ao salvar formulário", details: error.message });
-  } finally {
-    connection.release();
+  } catch (err) {
+    console.error("❌ Erro ao salvar formulário:", err);
+    res.status(500).json({ error: "Erro ao salvar formulário", details: err.message });
   }
 });
 

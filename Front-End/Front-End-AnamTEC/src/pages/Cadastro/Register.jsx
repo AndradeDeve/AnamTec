@@ -61,9 +61,10 @@ export default function Cadastro() {
   ];
 
   const precisaCursoEDisciplina = (cargo) =>
-    cargo === "Coordenador de Curso" || 
     cargo === "Professor";
 
+  const precisaCurso = (cargo) =>
+    cargo === "Coordenador de Curso"
   useEffect(() => {
     if (!precisaCursoEDisciplina(formData.cargo) && (formData.curso !== "" || formData.disciplina)){
       setFormData((prev) => ({ 
@@ -72,6 +73,7 @@ export default function Cadastro() {
         disciplina:"" 
       }));
     }
+    
   }, [formData.cargo]);
   
   const mascaraCPF = (value) => {
@@ -188,7 +190,7 @@ export default function Cadastro() {
         </div>
 
         {/* Se cargo for Coordenador ou Professor mostra o select de curso */}
-        {precisaCursoEDisciplina(formData.cargo) && (
+        {precisaCursoEDisciplina(formData.cargo) || precisaCurso(formData.cargo) && (
           <div className="field">
             <label htmlFor="curso">Curso:</label>
             <select

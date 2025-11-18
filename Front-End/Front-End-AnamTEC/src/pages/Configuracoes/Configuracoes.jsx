@@ -280,15 +280,6 @@ export default function Configuracoes() {
                                     <option value="escuro">Escuro</option>
                                 </select>
 
-                                <label className="checkbox-label">
-                                    <input 
-                                        type="checkbox" 
-                                        name="notificacoes" 
-                                        checked={formData.notificacoes} 
-                                        onChange={handleChange} 
-                                    />
-                                    Receber notificações por e-mail
-                                </label>
                             </>
                         )}
                         {/* === Aba Segurança === */}
