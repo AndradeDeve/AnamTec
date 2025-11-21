@@ -1,270 +1,138 @@
-import React, { useContext, useState } from "react";
-import { Container, Card, Button, Spinner, Form } from "react-bootstrap";
+import React, { useState, useContext } from "react";
+import { Container, Card, Button, Toast, ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FormContext } from "../Context/FormContext";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
 import ProgressBar from "../Components/ProgressBar/ProgressBar";
-import { postFormularioAnamnese } from "../service/ApiService";
 import "../Styles/FormRevisao.css";
 
 function FormRevisao() {
-  const navigate = useNavigate();
-  const { dadosFormulario } = useContext(FormContext);
+  const navigate = useNavigate();
+  const { dadosFormulario } = useContext(FormContext);
 
-  const [loading, setLoading] = useState(false);
-  const [erro, setErro] = useState("");
-  const [sucesso, setSucesso] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
-  const informacoes = dadosFormulario?.informacoesPrincipais || {};
-  const responsaveis = dadosFormulario?.responsaveis || []; 
-console.log(responsaveis)
-  const saude = dadosFormulario?.saude || {};
-  const comportamento = dadosFormulario?.comportamento || {};
+  const confirmarFormulario = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/api/form", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dadosFormulario),
+      });
 
-  const safe = (v) => (v ? v : "-");
+      if (!response.ok) {
+        throw new Error("Erro ao enviar dados");
+      }
 
-  const confirmarFormulario = async () => {
-    setErro("");
-    setSucesso("");
-    setLoading(true);
-    try {
-      const result = await postFormularioAnamnese(dadosFormulario);
-      console.log("✅ Dados enviados:", result);
-      setSucesso("Formulário enviado com sucesso!");
-      setTimeout(() => navigate("/sucesso"), 1500);
-    } catch (error) {
-      console.error("❌ Erro ao enviar:", error);
-      setErro("Erro ao enviar formulário. Verifique a conexão.");
-    } finally {
-      setLoading(false);
-    }
-  };
+      const result = await response.json();
+      console.log("Dados enviados com sucesso", result);
 
-  const handleVoltar = () => navigate("/FormComportEmocio");
+      navigate("/sucesso");
+    } catch (error) {
+      console.error("Erro ao enviar dados:", error);
+      setToastMessage("Não foi possível enviar os dados. Tente novamente.");
+      setShowToast(true);
+    }
+  };
 
-  return (
-    <>
-      <Header />
-      <Container className="mt-4">
-        <ProgressBar
-          etapas={[
-            "Informações principais",
-            "Dados do Responsável",
-            "Histórico de Saúde",
-            "Aspectos Comportamentais e Emocionais",
-            "Revisão",
-          ]}
-          etapaAtual={4}
-        />
+  const handleVoltar = () => navigate("/FormComportEmocio");
 
-        <div className="form-box form-revisao-body">
-          <h3 className="text-center mb-4">Revisão dos Dados</h3>
+  return (
+    <>
+      <Header />
 
-          {erro && <p className="text-danger text-center">{erro}</p>}
-          {sucesso && <p className="text-success text-center">{sucesso}</p>}
+      <ToastContainer position="top-end" className="p-3">
+        <Toast
+          onClose={() => setShowToast(false)}
+          show={showToast}
+          delay={3000}
+          autohide
+          bg="warning"
+        >
+          <Toast.Body>{toastMessage}</Toast.Body>
+        </Toast>
+      </ToastContainer>
 
-          {/* --- INFORMAÇÕES PRINCIPAIS --- */}
-          <Card className="mb-3">
-            <Card.Header>Informações Principais</Card.Header>
-            <Card.Body>
-              <Form.Group>
-                <Form.Label>Nome</Form.Label>
-                <Form.Control type="text" value={safe(informacoes.nome)} readOnly />
-              </Form.Group>
+      <Container className="mt-4">
+        <ProgressBar
+          etapas={[
+            "Informações principais",
+            "Dados do Responsável",
+            "Histórico de Saúde",
+            "Aspectos Comportamentais e Emocionais",
+            "Revisão",
+          ]}
+          etapaAtual={4}
+        />
 
-              <Form.Group className="mt-2">
-                <Form.Label>Data de Nascimento</Form.Label>
-                <Form.Control type="text" value={safe(informacoes.dataNascimento)} readOnly />
-              </Form.Group>
+        <div className="form-box form-revisao-body">
 
-              <Form.Group className="mt-2">
-                <Form.Label>RM</Form.Label>
-                <Form.Control type="text" value={safe(informacoes.rm)} readOnly />
-              </Form.Group>
+          <h3 className="font-semibold mb-4 text-center">Revisão dos Dados</h3>
 
-              <Form.Group className="mt-2">
-                <Form.Label>Curso</Form.Label>
-                <Form.Control type="text" value={safe(informacoes.curso)} readOnly />
-              </Form.Group>
+          {/* Informações Principais */}
+          <Card className="p-3 mb-3 shadow-sm">
+            <h5>Informações Principais</h5>
+            <p><strong>Nome:</strong> {dadosFormulario.informacoesPrincipais?.nome}</p>
+            <p><strong>RM:</strong> {dadosFormulario.informacoesPrincipais?.rm}</p>
+            <p><strong>Curso:</strong> {dadosFormulario.informacoesPrincipais?.curso}</p>
+            <p><strong>Data de Nascimento:</strong> {dadosFormulario.informacoesPrincipais?.dataNascimento}</p>
+            <p><strong>Turno:</strong> {dadosFormulario.informacoesPrincipais?.turno}</p>
+            <p><strong>Módulo:</strong> {dadosFormulario.informacoesPrincipais?.modulo}</p>
+            <p><strong>Gênero:</strong> {dadosFormulario.informacoesPrincipais?.genero}</p>
+            <p><strong>Email:</strong> {dadosFormulario.informacoesPrincipais?.email}</p>
+            <p><strong>Endereço:</strong> {`${dadosFormulario.informacoesPrincipais?.logradouro}, ${dadosFormulario.informacoesPrincipais?.numero}, ${dadosFormulario.informacoesPrincipais?.complemento}, ${dadosFormulario.informacoesPrincipais?.bairro}, ${dadosFormulario.informacoesPrincipais?.cidade} - ${dadosFormulario.informacoesPrincipais?.uf}, CEP: ${dadosFormulario.informacoesPrincipais?.cep}`}</p>
+          </Card>
 
-              <Form.Group className="mt-2">
-                <Form.Label>Módulo</Form.Label>
-                <Form.Control type="text" value={safe(informacoes.modulo)} readOnly />
-              </Form.Group>
+          {/* Responsável */}
+          <Card className="p-3 mb-3 shadow-sm">
+            <h5>Responsável</h5>
+            <p><strong>Nome:</strong> {dadosFormulario.responsavel?.[0]?.nome}</p>
+            <p><strong>CPF:</strong> {dadosFormulario.responsavel?.[0]?.cpf}</p>
+            <p><strong>Telefone:</strong> {dadosFormulario.responsavel?.[0]?.telefone}</p>
+            <p><strong>Email:</strong> {dadosFormulario.responsavel?.[0]?.email}</p>
+            <p><strong>Parentesco:</strong> {dadosFormulario.responsavel?.[0]?.parentesco}</p>
+          </Card>
 
-              <Form.Group className="mt-2">
-                <Form.Label>Turno</Form.Label>
-                <Form.Control type="text" value={safe(informacoes.turno)} readOnly />
-              </Form.Group>
+          {/* Saúde */}
+          <Card className="p-3 mb-3">
+            <h5>Histórico de Saúde</h5>
+            <p><strong>Tipo sanguíneo:</strong> {dadosFormulario.saude?.tipoSanguineo}</p>
+            <p><strong>Fumante:</strong> {dadosFormulario.saude?.fumante}</p>
+            <p><strong>Alergia:</strong> {dadosFormulario.saude?.possuiAlergia}</p>
+            <p><strong>Medicamentos:</strong> {dadosFormulario.saude?.medicamentos}</p>
+            <p><strong>Cirurgia:</strong> {dadosFormulario.saude?.cirurgia}</p>
+            <p><strong>Restrição Alimentar:</strong> {dadosFormulario.saude?.restricaoAlimentar}</p>
+          </Card>
 
-              <Form.Group className="mt-2">
-                <Form.Label>Email</Form.Label>
-                <Form.Control type="text" value={safe(informacoes.email)} readOnly />
-              </Form.Group>
-                
-             {/*CAMPO DE TELEFONE ADICIONADO AQUI */}
-              <Form.Group className="mt-2">
-                <Form.Label>Telefone</Form.Label>
-                <Form.Control type="text" value={safe(informacoes.telefone)} readOnly />
-              </Form.Group>
+          {/* Comportamento */}
+          <Card className="p-3 mb-3">
+            <h5>Comportamento e Emocional</h5>
+            <p><strong>Dificuldade de aprendizagem:</strong> {dadosFormulario.comportamento?.dificulAprendizagem}</p>
+            <p><strong>Quais dificuldades:</strong> {dadosFormulario.comportamento?.quaisAprendizagens}</p>
+            <p><strong>Acompanhamento psicológico/psiquiátrico:</strong> {dadosFormulario.comportamento?.acompPsi}</p>
+            <p><strong>Qual acompanhamento:</strong> {dadosFormulario.comportamento?.qualAcompPsi}</p>
+            <p><strong>Possui acesso à internet/dispositivos:</strong> {dadosFormulario.comportamento?.acesInternet}</p>
+            <p><strong>Quais acessos:</strong> {dadosFormulario.comportamento?.quaisAcessos}</p>
+            <p><strong>Pratica atividades físicas:</strong> {dadosFormulario.comportamento?.pratAtiv}</p>
+            <p><strong>Quais atividades e frequência:</strong> {dadosFormulario.comportamento?.quaisAtividades}</p>
+          </Card>
 
-              <Form.Group className="mt-2">
-                <Form.Label>CEP</Form.Label>
-                <Form.Control type="text" value={safe(informacoes.cep)} readOnly />
-              </Form.Group>
-
-              <Form.Group className="mt-2">
-                <Form.Label>Endereço</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={`${safe(informacoes.logradouro)}, ${safe(informacoes.numero)} - ${safe(informacoes.bairro)} - ${safe(informacoes.cidade)}/${safe(informacoes.uf)}`}
-                  readOnly
-                />
-              </Form.Group>
-            </Card.Body>
-          </Card>
-
-          {/* --- RESPONSÁVEIS --- */}
-          <Card className="mb-3">
-            <Card.Header>Responsáveis</Card.Header>
-            <Card.Body>
-              {responsaveis.length === 0 || (responsaveis.length === 1 && !responsaveis[0].nome) ? (
-                <p>Nenhum responsável adicionado.</p>
-              ) : (
-                responsaveis.map((resp, index) => (
-                  <div key={index} className="mb-3 border-bottom pb-3">
-                    <h6>Responsável {index + 1}</h6>
-                    <Form.Group>
-                      <Form.Label>Nome</Form.Label>
-                      <Form.Control type="text" value={safe(resp.nome)} readOnly />
-                    </Form.Group>
-                    <Form.Group className="mt-2">
-                      <Form.Label>Parentesco</Form.Label>
-                      <Form.Control type="text" value={safe(resp.parentesco)} readOnly />
-                    </Form.Group>
-                    <Form.Group className="mt-2">
-                      <Form.Label>Telefone</Form.Label>
-                      <Form.Control type="text" value={safe(resp.telefone)} readOnly />
-                    </Form.Group>
-                    {}
-                    <Form.Group className="mt-2">
-                      <Form.Label>Estado Civil</Form.Label>
-                      <Form.Control type="text" value={safe(resp.estadoCivil)} readOnly />
-                    </Form.Group>
-                    <Form.Group className="mt-2">
-                      <Form.Label>E-mail</Form.Label>
-                      <Form.Control type="text" value={safe(resp.email)} readOnly />
-                    </Form.Group>
-                  </div>
-                ))
-              )}
-            </Card.Body>
-          </Card>
-
-          {/* --- HISTÓRICO DE SAÚDE --- */}
-          <Card className="mb-3">
-            <Card.Header>Histórico de Saúde</Card.Header>
-            <Card.Body>
-              <Form.Group>
-                <Form.Label>Tipo Sanguíneo</Form.Label>
-                <Form.Control type="text" value={safe(saude.tipoSanguineo)} readOnly />
-              </Form.Group>
-
-              <Form.Group className="mt-2">
-                <Form.Label>Peso</Form.Label>
-                <Form.Control type="text" value={safe(saude.peso)} readOnly />
-              </Form.Group>
-
-              <Form.Group className="mt-2">
-                <Form.Label>Altura</Form.Label>
-                <Form.Control type="text" value={safe(saude.altura)} readOnly />
-              </Form.Group>
-
-              <Form.Group className="mt-2">
-                <Form.Label>Histórico Familiar</Form.Label>
-                <Form.Control as="textarea" rows={2} value={safe(saude.historicoFamiliar)} readOnly />
-              </Form.Group>
-
-              <Form.Group className="mt-2">
-                <Form.Label>Alergias</Form.Label>
-                <Form.Control as="textarea" rows={2} value={safe(saude.quaisAlergias)} readOnly />
-              </Form.Group>
-
-              <Form.Group className="mt-2">
-                <Form.Label>Medicamentos de Uso Contínuo</Form.Label>
-                <Form.Control as="textarea" rows={2} value={safe(saude.quaisMedicamentos)} readOnly />
-              </Form.Group>
-
-              <Form.Group className="mt-2">
-                <Form.Label>Restrições Alimentares</Form.Label>
-                <Form.Control as="textarea" rows={2} value={safe(saude.quaisRestricoes)} readOnly />
-              </Form.Group>
-
-              <Form.Group className="mt-2">
-                <Form.Label>Cirurgias Realizadas</Form.Label>
-                <Form.Control as="textarea" rows={2} value={safe(saude.quaisCirurgias)} readOnly />
-              </Form.Group>
-            </Card.Body>
-          </Card>
-
-          {/* --- COMPORTAMENTO --- */}
-          <Card className="mb-3">
-            <Card.Header>Comportamento e Aspectos Emocionais</Card.Header>
-            <Card.Body>
-              <Form.Group>
-                <Form.Label>Dificuldades de Aprendizagem</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={2}
-                  value={safe(comportamento.dificuldadesAprendizagem)}
-                  readOnly
-                />
-              </Form.Group>
-
-              <Form.Group className="mt-3">
-                <Form.Label>Comportamento do Aluno</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={2}
-                  value={safe(comportamento.comportamento)}
-                  readOnly
-                />
-              </Form.Group>
-
-              <Form.Group className="mt-3">
-                <Form.Label>Aspectos Emocionais</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={2}
-                  value={safe(comportamento.emocionais)}
-                  readOnly
-                />
-              </Form.Group>
-            </Card.Body>
-          </Card>
-
-          {/* --- BOTÕES --- */}
-          <div className="d-flex justify-content-between mt-3 mb-5">
-            <NavButtons onVoltar={handleVoltar} mostrarProximo={false} />
-            <Button
-              className="custom-btn mt-3"
-              onClick={confirmarFormulario}
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Enviando...
-                </>
-              ) : (
-                "Enviar Formulário"
-              )}
-            </Button>
-          </div>
-        </div>
-      </Container>
-    </>
-  );
+          <div className="d-flex justify-content-between mt-3 mb-5">
+            <NavButtons onVoltar={handleVoltar} mostrarProximo={false} />
+            <Button
+              type="button"
+              className="custom-btn mt-3"
+              onClick={confirmarFormulario}
+            >
+              Enviar
+            </Button>
+          </div>
+        </div>
+      </Container>
+    </>
+  );
 }
 
 export default FormRevisao;

@@ -91,7 +91,7 @@ export async function getFunctionUserSpecific(specific, value) {
 export async function postFunctionUser(dados) {
   const response = await axios.post(`${apiUrl}/user`, dados , { 
     headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
-  return response;
+  return response.data;
 }
 
 export async function deleteFunctionUser(id) {

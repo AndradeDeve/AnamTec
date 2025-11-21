@@ -145,15 +145,17 @@ export default function Cadastro() {
 
     try {
       const data = await postFunctionUser(formData); 
-  
-      // console.log("Resposta do servidor:", result);
+      
       if(data.status === 201) {
         showToast("success", 'Cadastro efetuado com sucesso')
+      }
+      if(data.status === 400){
+        showToast("error", data.data.err || 'Erro ao cadastrar');
       }
   
     } catch (error) {
       console.log("Erro ao cadastrar:", error);
-      showToast("error", "Erro ao efetuar cadastro. Tente novamente.");
+      showToast("error", "Erro no servidor.");
     }
   }
 

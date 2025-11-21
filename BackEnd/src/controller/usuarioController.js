@@ -138,6 +138,8 @@ routes.post("/", async (request, response) => {
             disciplina = null;
         }
 
+
+
         const rmRegex = /^\d{7,15}$/;
         if(!rm || !rmRegex.test(rm.toLowerCase().trim())){
             return response.status(400).json({err: "Rm inválido"})
@@ -182,6 +184,14 @@ routes.post("/", async (request, response) => {
         if(!email || !emailRegex.test(email.trim())){
             return response.status(400).json({erro: "E-mail inválido"});
         }
+        const emailExiste = await pool.query(
+            `SELECT * FROM tbl_usuario WHERE email = ? AND deletedAt IS NULL`, 
+            [email]
+        );
+
+        if(emailExiste[0].length > 0){
+            return response.status(400).json({err: "E-mail já cadastrado."});
+        }
 
         if(!senha || senha.length < 6){
             return response.status(400).json({err: "A senha deve conter no minimo 6 caracteres."});
@@ -211,7 +221,7 @@ routes.post("/", async (request, response) => {
                 if(id_coord[0].length === 0){
                     return response.status(400).json({err: "Curso inválido para coordenador."});
                 }
-                await pool.query(`update tbl_curso set id_coordenador = (select id from tbl_usuario where RM = ?) where deletedAt is null and curso = ?`, [rm, curso]);
+                await pool.query(`update tbl_curso set id_coordenador = (select id from tbl_usuario where email = ?) where deletedAt is null and curso = ?`, [email, curso]);
             }
 
         await pool.query(`INSERT INTO juncao_type_user (id_type, id_user) VALUES(?, ?)`, [id_tipo, id_user.id])
