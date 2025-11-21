@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Form, Toast, ToastContainer } from "react-bootstrap";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {FormContext} from "../Context/FormContext";
 import { useContext } from "react";
 import Header from "../Components/Header/Header";
@@ -16,7 +19,6 @@ function FormInform() {
 
   const [erros, setErros] = useState({});
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
 
   const camposObrigatorios = [
     "nome",
@@ -109,8 +111,7 @@ function FormInform() {
 
   const handleProximo = () => {
     if (!validarFomulario()) {
-      setToastMessage("⚠️ Preencha todos os campos obrigatorios corretamente!");
-      setShowToast(true);
+      toast.error("⚠️ Preencha todos os campos obrigatorios corretamente!");
       return;
     }
 
@@ -127,7 +128,7 @@ function FormInform() {
     <Container className="mt-3">
       <ProgressBar 
       etapas={[
-        "Informações principais",
+        "Informações Principais",
         "Dados do Responsável",
         "Histórico de Saúde",
         "Aspectos Comportamentais e Emocionais",
@@ -142,20 +143,7 @@ function FormInform() {
         handleProximo();
         }}
       >
-
-      <ToastContainer className="p-3" position="top-center">
-        <Toast 
-          onClose={() => setShowToast(false)} 
-          show={showToast} 
-          delay={4000} 
-          autohide 
-          bg="danger"
-        >
         
-        <Toast.Body className="text-white">{toastMessage}</Toast.Body>
-          </Toast>
-        </ToastContainer>
-
         <h5 className="mb-3">Dados Pessoais</h5>
 
           <Row className="mb-3">

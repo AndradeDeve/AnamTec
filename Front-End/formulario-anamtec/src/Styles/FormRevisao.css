@@ -6,7 +6,7 @@
 }
 
 .form-revisao-body {
-    padding: 30px;
+    padding: 15px;
     border-radius: 10px;
     margin-top: 30px; 
     margin-bottom: 30px; /* espaço extra abaixo dos botões */
@@ -35,5 +35,5 @@
 .form-box h5 {
     color: var(--cor-destaque);
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }

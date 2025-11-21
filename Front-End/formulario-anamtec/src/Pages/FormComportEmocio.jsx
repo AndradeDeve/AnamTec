@@ -1,5 +1,7 @@
 import React, { useContext, useState } from "react";
-import { Container, Row, Col, Form, Toast, ToastContainer } from "react-bootstrap";
+import { Container, Row, Col, Form, } from "react-bootstrap";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
@@ -42,6 +44,13 @@ function FormComportEmocio() {
       }
     });
 
+    const camposObrigatorios = [
+    "dificulAprendizagem",
+    "acomPsi",
+    "acesInternet", 
+    "pratAtiv",
+  ];
+
     // Campos "detalhes" obrigatórios se marcado "sim"
     if (comportamento.dificulAprendizagem === "sim" && !comportamento.quaisAprendizagens.trim()) {
       valid = false;
@@ -69,8 +78,7 @@ function FormComportEmocio() {
 
   const handleProximo = () => {
     if (!validarFormulario()) {
-      setToastMessage("⚠️ Preencha todos os campos obrigatórios corretamente!");
-      setShowToast(true);
+      toast.error("⚠️ Preencha todos os campos obrigatórios corretamente!");
       return;
     }
 
@@ -83,22 +91,10 @@ function FormComportEmocio() {
     <>
       <Header />
 
-      <ToastContainer position="top-end" className="p-3">
-        <Toast
-          onClose={() => setShowToast(false)}
-          show={showToast}
-          delay={3500}
-          autohide
-          bg="warning"
-        >
-          <Toast.Body>{toastMessage}</Toast.Body>
-        </Toast>
-      </ToastContainer>
-
       <Container className="mt-4">
         <ProgressBar
           etapas={[
-            "Informações principais",
+            "Informações Principais",
             "Dados do Responsável",
             "Histórico de Saúde",
             "Aspectos Comportamentais e Emocionais",
@@ -113,10 +109,16 @@ function FormComportEmocio() {
           <Row className="mb-3">
             <Col xs={12} md={5}>
               <SelectYesNo
-                label="Apresenta dificuldades de aprendizagem?"
+                label ={
+                  <>
+                  Apresenta dificuldades de aprendizagem?{""}
+                  <span style={{ color: "red"}}>*</span>
+                  </>
+                }
                 value={dadosFormulario.comportamento.dificulAprendizagem || ""}
                 onChange={(e) => handleChange("dificulAprendizagem", e.target.value)}
                 controlId="dificulAprendizagem"
+                error={erros.dificulAprendizagem}
               />
             </Col>
             <Col xs={12} md={7}>
@@ -141,10 +143,16 @@ function FormComportEmocio() {
           <Row className="mb-3">
             <Col xs={12} md={5}>
               <SelectYesNo
-                label="Faz acompanhamento psicológico ou psiquiátrico?"
+                label={
+                <>
+                Faz acompanhamento psicológico ou psiquiátrico?
+                <span style={{ color: "red"}}>*</span>
+                </>
+                }
                 value={dadosFormulario.comportamento.acompPsi || ""}
                 onChange={(e) => handleChange("acompPsi", e.target.value)}
                 controlId="acompPsi"
+                error={erros.acompPsi}
               />
             </Col>
             <Col xs={12} md={7}>
@@ -168,10 +176,16 @@ function FormComportEmocio() {
           <Row className="mb-3">
             <Col xs={12} md={5}>
               <SelectYesNo
-                label="Tem acesso à internet e dispositivos para estudo?"
+                label={
+                <>
+                Tem acesso à internet e dispositivos para estudo?
+                <span style={{ color: "red"}}>*</span>
+                </>
+                }
                 value={dadosFormulario.comportamento.acesInternet || ""}
                 onChange={(e) => handleChange("acesInternet", e.target.value)}
                 controlId="acesInternet"
+                error={erros.acesInternet}
               />
             </Col>
             <Col xs={12} md={7}>
@@ -194,10 +208,16 @@ function FormComportEmocio() {
           <Row className="mb-3">
             <Col xs={12} md={5}>
               <SelectYesNo
-                label="Pratica atividades físicas regularmente?"
+                label={
+                <>
+                Pratica atividades físicas regularmente?
+                <span style={{ color: "red"}}>*</span>
+                </>
+                }
                 value={dadosFormulario.comportamento.pratAtiv || ""}
                 onChange={(e) => handleChange("pratAtiv", e.target.value)}
                 controlId="pratAtiv"
+                error={erros.pratAtiv}
               />
             </Col>
             <Col xs={12} md={7}>

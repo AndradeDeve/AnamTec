@@ -19,7 +19,11 @@ function ProgressBar({ etapas, etapaAtual }) {
                 <span 
                 className={`etapa-label 
                 ${isActive ? "active" : ""}
-                ${isCompleted ? "completed" : ""}`}>
+                ${isCompleted ? "completed" : ""}`
+            }
+            title={etapa}
+                
+        >
                     {etapa}
                 </span>
             </div>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { FormProvider } from "./Context/FormContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Home from "./Pages/Home";
 import FormInform from "./Pages/FormInform";
 import FormResp from "./Pages/FormResp";
@@ -14,7 +16,7 @@ function App() {
     <FormProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/Home" element={<Home />} />
           <Route path="/FormInform" element={<FormInform />} />
           <Route path="/FormResp" element={<FormResp />} />
           <Route path="/FormSaude" element={<FormSaude />} />
@@ -22,6 +24,13 @@ function App() {
           <Route path="/FormRevisao" element={<FormRevisao/>} />
         </Routes>
       </Router>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        pauseOnHover
+        theme="light"
+      />
     </FormProvider>
   );
 }

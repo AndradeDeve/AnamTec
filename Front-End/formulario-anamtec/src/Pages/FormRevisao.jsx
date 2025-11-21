@@ -1,5 +1,8 @@
 import React, { useState, useContext } from "react";
-import { Container, Card, Button, Toast, ToastContainer } from "react-bootstrap";
+import { Container, Card, Button } from "react-bootstrap";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { FormContext } from "../Context/FormContext";
 import Header from "../Components/Header/Header";
@@ -43,22 +46,10 @@ function FormRevisao() {
     <>
       <Header />
 
-      <ToastContainer position="top-end" className="p-3">
-        <Toast
-          onClose={() => setShowToast(false)}
-          show={showToast}
-          delay={3000}
-          autohide
-          bg="warning"
-        >
-          <Toast.Body>{toastMessage}</Toast.Body>
-        </Toast>
-      </ToastContainer>
-
       <Container className="mt-4">
         <ProgressBar
           etapas={[
-            "Informações principais",
+            "Informações Principais",
             "Dados do Responsável",
             "Histórico de Saúde",
             "Aspectos Comportamentais e Emocionais",

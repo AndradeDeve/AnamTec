@@ -1,5 +1,7 @@
 import React, {useContext, useState} from "react";
-import { Container, Row, Col, Form, Toast, ToastContainer } from "react-bootstrap";
+import { Container, Row, Col, Form } from "react-bootstrap";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import NavButtons from "../Components/NavButtons/NavButtons";
@@ -53,7 +55,7 @@ function FormResp() {
     "nome",
     "cpf",
     "email", 
-    "telefone"
+    "telefone",
   ];
 
 const validarFomulario = () => {
@@ -82,7 +84,7 @@ const validarFomulario = () => {
   };
 
   const handleVoltar = () => {
-    navigate("/FromInform");
+    navigate("/FormInform");
   }
 
   const handleProximo = () => {
@@ -101,7 +103,7 @@ const validarFomulario = () => {
       <Container className="mt-4">
         <ProgressBar 
           etapas={[
-            "Informações principais",
+            "Informações Principais",
             "Dados do Responsável",
             "Histórico de Saúde",
             "Aspectos Comportamentais e Emocionais",
@@ -119,8 +121,11 @@ const validarFomulario = () => {
                   <Col xs={12} md={7}>
                     <Form.Group>
                         <Form.Label>Nome do Responsável:<span style={{ color: "red"}}>*</span></Form.Label>
-                        <Form.Control type="text" placeholder="Digite o nome" value={resp.nome} onChange={(e) => handleChange(index, "nome", e.target.value)}
+                        <Form.Control type="text" placeholder="Digite o nome" value={resp.nome} isInvalid={!!erros[`${index}-nome`]} onChange={(e) => handleChange(index, "nome", e.target.value)}
                       />
+                      <Form.Control.Feedback type="invalid">
+                          {erros[`${index}-nome`]}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
 
@@ -147,18 +152,25 @@ const validarFomulario = () => {
                   <Col xs={12} md={7}>
                     <Form.Group>
                       <Form.Label>E-mail:<span style={{ color: "red"}}>*</span></Form.Label>
-                      <Form.Control type="email" placeholder="Digite o e-mail" value={resp.email} onChange={(e) =>
+                      <Form.Control type="email" placeholder="Digite o e-mail" value={resp.email} isInvalid={!!erros[`${index}-email`]} onChange={(e) =>
                         handleChange(index, "email", e.target.value)} 
                         />
+                      
+                      <Form.Control.Feedback type="invalid">
+                          {erros[`${index}-nome`]}
+                      </Form.Control.Feedback>
                     </Form.Group>
                  </Col>
 
                  <Col xs={12} md={5}>
                     <Form.Group>
                       <Form.Label>Telefone:<span style={{ color: "red"}}>*</span></Form.Label>
-                      <Form.Control type="text" value={resp.telefone} onChange={(e) =>
-                          handleChange(index, "telefone", e.target.value)} 
+                      <Form.Control type="text" value={resp.telefone} isInvalid={!!erros[`${index}-telefone`]} onChange={(e) =>
+                           handleChange(index, "telefone", e.target.value)} 
                       />
+                      <Form.Control.Feedback type="invalid">
+                          {erros[`${index}-telefone`]}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -186,7 +198,7 @@ const validarFomulario = () => {
                         <Form.Select
                           value={resp.estadoCivil} onChange={(e) =>
                           handleChange(index, "estadoCivil", e.target.value)}>
-                            <option value="">Selecio</option>
+                            <option value="">Selecione</option>
                             <option value="Solteiro(a)">Solteiro(a)</option>
                             <option value="Casado(a)">Casado(a)</option>
                             <option value="Divorciado(a)">Divorsiado(a)</option>
@@ -200,7 +212,7 @@ const validarFomulario = () => {
         
           <div className="btn-wrapper">
             <button type="button" onClick={handleAddResponsavel} className="custom-btn-resp">
-                + Adiconar Responsável
+                + Adicionar Responsável
             </button>
 
                 {responsavel.length > 1 && (
