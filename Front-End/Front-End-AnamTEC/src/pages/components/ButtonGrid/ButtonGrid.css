@@ -5,6 +5,15 @@
   flex-wrap: wrap; 
    margin-right: 1.7rem;
 }
+.button-row a {
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+}
+.button-row a:focus,
+.button-row a:active {
+  outline: none;
+}
 .custom-btn {
   background-color: var(--cor-destaque);
   color: var(--branco);
@@ -16,6 +25,10 @@
   transition: all 0.3s ease;
   flex: 1 1 120px; 
   max-width: 200px; 
+}
+.custom-btn:focus {
+  outline: none;
+  box-shadow: none;
 }
 .custom-btn:hover {
   background-color: var(--azulHover);

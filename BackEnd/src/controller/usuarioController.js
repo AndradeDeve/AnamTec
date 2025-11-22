@@ -197,6 +197,45 @@ routes.post("/", async (request, response) => {
             return response.status(400).json({err: "A senha deve conter no minimo 6 caracteres."});
         }
 
+        if (cargo.toLowerCase() === "coordenador de curso") {
+
+            // Verifica se o coordenador já coordena outro curso
+            const [jaCoordena] = await pool.query(
+                `SELECT curso 
+                FROM tbl_curso 
+                WHERE id_coordenador = (SELECT id FROM tbl_usuario WHERE email = ?) 
+                AND deletedAt IS NULL`,
+                [email]
+            );
+
+            if (jaCoordena.length > 0) {
+                return response.status(400).json({
+                    err: `Este usuário já é coordenador do curso: ${jaCoordena[0].curso}`
+                });
+            }
+
+            // Verifica se o curso NÃO possui coordenador ainda
+            const [cursoLivre] = await pool.query(
+                `SELECT * FROM tbl_curso 
+                WHERE curso = ? 
+                AND id_coordenador IS NULL`,
+                [curso]
+            );
+
+            if (cursoLivre.length === 0) {
+                return response.status(400).json({ 
+                    err: "Este curso já possui um coordenador." 
+                });
+            }
+
+            await pool.query(
+                `UPDATE tbl_curso 
+                SET id_coordenador = (SELECT id FROM tbl_usuario WHERE email = ?) 
+                WHERE curso = ?`,
+                [email, curso]
+            );
+        }
+
         const hashedSenha = await hash(senha, 10);
 
         await pool.query(`INSERT INTO tbl_usuario (RM, CPF, nome, email, senha, disciplina) VALUES(?, ?, ?, ?, ?, ?)`,
@@ -216,13 +255,46 @@ routes.post("/", async (request, response) => {
              );
         }
 
-        if(cargo.toLowerCase() === "coordenador de curso"){
-            const id_coord = await pool.query("select * from tbl_curso where curso = ? and id_coordenador is null", [curso]);
-                if(id_coord[0].length === 0){
-                    return response.status(400).json({err: "Curso inválido para coordenador."});
-                }
-                await pool.query(`update tbl_curso set id_coordenador = (select id from tbl_usuario where email = ?) where deletedAt is null and curso = ?`, [email, curso]);
+        if (cargo.toLowerCase() === "coordenador de curso") {
+
+            // Verifica se o coordenador já coordena outro curso
+            const [jaCoordena] = await pool.query(
+                `SELECT curso 
+                FROM tbl_curso 
+                WHERE id_coordenador = (SELECT id FROM tbl_usuario WHERE email = ?) 
+                AND deletedAt IS NULL`,
+                [email]
+            );
+
+            if (jaCoordena.length > 0) {
+                return response.status(400).json({
+                    err: `Este usuário já é coordenador do curso: ${jaCoordena[0].curso}`
+                });
             }
+
+            // Verifica se o curso NÃO possui coordenador ainda
+            const [cursoLivre] = await pool.query(
+                `SELECT * FROM tbl_curso 
+                WHERE curso = ? 
+                AND id_coordenador IS NULL`,
+                [curso]
+            );
+
+            if (cursoLivre.length === 0) {
+                return response.status(400).json({ 
+                    err: "Este curso já possui um coordenador." 
+                });
+            }
+
+            // Atualiza com segurança
+            await pool.query(
+                `UPDATE tbl_curso 
+                SET id_coordenador = (SELECT id FROM tbl_usuario WHERE email = ?) 
+                WHERE curso = ?`,
+                [email, curso]
+            );
+        }
+
 
         await pool.query(`INSERT INTO juncao_type_user (id_type, id_user) VALUES(?, ?)`, [id_tipo, id_user.id])
 
@@ -318,3 +390,5 @@ routes.put("/ativo/:ID", async (request, response) => {
 });
 
 export default routes;
+
+

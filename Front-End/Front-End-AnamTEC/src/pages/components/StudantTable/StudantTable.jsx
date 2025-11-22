@@ -77,7 +77,12 @@ export default function StudentTable({ alunosFiltrados = [] }) {
                   {aluno.status}
                 </td>
                 <td className="p-3">
-                  <a href="http://localhost:3001/" target='_blanck'><button className="btn-table btn-outline-primary btn-sm">ACESSAR</button></a>
+                  <button 
+                    className="btn-table btn-outline-primary btn-sm" 
+                    onClick={() => navigate('/Anamnese', {state: {aluno}})}
+                  >
+                    ACESSAR
+                  </button>
                 </td>
                 <td className="p-3">
                   <button

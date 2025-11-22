@@ -66,7 +66,8 @@ export default function Cadastro() {
   const precisaCurso = (cargo) =>
     cargo === "Coordenador de Curso"
   useEffect(() => {
-    if (!precisaCursoEDisciplina(formData.cargo) && (formData.curso !== "" || formData.disciplina)){
+    // Limpa curso/disciplina somente quando o cargo não precisar de nenhum dos dois
+    if (!(precisaCursoEDisciplina(formData.cargo) || precisaCurso(formData.cargo)) && (formData.curso !== "" || formData.disciplina)){
       setFormData((prev) => ({ 
         ...prev, 
         curso: "", 
@@ -145,7 +146,7 @@ export default function Cadastro() {
 
     try {
       const data = await postFunctionUser(formData); 
-      
+      console.log(data.status)
       if(data.status === 201) {
         showToast("success", 'Cadastro efetuado com sucesso')
       }
@@ -192,7 +193,7 @@ export default function Cadastro() {
         </div>
 
         {/* Se cargo for Coordenador ou Professor mostra o select de curso */}
-        {precisaCursoEDisciplina(formData.cargo) || precisaCurso(formData.cargo) && (
+        {(precisaCursoEDisciplina(formData.cargo) || precisaCurso(formData.cargo)) && (
           <div className="field">
             <label htmlFor="curso">Curso:</label>
             <select

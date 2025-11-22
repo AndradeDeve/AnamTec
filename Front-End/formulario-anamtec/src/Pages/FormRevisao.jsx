@@ -1,5 +1,9 @@
 import React, { useState, useContext } from "react";
-import { Container, Card, Button, Toast, ToastContainer } from "react-bootstrap";
+import { Container, Card, Button } from "react-bootstrap";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { postFormularioAnamnese } from "../service/ApiService.js"
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { FormContext } from "../Context/FormContext";
 import Header from "../Components/Header/Header";
@@ -10,30 +14,42 @@ import "../Styles/FormRevisao.css";
 function FormRevisao() {
   const navigate = useNavigate();
   const { dadosFormulario } = useContext(FormContext);
-
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
   const confirmarFormulario = async () => {
     try {
-      const response = await fetch("http://localhost:4000/api/form", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dadosFormulario),
-      });
+      // Monta payload usando a nova estrutura do contexto
+      const payload = {
+        alunoInformacoes: dadosFormulario.alunoInformacoes || {},
+        logradouroInformacoes: dadosFormulario.logradouroInformacoes || {},
+        cursoInformacoes: dadosFormulario.cursoInformacoes || {},
+        responsavel: dadosFormulario.responsavel || [],
+        saude: dadosFormulario.saude || {},
+        comportamento: dadosFormulario.comportamento || {},
+      };
 
-      if (!response.ok) {
-        throw new Error("Erro ao enviar dados");
+      const response = await postFormularioAnamnese(payload);
+
+      const backendMessage =
+        response?.data?.response ||
+        response?.data?.err ||
+        `Status: ${response?.status}`;
+
+      if (response && (response.status === 200 || response.status === 201)) {
+        toast.success(backendMessage);
+        navigate("/sucesso");
+        return;
       }
 
-      const result = await response.json();
-      console.log("Dados enviados com sucesso", result);
-
+      // qualquer outro status
+      toast.error(backendMessage);
       navigate("/sucesso");
     } catch (error) {
       console.error("Erro ao enviar dados:", error);
-      setToastMessage("Não foi possível enviar os dados. Tente novamente.");
-      setShowToast(true);
+      const errMsg = error?.response?.data?.err;
+
+      toast.error(errMsg);
     }
   };
 
@@ -43,22 +59,10 @@ function FormRevisao() {
     <>
       <Header />
 
-      <ToastContainer position="top-end" className="p-3">
-        <Toast
-          onClose={() => setShowToast(false)}
-          show={showToast}
-          delay={3000}
-          autohide
-          bg="warning"
-        >
-          <Toast.Body>{toastMessage}</Toast.Body>
-        </Toast>
-      </ToastContainer>
-
       <Container className="mt-4">
         <ProgressBar
           etapas={[
-            "Informações principais",
+            "Informações Principais",
             "Dados do Responsável",
             "Histórico de Saúde",
             "Aspectos Comportamentais e Emocionais",
@@ -74,15 +78,15 @@ function FormRevisao() {
           {/* Informações Principais */}
           <Card className="p-3 mb-3 shadow-sm">
             <h5>Informações Principais</h5>
-            <p><strong>Nome:</strong> {dadosFormulario.informacoesPrincipais?.nome}</p>
-            <p><strong>RM:</strong> {dadosFormulario.informacoesPrincipais?.rm}</p>
-            <p><strong>Curso:</strong> {dadosFormulario.informacoesPrincipais?.curso}</p>
-            <p><strong>Data de Nascimento:</strong> {dadosFormulario.informacoesPrincipais?.dataNascimento}</p>
-            <p><strong>Turno:</strong> {dadosFormulario.informacoesPrincipais?.turno}</p>
-            <p><strong>Módulo:</strong> {dadosFormulario.informacoesPrincipais?.modulo}</p>
-            <p><strong>Gênero:</strong> {dadosFormulario.informacoesPrincipais?.genero}</p>
-            <p><strong>Email:</strong> {dadosFormulario.informacoesPrincipais?.email}</p>
-            <p><strong>Endereço:</strong> {`${dadosFormulario.informacoesPrincipais?.logradouro}, ${dadosFormulario.informacoesPrincipais?.numero}, ${dadosFormulario.informacoesPrincipais?.complemento}, ${dadosFormulario.informacoesPrincipais?.bairro}, ${dadosFormulario.informacoesPrincipais?.cidade} - ${dadosFormulario.informacoesPrincipais?.uf}, CEP: ${dadosFormulario.informacoesPrincipais?.cep}`}</p>
+            <p><strong>Nome:</strong> {dadosFormulario.alunoInformacoes?.nome}</p>
+            <p><strong>RM:</strong> {dadosFormulario.alunoInformacoes?.rm}</p>
+            <p><strong>Curso:</strong> {dadosFormulario.cursoInformacoes?.curso}</p>
+            <p><strong>Data de Nascimento:</strong> {dadosFormulario.alunoInformacoes?.dataNascimento}</p>
+            <p><strong>Turno:</strong> {dadosFormulario.cursoInformacoes?.turno}</p>
+            <p><strong>Módulo:</strong> {dadosFormulario.cursoInformacoes?.modulo}</p>
+            <p><strong>Gênero:</strong> {dadosFormulario.alunoInformacoes?.genero}</p>
+            <p><strong>Email:</strong> {dadosFormulario.alunoInformacoes?.email}</p>
+            <p><strong>Endereço:</strong> {`${dadosFormulario.logradouroInformacoes?.logradouro || ''}, ${dadosFormulario.logradouroInformacoes?.numero || ''}, ${dadosFormulario.logradouroInformacoes?.complemento || ''}, ${dadosFormulario.logradouroInformacoes?.bairro || ''}, ${dadosFormulario.logradouroInformacoes?.cidade || ''} - ${dadosFormulario.logradouroInformacoes?.uf || ''}, CEP: ${dadosFormulario.logradouroInformacoes?.cep || ''}`}</p>
           </Card>
 
           {/* Responsável */}

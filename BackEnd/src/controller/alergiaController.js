@@ -1,6 +1,6 @@
 import express from 'express';
 import pool from '../database/data-source.js';
-
+/* teste git hub*/
 const routes = express.Router();
 
 routes.get("/", async (req, res) => {

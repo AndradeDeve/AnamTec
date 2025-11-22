@@ -94,26 +94,26 @@ export default function TelaObservacoes() {
 
     // Lógica de filtragem de professores
 // 1. Buscar cursos e professores ao montar o componente
-useEffect(() => {
-    const fetchCursos = async () => {
-        try {
-            const professores = await getFunctonCursoProfessor();
-            console.log("professores:", professores.data)
-            if(professores.status === 200){
-                setTodosProfessores(professores.data);
-            }
+    useEffect(() => {
+        const fetchCursos = async () => {
+            try {
+                const professores = await getFunctonCursoProfessor();
+                console.log("professores:", professores.data)
+                if(professores.status === 200){
+                    setTodosProfessores(professores.data);
+                }
 
-            const cursos = await getFunctonCurso();
-            if(cursos.status === 200){
-                setTodosCursos(cursos.data);
+                const cursos = await getFunctonCurso();
+                if(cursos.status === 200){
+                    setTodosCursos(cursos.data);
+                }
+            } catch (error) {
+                console.error("Erro ao buscar cursos:", error);
             }
-        } catch (error) {
-            console.error("Erro ao buscar cursos:", error);
         }
-    }
 
-    fetchCursos();
-}, []);
+        fetchCursos();
+    }, []);
 
 // 2. Filtrar professores sempre que mudar cursoFiltro ou todosProfessores
 useEffect(() => {

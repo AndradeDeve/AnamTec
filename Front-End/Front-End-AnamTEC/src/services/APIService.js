@@ -91,7 +91,7 @@ export async function getFunctionUserSpecific(specific, value) {
 export async function postFunctionUser(dados) {
   const response = await axios.post(`${apiUrl}/user`, dados , { 
     headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
-  return response.data;
+  return response;
 }
 
 export async function deleteFunctionUser(id) {
@@ -147,5 +147,15 @@ export async function getFunctonCursoProfessor() {
     return response;
   }catch (error) {
     console.error("Erro ao buscar professores:", error);
+  }
+}
+
+export async function getFunctionAnamnese(dados) {
+  try{
+    const response = await axios.get(`${apiUrl}/formularioAnamnese/${dados}`, { 
+      headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+    return response;
+  }catch(err){
+    console.log("Erro: ", err)
   }
 }

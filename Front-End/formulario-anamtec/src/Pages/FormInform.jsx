@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Form, Toast, ToastContainer } from "react-bootstrap";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {FormContext} from "../Context/FormContext";
 import { useContext } from "react";
 import Header from "../Components/Header/Header";
@@ -16,62 +19,77 @@ function FormInform() {
 
   const [erros, setErros] = useState({});
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
 
   const camposObrigatorios = [
     "nome",
     "cpf",
-    "rm", 
-    "curso", 
-    "dataNascimento", 
-    "turno", 
-    "modulo", 
-    "email", 
-    "cep",];
-  
-    const informacoes = dadosFormulario.informacoesPrincipais;
+    "rm",
+    "curso",
+    "dataNascimento",
+    "turno",
+    "modulo",
+    "email",
+    "cep",
+  ];
 
-    const handleChange = (field, value) => {
-    let novosDados = { ...informacoes, [field]: value };
-    setDadosFormulario((prev) => ({
-      ...prev, 
-      informacoesPrincipais: novosDados
-    }));
-    setErros((prev) => ({ ...prev, [field]: ""}));
-    setShowToast(false);
+  // Combina blocos para facilitar leitura no JSX
+  const informacoes = {
+    ...((dadosFormulario && dadosFormulario.alunoInformacoes) || {}),
+    ...((dadosFormulario && dadosFormulario.logradouroInformacoes) || {}),
+    ...((dadosFormulario && dadosFormulario.cursoInformacoes) || {}),
   };
-    
-  useEffect(() => {
-    fetch("http://localhost:4000/api/form")
-    .then((res) => res.json())
-    .then((data) => setDadosFormulario(data || {}))
-    .catch((err) => console.error("Error ao carregar dados:", err)); 
-  }, [setDadosFormulario]);
 
-  const salvarNoBackend = (dados) => {
-    fetch("http://localhost:4000/form/123", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({data: dados }),
-    }).catch((err) => console.error("Erro ao salvar:", err));
+  const handleChange = (field, value) => {
+    const cursoFields = ["curso", "turno", "modulo"];
+    const logradouroFields = ["cep", "numero", "complemento", "logradouro", "bairro", "cidade", "uf"];
+
+    if (cursoFields.includes(field)) {
+      setDadosFormulario(prev => ({
+        ...prev,
+        cursoInformacoes: {
+          ...((prev && prev.cursoInformacoes) || {}),
+          [field]: value,
+        }
+      }));
+    } else if (logradouroFields.includes(field)) {
+      setDadosFormulario(prev => ({
+        ...prev,
+        logradouroInformacoes: {
+          ...((prev && prev.logradouroInformacoes) || {}),
+          [field]: value,
+        }
+      }));
+    } else {
+      setDadosFormulario(prev => ({
+        ...prev,
+        alunoInformacoes: {
+          ...((prev && prev.alunoInformacoes) || {}),
+          [field]: value,
+        }
+      }));
+    }
+
+    setErros(prev => ({ ...prev, [field]: "" }));
+    setShowToast(false);
   };
 
   const buscarCEP = async (cep) => {
     const cepLimpo = cep.replace(/\D/g, "");
     if (cepLimpo.length === 8) {
       try {
-        const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`)
+        const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
         const data = await response.json();
+        console.log("Resposta ViaCEP:", data);
 
         if (!data.erro) {
           setDadosFormulario((prev) => ({
             ...prev,
-            informacoesPrincipais: {
-              ...prev.informacoesPrincipais,
-            logradouro: data.logradouro || "",
-            bairro: data.bairro || "",
-            cidade: data.localidade || "",
-            uf: data.uf || ""
+            logradouroInformacoes: {
+              ...((prev && prev.logradouroInformacoes) || {}),
+              logradouro: data.logradouro || "",
+              bairro: data.bairro || "",
+              cidade: data.localidade || "",
+              uf: data.uf || ""
             },
           }));
         } else {
@@ -80,9 +98,9 @@ function FormInform() {
 
       } catch (error) {
         console.error("Erro ao buscar CEP:", error);
-        }
       }
-    };
+    }
+  };
 
   const validarFomulario = () => {
     let valid = true;
@@ -109,8 +127,7 @@ function FormInform() {
 
   const handleProximo = () => {
     if (!validarFomulario()) {
-      setToastMessage("⚠️ Preencha todos os campos obrigatorios corretamente!");
-      setShowToast(true);
+      toast.error("⚠️ Preencha todos os campos obrigatorios corretamente!");
       return;
     }
 
@@ -127,7 +144,7 @@ function FormInform() {
     <Container className="mt-3">
       <ProgressBar 
       etapas={[
-        "Informações principais",
+        "Informações Principais",
         "Dados do Responsável",
         "Histórico de Saúde",
         "Aspectos Comportamentais e Emocionais",
@@ -142,20 +159,7 @@ function FormInform() {
         handleProximo();
         }}
       >
-
-      <ToastContainer className="p-3" position="top-center">
-        <Toast 
-          onClose={() => setShowToast(false)} 
-          show={showToast} 
-          delay={4000} 
-          autohide 
-          bg="danger"
-        >
         
-        <Toast.Body className="text-white">{toastMessage}</Toast.Body>
-          </Toast>
-        </ToastContainer>
-
         <h5 className="mb-3">Dados Pessoais</h5>
 
           <Row className="mb-3">
@@ -238,11 +242,11 @@ function FormInform() {
                 <Form.Label>Etnia:</Form.Label>
                 <Form.Select value={informacoes.etnia} onChange={(e) => handleChange("etnia", e.target.value)}>
                   <option value="">Selecione a etnia</option>
-                  <option value="Negro">Negro(a)</option>
-                  <option value="Pardo">Pardo(a)</option>
-                  <option value="Branco">Branco(a)</option>
-                  <option value="Amarelo">Amarelo(a)</option>
-                  <option value="Indígena">Indígena</option>
+                  <option value="Negro(a)">Negro(a)</option>
+                  <option value="Pardo(a)">Pardo(a)</option>
+                  <option value="Branco(a)">Branco(a)</option>
+                  <option value="Amarelo(a)">Amarelo(a)</option>
+                  <option value="Indígena(a)">Indígena</option>
                 </Form.Select>
               </Form.Group>
             </Col>

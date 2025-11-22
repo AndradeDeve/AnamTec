@@ -1,9 +1,9 @@
 .progress-bar-container {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
     margin: 20px 0;
     width: 100%;
+    gap: 4px;
 }
 
 .step-container {
@@ -11,12 +11,14 @@
     min-width: 120px;
     display: flex;
     align-items: center;
-    padding: 0 8px;
+    gap: 8px;
+    justify-content: center;
 }
 
 .step-container:last-child {
-    flex: 0 0 auto;
-    margin-right: 20px;
+    flex: 1 0 auto; 
+    margin-right: 0;
+    margin-left: 0;
 }
 
 .circle {
@@ -41,19 +43,30 @@
 .etapa-label {
     margin-left: 8px;
     font-size: 0.8rem;
-    color: #044654;
+    color: var(--cor-destaque);
     white-space: nowrap;
-    text-overflow: unset;
+    text-overflow: clip;
     overflow: visible;
-    max-width: 120px;
-
+    max-width: none;
+    min-width: 0;
 }
 
 .etapa-label.ativa {
     font-weight: bold;
-    color: #044654;
+    color: var(--cor-destaque);
 }
 
+@media (max-width: 900px) {
+    .etapa-label {
+        overflow: hidden;       
+        text-overflow: ellipsis; 
+        max-width: 130px;
+    }
+
+    .step-container {
+        padding: 0 4px;
+    }
+}
 
 @media (max-width: 768px) {
     .circle {
@@ -64,7 +77,7 @@
 
     .etapa-label {
         font-size: 0.7rem;
-        margin-left: 4px;
+        max-width: 90px;
     }
 
 
@@ -77,6 +90,11 @@
 
     .etapa-label {
         font-size: 0.6rem;
+        max-width: 60px;
+    }
+
+    .step-container {
+        padding: 0 1px;
     }
 }
 }
