@@ -149,3 +149,13 @@ export async function getFunctonCursoProfessor() {
     console.error("Erro ao buscar professores:", error);
   }
 }
+
+export async function getFunctionAnamnese(dados) {
+  try{
+    const response = await axios.get(`${apiUrl}/formularioAnamnese/${dados}`, { 
+      headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+    return response;
+  }catch(err){
+    console.log("Erro: ", err)
+  }
+}

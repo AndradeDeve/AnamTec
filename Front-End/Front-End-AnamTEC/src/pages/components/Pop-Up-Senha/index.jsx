@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button } from "react-bootstrap";
 import { toast } from 'react-toastify';
 import { putFunctionUsuario } from '../../../services/APIService.js';
 import  { jwtDecode } from "jwt-decode";
@@ -25,7 +24,7 @@ const RedefineInfo = ({ show, onClose, emailUser, NomeUser }) => {
   }, [show, emailUser, NomeUser]);
 
   const sendUpdate = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     try {
       const token = localStorage.getItem("token");
       const infoUser = jwtDecode(token);
@@ -39,18 +38,15 @@ const RedefineInfo = ({ show, onClose, emailUser, NomeUser }) => {
       toast.error('Erro ao atualizar informações.', { theme: "dark" });
     }
   };
+  if (!show) return null;
 
   return (
-    <Modal className="" show={show} onHide={onClose} centered>
-      <Modal.Header className="modalheader" closeButton>
-        <Modal.Title className="title-modal">Confirmar Alteração</Modal.Title>
-      </Modal.Header>
-
-      <Modal.Body className="modal-body">
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h3>Confirmar Alteração</h3>
         <p>Confirme sua senha para salvar as alterações de nome ou e-mail.</p>
 
         <form onSubmit={sendUpdate}>
-
           <label>Senha:</label>
           <input
             type="password"
@@ -60,13 +56,25 @@ const RedefineInfo = ({ show, onClose, emailUser, NomeUser }) => {
             required
           />
         </form>
-      </Modal.Body>
 
-      <Modal.Footer className="modal-footer">
-        <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-        <Button variant="primary" onClick={sendUpdate}>Confirmar Alterações</Button>
-      </Modal.Footer>
-    </Modal>
+        <div className="modal-actions">
+          <button
+            type="button"
+            className="btn-salvar btn-cancel"
+            onClick={onClose}
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            className="btn-salvar btn-confirm"
+            onClick={sendUpdate}
+          >
+            Confirmar Alterações
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

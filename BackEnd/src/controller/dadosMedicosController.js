@@ -130,7 +130,7 @@ routes.post("/", (req, res, next) => {
           id_restricoes || null, id_cirurgias || null, id_medicamentos || null, id_aluno
         ]
       );
-
+      console.log("Dados médicos cadastrados com sucesso.");
       return res.status(201).json({ response: "Dados médicos cadastrados com sucesso." });
   } catch (err) {
       console.error("Erro:", err);

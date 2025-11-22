@@ -15,6 +15,7 @@ import ObservacoesUsers from './pages/Observacoes/UserObservation.jsx';
 import ControllAcess from './pages/ControleAcesso/ControllAcess.jsx';
 import Configuracoes from './pages/Configuracoes/Configuracoes.jsx';
 import ReportsDashboard from './pages/relatorio/reports/ReportsDashboard.jsx'; 
+import Anamnese from './pages/Anamnese/Anamnese.jsx';
 import NaoAchou from './pages/not-found/index.jsx'
 function App() {
   return (
@@ -24,14 +25,16 @@ function App() {
       <Routes>
         <Route path="/" element={<Login/>} />
         <Route path="/Cadastro" element={
-            <ProtectedRouter roles={['coordenador pedagógico']}>  
+            // <ProtectedRouter roles={['coordenador pedagógico']}>  
                 <Cadastro /> 
-            </ProtectedRouter>} />
+            // </ProtectedRouter>
+          } />
         <Route path="/ResetarSenha" element={<ResetPassW />} />
        <Route path="/Home" element={
         <ProtectedRouter>
             <MasterDashboard />
         </ProtectedRouter>} />
+        <Route path="/Anamnese" element={<Anamnese />} />
         <Route path="/Observacoes" element={<ObservacoesUsers />} />
         <Route path="/Controle" element={<ControllAcess />} />
         <Route path="/config" element={<Configuracoes />} />

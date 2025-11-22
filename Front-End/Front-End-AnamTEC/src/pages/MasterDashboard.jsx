@@ -50,8 +50,6 @@ export default function MasterDashboard() {
   // 🔹 Mock do modal
   const carregarAlunosPendentes = () => {
     const mock = [
-      { id: 1, nome: "Ana Paula", emailResponsavel: "ana.mae@email.com" },
-      { id: 2, nome: "Carlos Henrique", emailResponsavel: "carlos.pai@email.com" }
     ];
     setAlunosPendentes(mock);
   };

@@ -37,7 +37,6 @@ routes.post("/", async(request, response) => {
         const user = rows[0];       
         
         const senhaValida = await VerificarSenha(senha, user.senha);
-        console.log("Senha válida:", user.id);
         if(!senhaValida){
             return response.status(401).json({err: "Senha inválida."});
         }        
