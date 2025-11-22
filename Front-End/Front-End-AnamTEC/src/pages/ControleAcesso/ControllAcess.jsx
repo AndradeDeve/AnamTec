@@ -73,7 +73,7 @@ export default function ControleAcesso() {
         if (status === "ativo") {
           const deletedAluno = await deleteFunctionAluno(id);
           if (deletedAluno.status === 200){
-            toast.success('Aluno deletado com sucesso.', {  
+            toast.success('Aluno desativado com sucesso.', {  
               position: "top-center",
               autoClose: 5000,
               hideProgressBar: false,
@@ -107,7 +107,7 @@ export default function ControleAcesso() {
         if (status === "ativo") {
           const deletedUser = await deleteFunctionUser(id);
           if (deletedUser.status === 200){
-            toast.success('Usuário deletado com sucesso.', {  
+            toast.success('Usuário desativado com sucesso.', {  
               position: "top-center",
               autoClose: 5000,
               hideProgressBar: false,
@@ -138,8 +138,6 @@ export default function ControleAcesso() {
           )
         );
       }
-
-      // 🔥 Atualiza também a lista filtrada se estiver sendo exibida
       setUsuariosFiltrados((prev) =>
         prev.map((u) =>
           u.id === id ? { ...u, status: u.status === "ativo" ? "inativo" : "ativo" } : u
@@ -243,8 +241,19 @@ export default function ControleAcesso() {
       if (filtroAlunoProf) {
         resultado = resultado.filter((u) => {
         return normalizarEntidade(u.entidade) === filtroAlunoProf.toLowerCase();
-      });
-    }
+        });
+        if(resultado.length === 0){
+          toast.warn("Nenhuma entidade encontrada com esse filtro.", {  
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark" });
+        }
+      }
       setUsuariosFiltrados(resultado);
     }catch(err){
       console.log("Erro: ", err);

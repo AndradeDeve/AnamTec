@@ -1,5 +1,6 @@
 import express from 'express';
 import pool from '../database/data-source.js';
+
 const routes = express.Router();
 routes.get("/", async (req, res) => {
     try {

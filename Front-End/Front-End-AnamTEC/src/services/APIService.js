@@ -150,7 +150,6 @@ export async function getFunctonCursoProfessor() {
   }
 }
 
-
 export async function getFunctionComentarios() {
   try{
     const response = await axios.get(`${apiUrl}/comentarios`, { 
@@ -211,12 +210,23 @@ export async function deleteFunctionComentario(id) {
 
 export async function deleteFunctionResposta(id) {
   try {
-    const response = await axios.delete(`${apiUrl}/comentarios/resposta/${id}`, {
+    // rota no backend definida em comentarioControllerTest.js como "/Resposta/:id" (case-sensitive)
+    const response = await axios.delete(`${apiUrl}/comentarios/Resposta/${id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
   } catch (error) {
     console.error('Erro ao deletar comentário:', error);
     throw error;
+  }
+}
+export async function getFunctionAnamnese(dados) {
+  try{
+    const response = await axios.get(`${apiUrl}/formularioAnamnese/${dados}`, { 
+      headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+    return response;
+  }catch(err){
+    console.log("Erro: ", err)
+
   }
 }

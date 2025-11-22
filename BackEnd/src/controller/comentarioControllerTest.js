@@ -15,6 +15,7 @@ routes.get("/", async (req, res) => {
             DATE_FORMAT(data_criacao, '%d/%m/%Y %H:%i') AS data_criacao,
             deletedAt
             FROM tbl_comentario
+            WHERE deletedAt IS NULL
 
         `);
 

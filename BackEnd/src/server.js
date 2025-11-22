@@ -1,20 +1,27 @@
 import express from "express";
 import routes from "./routes.js";
+import uploadRoutes from "./utils/uploadRoutes.js";
 import pool from "./database/data-source.js";
-import cors from 'cors';
-import dotenv from 'dotenv';
-
+import path from "path";
+import cors from "cors";
+import dotenv from "dotenv";
 
 dotenv.config();
+
 const server = express();
 server.use(cors());
 server.use(express.json());
+
+server.use("/uploads", express.static(path.resolve("uploads")));
+
 server.use("/", routes);
 
+server.use("/upload", uploadRoutes);
+
 async function startServer() {
-    try{
-        const connection = await pool.getConnection();
-        console.log("Banco conectado com sucesso!");
+  try {
+    const connection = await pool.getConnection();
+    console.log("✅ Banco conectado com sucesso!");
 
         server.listen(3332, ()=>{
             console.log("O servidor está funcionando 😎 port: 3332");
@@ -42,3 +49,5 @@ startServer();
 // Obrigado por sua compreensão.
 
 // total_de_Horas_pedidas_para_entender_este_codigo = 2.142
+
+

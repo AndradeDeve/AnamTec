@@ -61,17 +61,20 @@ export default function Cadastro() {
   ];
 
   const precisaCursoEDisciplina = (cargo) =>
-    cargo === "Coordenador de Curso" || 
     cargo === "Professor";
 
+  const precisaCurso = (cargo) =>
+    cargo === "Coordenador de Curso"
   useEffect(() => {
-    if (!precisaCursoEDisciplina(formData.cargo) && (formData.curso !== "" || formData.disciplina)){
+    // Limpa curso/disciplina somente quando o cargo não precisar de nenhum dos dois
+    if (!(precisaCursoEDisciplina(formData.cargo) || precisaCurso(formData.cargo)) && (formData.curso !== "" || formData.disciplina)){
       setFormData((prev) => ({ 
         ...prev, 
         curso: "", 
         disciplina:"" 
       }));
     }
+    
   }, [formData.cargo]);
   
   const mascaraCPF = (value) => {
@@ -143,15 +146,17 @@ export default function Cadastro() {
 
     try {
       const data = await postFunctionUser(formData); 
-  
-      // console.log("Resposta do servidor:", result);
+      console.log(data.status)
       if(data.status === 201) {
         showToast("success", 'Cadastro efetuado com sucesso')
+      }
+      if(data.status === 400){
+        showToast("error", data.data.err || 'Erro ao cadastrar');
       }
   
     } catch (error) {
       console.log("Erro ao cadastrar:", error);
-      showToast("error", "Erro ao efetuar cadastro. Tente novamente.");
+      showToast("error", "Erro no servidor.");
     }
   }
 
@@ -188,7 +193,7 @@ export default function Cadastro() {
         </div>
 
         {/* Se cargo for Coordenador ou Professor mostra o select de curso */}
-        {precisaCursoEDisciplina(formData.cargo) && (
+        {(precisaCursoEDisciplina(formData.cargo) || precisaCurso(formData.cargo)) && (
           <div className="field">
             <label htmlFor="curso">Curso:</label>
             <select

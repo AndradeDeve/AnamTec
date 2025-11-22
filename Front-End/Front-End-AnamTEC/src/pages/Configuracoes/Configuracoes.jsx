@@ -6,7 +6,6 @@ import "./Config.css";
 import { getFunctionUser } from "../../services/APIService.js";
 import { getUser } from "../../helpers/auth";
 import RedefineInfo from "../components/Pop-Up-Senha";
-import { use } from "react";
 
 export default function Configuracoes() {
 
@@ -45,7 +44,7 @@ export default function Configuracoes() {
         
         // Limpa as classes existentes
         root.classList.remove('tema-claro', 'tema-escuro'); 
-
+        
         // Aplica a nova classe
         if (novoTema === 'escuro') {
             root.classList.add('tema-escuro');
@@ -53,50 +52,59 @@ export default function Configuracoes() {
             root.classList.add('tema-claro');
         }
         
+        // Atualiza localStorage e estado local para refletir a mudança imediatamente
         localStorage.setItem('temaPreferido', novoTema);
+        setFormData(prev => ({ ...prev, tema: novoTema }));
+        setPendingTheme(null);
         showToast("success", "Tema atualizado com sucesso!");
         setShowModal(false); // Fecha o modal
     };
     
     useEffect(() => {
-        const handUser = async () => {
-            const userdata = getUser(); 
-            const user = await getFunctionUser("id", userdata.id);
-            console.log("Dados do usuário obtidos:", user);
-            if (userdata) {
+        try{
+            const temaSalvo = localStorage.getItem('temaPreferido') || 'claro';
+            const handUser = async () => {
+                const userdata = getUser(); 
+                const user = await getFunctionUser("id", userdata.id);
+                console.log("Dados do usuário obtidos:", user);
+                if (userdata) {
+                setFormData(prev => ({
+                    ...prev,
+                    nome: user[0].nome || prev.nome,
+                    email: user[0].email || prev.email,
+                    type: userdata.type || prev.type,
+                    tema: temaSalvo || prev.tema
+                }));
+
+                setOriginalUserData({
+                    nome: userdata.nome || "",
+                    email: userdata.email || "",
+                });
+            }
+            }
+            handUser();
+            const root = document.documentElement;
+
+            // Sempre limpa classes antigas para evitar conflitos
+            root.classList.remove('tema-claro', 'tema-escuro');
+
+            // Aplica o tema escuro se estiver salvo
+            if (temaSalvo === 'escuro') {
+                root.classList.add('tema-escuro');
+            } else {
+                root.classList.add('tema-claro'); // Explícito para consistência
+            }
+
+            // Atualiza o estado para que o select reflita a preferência salva
             setFormData(prev => ({
                 ...prev,
-                nome: user[0].nome || prev.user,
-                email: user[0].email || prev.email,
-                type: userdata.type || prev.type,
-                tema: temaSalvo || prev.tema
+                tema: temaSalvo || prev.tema 
             }));
 
-            setOriginalUserData({
-                nome: userdata.nome || "",
-                email: userdata.email || "",
-            });
+        }catch(error){
+            console.log("Erro: ", error)
         }
-        }
-        handUser();
-        const temaSalvo = localStorage.getItem('temaPreferido') || 'claro';
-        const root = document.documentElement;
-
-        // Sempre limpa classes antigas para evitar conflitos
-        root.classList.remove('tema-claro', 'tema-escuro');
-
-        // Aplica o tema escuro se estiver salvo
-        if (temaSalvo === 'escuro') {
-            root.classList.add('tema-escuro');
-        } else {
-            root.classList.add('tema-claro'); // Explícito para consistência
-        }
-
-        // Atualiza o estado para que o select reflita a preferência salva
-        setFormData(prev => ({
-            ...prev,
-            tema: temaSalvo || prev.tema 
-        }));
+        
 
         
     }, []);
@@ -280,15 +288,6 @@ export default function Configuracoes() {
                                     <option value="escuro">Escuro</option>
                                 </select>
 
-                                <label className="checkbox-label">
-                                    <input 
-                                        type="checkbox" 
-                                        name="notificacoes" 
-                                        checked={formData.notificacoes} 
-                                        onChange={handleChange} 
-                                    />
-                                    Receber notificações por e-mail
-                                </label>
                             </>
                         )}
                         {/* === Aba Segurança === */}
@@ -348,7 +347,9 @@ export default function Configuracoes() {
                 />
             </div>
             {/* Renderiza o Modal de Confirmação */}
-            <ConfirmationModal />
+            <ConfirmationModal
+            
+            />
         </div>
     );
 };

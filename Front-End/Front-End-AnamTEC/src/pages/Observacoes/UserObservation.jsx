@@ -97,15 +97,13 @@ export default function TelaObservacoes() {
             try {
                 const user = getUser();
                 const comentariosResponse = await getFunctionComentarios();
-                
-                console.log("comentariosResponse:", comentariosResponse);
+
                 if (comentariosResponse && comentariosResponse.status === 200) {
                     // armazena array bruto; a variável `comentariosAtuais` faz o filtro por professor
                     setComentariosPorProfessor(comentariosResponse.data || []);
                 }
-                console.log("User ID:", user);
+
                 const professores = await getFunctonCursoProfessor();
-                console.log("professores:", professores.data)
                 if(professores.status === 200){
                     setTodosProfessores(professores.data);
                     setProfessorAtual(user)
@@ -142,10 +140,7 @@ export default function TelaObservacoes() {
 
         setProfessoresFiltrados(filtrados);
         setProfessorSelecionado(null);
-
-        console.log("Professores filtrados:", professoresFiltrados);
-        console.log("Curso filtro:", cursoFiltro);
-        console.log("Todos professores:", comentariosDoProfessorLogado);
+    
     }, [cursoFiltro, todosProfessores]);
 
     
@@ -159,7 +154,6 @@ export default function TelaObservacoes() {
             id_aluno: aluno?.id || aluno?.id_aluno || aluno?.id_aluno_fk || null,
             texto: novoComentario
         };
-        console.log("Payload para envio:", payload);
         try {
             const resp = await postFunctionComentario(payload);
             // Se backend retornar o comentário criado, use ele; senão constrói localmente
@@ -215,7 +209,6 @@ export default function TelaObservacoes() {
     const adicionarResposta = async (index, id_comentario) => {
         const textoResposta = respostasTemp[index];
         if (!textoResposta || !textoResposta.trim()) return;
-        console.log("Adicionando resposta para comentário index:", id_comentario);
         const novaResposta = {
             id_autor: professorAtual?.id || 'Você',
             autor: professorAtual?.user || 'Você',
@@ -228,61 +221,63 @@ export default function TelaObservacoes() {
             const resp = await postRespostaComentario(novaResposta)
 
             const created = resp && resp.data ? resp.data : null;
-            console.log("created  ",created)
-            const comentarioParaInserir = created
+
+            // Construir o objeto de resposta que será inserido no estado, garantindo o campo `id`
+            const respostaInserir = created
                 ? {
-                    ...created,
-                    // normaliza nomes para UI
+                    id: created.id_resposta || created.id || created.insertId,
+                    id_autor: novaResposta.id_autor,
+                    autor: novaResposta.autor,
+                    id_comentario: id_comentario,
                     texto: created.texto || created.comentario || created.body || textoResposta,
-                    autor: created.autor || created.nome_autor || professorAtual?.user || professorAtual?.nome || 'Você',
-                    data: created.data_criacao || created.data || created.created_at || new Date().toLocaleDateString('pt-BR'),
-                    respostas: created.respostas || []
+                    data_criacao: created.data_criacao || created.data || created.created_at || new Date().toLocaleDateString('pt-BR')
                 }
                 : {
-                    autor: professorAtual?.user || professorAtual?.nome || 'Você',
+                    id: Date.now(), // fallback temporário
+                    id_autor: novaResposta.id_autor,
+                    autor: novaResposta.autor,
+                    id_comentario: id_comentario,
                     texto: textoResposta,
-                    data: new Date().toLocaleDateString('pt-BR'),
-                    respostas: []
+                    data_criacao: new Date().toLocaleDateString('pt-BR')
                 };
-                console.log("Adicionando resposta para professor ID:", professorSelecionado?.id_professor);
-            
 
-                setComentariosPorProfessor(prev => {
-                    if (Array.isArray(prev)) {
-                        return prev.map(c => {
-                            if (c.id === id_comentario) {
-                                const respostas = Array.isArray(c.respostas) ? c.respostas : [];
-                                return { ...c, respostas: [...respostas, novaResposta] };
-                            }
-                            return c;
-                        });
-                    }
 
-                    // Caso seja um mapa por professores
-                    const professorId = professorSelecionado.id_professor;
-                    return {
-                        ...prev,
-                        [professorId]: prev[professorId].map(c => {
-                            if (c.id === id_comentario) {
-                                const respostas = Array.isArray(c.respostas) ? c.respostas : [];
-                                return { ...c, respostas: [...respostas, novaResposta] };
-                            }
-                            return c;
-                        })
-                    };
-                });
+            setComentariosPorProfessor(prev => {
+                if (Array.isArray(prev)) {
+                    return prev.map(c => {
+                        if (c.id === id_comentario) {
+                            const respostas = Array.isArray(c.respostas) ? c.respostas : [];
+                            return { ...c, respostas: [...respostas, respostaInserir] };
+                        }
+                        return c;
+                    });
+                }
 
-                setRespostasTemp(prev => ({ ...prev, [index]: "" }));
-            }catch(error){
-            
-                    }
+                // Caso seja um mapa por professores
+                const professorId = professorSelecionado?.id_professor || professorAtual?.id;
+                return {
+                    ...prev,
+                    [professorId]: (prev[professorId] || []).map(c => {
+                        if (c.id === id_comentario) {
+                            const respostas = Array.isArray(c.respostas) ? c.respostas : [];
+                            return { ...c, respostas: [...respostas, respostaInserir] };
+                        }
+                        return c;
+                    })
+                };
+            });
+
+            setRespostasTemp(prev => ({ ...prev, [index]: "" }));
+        } catch(error){
+            console.error('Erro ao adicionar resposta:', error, error?.response?.data);
+            toast.error('Não foi possível enviar a resposta.');
+        }
   };
 
     // Enviar com ENTER no Input de Resposta (TAREFA 3: Nova Lógica)
     const handleRespostaEnterPress = (e, index) => {
         if (e.key === 'Enter') {
             e.preventDefault(); 
-            console.log("Adicionando resposta para comentário index:", respostasTemp);
             // colocar a função aquiiiiiiiiiiiii
         }
     };
@@ -295,8 +290,18 @@ export default function TelaObservacoes() {
                     if (Array.isArray(prev)) {
                         return prev.filter(c => c.id !== idComentario);
                     }
+
+                    // Caso seja mapa por professor
+                    const professorId = professorSelecionado?.id_professor || professorAtual?.id;
+                    if (!professorId) return prev;
+
+                    const comentariosDoProfessor = Array.isArray(prev[professorId]) ? prev[professorId].filter(c => c.id !== idComentario) : [];
+                    return {
+                        ...prev,
+                        [professorId]: comentariosDoProfessor
+                    };
                 });
-                toast.sucess('Comentário deletado com sucesso.');
+                toast.success('Comentário deletado com sucesso.');
             }
         } catch (error) {
             console.error('Erro ao deletar comentário:', error);
@@ -306,16 +311,22 @@ export default function TelaObservacoes() {
 
     const excluirResposta = async (idResposta, idComentario) => {
         try {
-            const resp = await deleteFunctionResposta(idResposta);
+            const idNum = Number(idResposta);
+            if (!idNum || isNaN(idNum)) {
+                toast.error('ID da resposta inválido (frontend).');
+                return;
+            }
 
-            if (resp.status === 200) {
+            const resp = await deleteFunctionResposta(idNum);
+
+            if (resp && resp.status === 200) {
                 setComentariosPorProfessor(prev => {
                     if (Array.isArray(prev)) {
                         return prev.map(comentario => {
                             if (comentario.id === idComentario) {
                                 return {
                                     ...comentario,
-                                    respostas: comentario.respostas.filter(r => r.id !== idResposta)
+                                    respostas: (comentario.respostas || []).filter(r => r.id !== idNum)
                                 };
                             }
                             return comentario;
@@ -323,14 +334,16 @@ export default function TelaObservacoes() {
                     }
 
                     // Caso seja estrutura em MAP (por professor)
-                    const professorId = professorSelecionado.id_professor;
+                    const professorId = professorSelecionado?.id_professor || professorAtual?.id;
+                    if (!professorId) return prev;
+
                     return {
                         ...prev,
-                        [professorId]: prev[professorId].map(comentario => {
+                        [professorId]: (prev[professorId] || []).map(comentario => {
                             if (comentario.id === idComentario) {
                                 return {
                                     ...comentario,
-                                    respostas: comentario.respostas.filter(r => r.id !== idResposta)
+                                    respostas: (comentario.respostas || []).filter(r => r.id !== idNum)
                                 };
                             }
                             return comentario;
@@ -338,11 +351,16 @@ export default function TelaObservacoes() {
                     };
                 });
 
-                toast.success("Resposta deletada.");
+                toast.success('Resposta deletada.');
+            } else {
+                const errMsg = resp?.data?.err || 'Falha ao deletar resposta';
+                console.warn('Falha ao deletar resposta:', resp && resp.data);
+                toast.error(errMsg);
             }
         } catch (error) {
-            console.error("Erro ao deletar resposta:", error);
-            toast.error("Não foi possível deletar a resposta.");
+            console.error('Erro ao deletar resposta:', error, error?.response?.data);
+            const serverMsg = error?.response?.data?.err || error.message;
+            toast.error(`Não foi possível deletar a resposta: ${serverMsg}`);
         }
     };
 

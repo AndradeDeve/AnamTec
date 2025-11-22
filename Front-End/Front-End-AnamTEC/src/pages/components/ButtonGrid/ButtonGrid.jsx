@@ -7,7 +7,7 @@ const ButtonGrid = ({ onCadastrar, onEnviarEmail, showModal, setShowModal, aluno
  
       <div className=" d-flex container mb-4 row justify-content-center">
         <div className="button-row">
-          <button className="custom-btn" onClick={onCadastrar}>Cadastrar</button>
+          <a href="http://localhost:3001/" target="_blanck"><button className="custom-btn" onClick={onCadastrar}>Cadastrar</button></a>
           <button className="custom-btn" onClick={onEnviarEmail}>Enviar Email</button>
         </div>
 
