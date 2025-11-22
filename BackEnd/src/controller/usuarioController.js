@@ -183,6 +183,14 @@ routes.post("/", async (request, response) => {
             return response.status(400).json({erro: "E-mail inválido"});
         }
 
+        const emailExiste = await pool.query(
+            `SELECT * FROM tbl_usuario WHERE email = ?`, [email]
+        );
+
+        if(emailExiste[0].length > 0){
+            return response.status(400).json({err: "E-mail já cadastrado."});
+        }
+
         if(!senha || senha.length < 6){
             return response.status(400).json({err: "A senha deve conter no minimo 6 caracteres."});
         }
@@ -192,10 +200,10 @@ routes.post("/", async (request, response) => {
         await pool.query(`INSERT INTO tbl_usuario (RM, CPF, nome, email, senha, disciplina) VALUES(?, ?, ?, ?, ?, ?)`,
             [rm, cpfsemPontuacao, nome, email, hashedSenha, disciplina]
         );
-        const [idUserExiste] = await pool.query(`SELECT * FROM tbl_usuario WHERE CPF = ?`, [cpfsemPontuacao])
+        const [idUserExiste] = await pool.query(`SELECT * FROM tbl_usuario WHERE email = ?`, [email])
 
         if(idUserExiste.length === 0){
-            return response.status(400).json({response: "Erro ao cadastrar usuário."})
+            return response.status(400).json({response: "Erro ao cadastrar usuário."});
         }
         const id_user = idUserExiste[idUserExiste.length - 1];
 

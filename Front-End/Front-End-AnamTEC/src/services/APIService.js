@@ -149,3 +149,74 @@ export async function getFunctonCursoProfessor() {
     console.error("Erro ao buscar professores:", error);
   }
 }
+
+
+export async function getFunctionComentarios() {
+  try{
+    const response = await axios.get(`${apiUrl}/comentarios`, { 
+      headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}});
+    return response; 
+  }catch(error){
+    console.error("Erro: ", error);
+  }
+}
+
+export async function postFunctionComentario(dados) {
+  try {
+    const response = await axios.post(`${apiUrl}/comentarios`, dados, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  } catch (error) {
+    console.error('Erro ao criar comentário:', error);
+    throw error;
+  }
+}
+
+export async function postRespostaComentario(dados) {
+  try{
+    const response = await axios.post(`${apiUrl}/comentarios/resposta`, dados, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  }catch(error){
+    console.error("Erro ao adicionar resposta ao comentário:", error);
+    throw error;
+  }
+}
+
+export async function getRespostaComentario() {
+  try {
+    const response = await axios.delete(`${apiUrl}/comentarios/resposta`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  } catch (error) {
+    console.error('Erro ao deletar comentário:', error);
+    throw error;
+  }
+}
+
+export async function deleteFunctionComentario(id) {
+  try {
+    const response = await axios.delete(`${apiUrl}/comentarios/${id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  } catch (error) {
+    console.error('Erro ao deletar comentário:', error);
+    throw error;
+  }
+}
+
+export async function deleteFunctionResposta(id) {
+  try {
+    const response = await axios.delete(`${apiUrl}/comentarios/resposta/${id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  } catch (error) {
+    console.error('Erro ao deletar comentário:', error);
+    throw error;
+  }
+}
