@@ -234,7 +234,7 @@ const camposObrigatorios = [
               >
                   <option value="">Selecione</option>
                   <option value="sim">Sim</option>
-                  <option value="não">Não</option>
+                  <option value="nao">Não</option>
                   <option value="eventualmente">Eventualmente</option>
                 </Form.Select>
 

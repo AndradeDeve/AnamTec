@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'; 
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
-import { getFunctonCurso, getFunctonCursoProfessor } from '../../services/APIService';
+import { getFunctonCurso, getFunctonCursoProfessor, getFunctionComentarios, postFunctionComentario,
+        deleteFunctionComentario, postRespostaComentario, deleteFunctionResposta
+ } from '../../services/APIService';
+import { getUser } from '../../helpers/auth';
 
 import { Send } from 'react-feather'; 
 import './UserObservation.css';
@@ -9,11 +12,6 @@ import Header from "../components/Header/Header";
 import { toast } from 'react-toastify';
 
 
-const cursos = [
-  "Desenvolvimento de Sistemas",
-  "Redes de Computadores",
-  "Administração"
-];
 
 // Dados do Aluno com novos campos (Tarefa 1)
 // const aluno = { 
@@ -56,19 +54,6 @@ const cursos = [
 // ];
 
 // Comentários MOCK (Tarefa 3) - Map by Professor ID
-const mockComentariosPorProfessor = {
-    2: [ // Comentários para Marcos Costa (ID 2)
-        {
-            autor: "Marcos Costa",
-            texto: "Aluno com boa presença e participa bem das atividades.",
-            data: "20/09/2023",
-            respostas: [{ autor: "Professor Atual", texto: "Contudo, precisamos observar mais nas aulas práticas.", data: "20/09/2023" }]
-        }
-    ],
-    1: [ // Comentários para Lúcie Épité (ID 1)
-        { autor: "Lúcie Épité", texto: "Excelente desenvolvimento em lógica de programação.", data: "10/10/2023", respostas: [] }
-    ],
-};
 // ==============================================
 // FIM DADOS
 // ==============================================
@@ -81,12 +66,25 @@ export default function TelaObservacoes() {
     const [todosCursos, setTodosCursos] = useState([]);
     const [todosProfessores, setTodosProfessores] = useState([])
     const [cursoFiltro, setCursoFiltro] = useState("Todos");
-    const [professoresFiltrados, setProfessoresFiltrados] = useState([todosProfessores]);
+    const [professoresFiltrados, setProfessoresFiltrados] = useState([]);
     const [professorSelecionado, setProfessorSelecionado] = useState(null); 
+    const [professorAtual, setProfessorAtual] = useState(null);
+
+    const [comentariosPorProfessor, setComentariosPorProfessor] = useState([]);
+
     
-    const [comentariosPorProfessor, setComentariosPorProfessor] = useState(mockComentariosPorProfessor);
-    
-    const comentariosAtuais = professorSelecionado ? (comentariosPorProfessor[professorSelecionado.id] || []) : [];
+    const comentariosAtuais = professorSelecionado && aluno
+    ? (
+        Array.isArray(comentariosPorProfessor)
+            ? comentariosPorProfessor.filter(c =>
+                c.id_professor === professorSelecionado.id_professor &&
+                c.id_aluno === aluno.id
+            )
+            : (comentariosPorProfessor[professorSelecionado.id_professor] || [])
+                .filter(c => c.id_aluno === aluno.id || [])
+    )
+    : [];
+
 
     const [novoComentario, setNovoComentario] = useState("");
     const [respostasTemp, setRespostasTemp] = useState({});
@@ -97,10 +95,18 @@ export default function TelaObservacoes() {
     useEffect(() => {
         const fetchCursos = async () => {
             try {
+                const user = getUser();
+                const comentariosResponse = await getFunctionComentarios();
+
+                if (comentariosResponse && comentariosResponse.status === 200) {
+                    // armazena array bruto; a variável `comentariosAtuais` faz o filtro por professor
+                    setComentariosPorProfessor(comentariosResponse.data || []);
+                }
+
                 const professores = await getFunctonCursoProfessor();
-                console.log("professores:", professores.data)
                 if(professores.status === 200){
                     setTodosProfessores(professores.data);
+                    setProfessorAtual(user)
                 }
 
                 const cursos = await getFunctonCurso();
@@ -113,94 +119,251 @@ export default function TelaObservacoes() {
         }
 
         fetchCursos();
-    }, []);
+    }, [novoComentario]);
 
-// 2. Filtrar professores sempre que mudar cursoFiltro ou todosProfessores
-useEffect(() => {
-    let filtrados = todosProfessores;
-
-    if (cursoFiltro !== "Todos") {
-        filtrados = todosProfessores.filter(
-            (p) => p.nome_curso === cursoFiltro
-        );
-    }
-
-    setProfessoresFiltrados(filtrados);
-    setProfessorSelecionado(null);
-}, [cursoFiltro, todosProfessores]);
+    const comentariosDoProfessorLogado = comentariosPorProfessor.filter(
+        (comentario) => 
+            comentario.id_professor === professorAtual?.id &&
+            comentario.id_aluno === aluno.id
+    );
 
 
+    // 2. Filtrar professores sempre que mudar cursoFiltro ou todosProfessores
+    useEffect(() => {
+        let filtrados = todosProfessores;
 
-    // Adiciona novo comentário (TAREFA 2: Duplicação resolvida garantindo um único ponto de chamada)
-    const adicionarComentario = () => {
-        if (!novoComentario.trim() || !professorSelecionado) return;
+        if (cursoFiltro !== "Todos") {
+            filtrados = todosProfessores.filter(
+                (p) => p.nome_curso === cursoFiltro
+            );
+        }
 
-        const novo = {
-            autor: "Professor Atual",
-            texto: novoComentario,
-            data: new Date().toLocaleDateString("pt-BR"),
-            respostas: []
+        setProfessoresFiltrados(filtrados);
+        setProfessorSelecionado(null);
+    
+    }, [cursoFiltro, todosProfessores]);
+
+    
+
+    // Adiciona novo comentário (envia ao backend e atualiza estado)
+    const adicionarComentario = async () => {
+        if (!novoComentario.trim() ) return;
+
+        const payload = {
+            id_professor: professorAtual?.id,
+            id_aluno: aluno?.id || aluno?.id_aluno || aluno?.id_aluno_fk || null,
+            texto: novoComentario
         };
+        try {
+            const resp = await postFunctionComentario(payload);
+            // Se backend retornar o comentário criado, use ele; senão constrói localmente
+            const created = resp && resp.data ? resp.data : null;
 
-        const professorId = professorSelecionado.id;
-        
-        // Atualiza o mapa de comentários (imutabilidade)
-        setComentariosPorProfessor(prev => ({
-            ...prev,
-            [professorId]: [...(prev[professorId] || []), novo]
-        }));
-        setNovoComentario("");
+            const comentarioParaInserir = created
+                ? {
+                    ...created,
+                    // normaliza nomes para UI
+                    texto: created.texto || created.comentario || created.body || novoComentario,
+                    autor: created.autor || created.nome_autor || professorAtual?.user || professorAtual?.nome || 'Você',
+                    data: created.data_criacao || created.data || created.created_at || new Date().toLocaleDateString('pt-BR'),
+                    respostas: created.respostas || []
+                }
+                : {
+                    autor: professorAtual?.user || professorAtual?.nome || 'Você',
+                    texto: novoComentario,
+                    data: new Date().toLocaleDateString('pt-BR'),
+                    respostas: []
+                };
+
+            // atualiza estado: suporta ambos formatos (array ou mapa)
+            setComentariosPorProfessor(prev => {
+                if (Array.isArray(prev)) {
+                    return [...prev, { id_professor: professorAtual?.id, ...comentarioParaInserir }];
+                }
+
+                // se for um mapa por id
+                const professorId = professorSelecionado.id_professor;
+                return {
+                    ...prev,
+                    [professorId]: [...(prev[professorId] || []), comentarioParaInserir]
+                };
+            });
+
+            setNovoComentario("");
+            toast.success('Comentário enviado.');
+        } catch (error) {
+            console.error('Erro ao postar comentário:', error);
+            toast.error('Não foi possível enviar o comentário.');
+        }
     };
 
     const handleEnterPress = (e) => {
         // Envia apenas se for a tecla Enter e se for o input principal
         if (e.key === 'Enter' && e.target.id === 'input-comentario-principal') {
             e.preventDefault(); 
-            adicionarComentario();
+            adicionarComentario(novoComentario);
         }
     };
 
     // Adiciona resposta a comentário específico
-    const adicionarResposta = (index) => {
+    const adicionarResposta = async (index, id_comentario) => {
         const textoResposta = respostasTemp[index];
-        if (!textoResposta || !textoResposta.trim() || !professorSelecionado) return;
-
+        if (!textoResposta || !textoResposta.trim()) return;
         const novaResposta = {
-            autor: "Professor Atual",
+            id_autor: professorAtual?.id || 'Você',
+            autor: professorAtual?.user || 'Você',
+            id_comentario: id_comentario || null,
             texto: textoResposta,
             data: new Date().toLocaleDateString("pt-BR")
         };
-        
-        setComentariosPorProfessor(prev => {
-            const professorId = professorSelecionado.id;
 
-        // Clona os comentários do professor
-        const comentariosDoProfessor = prev[professorId]
-            ? prev[professorId].map(c => ({ ...c, respostas: [...c.respostas] }))
-            : [];
+        try{
+            const resp = await postRespostaComentario(novaResposta)
 
-        // Adiciona a nova resposta de forma imutável
-        comentariosDoProfessor[index].respostas = [
-            ...comentariosDoProfessor[index].respostas,
-            novaResposta
-        ];
+            const created = resp && resp.data ? resp.data : null;
 
-        return {
-            ...prev,
-            [professorId]: comentariosDoProfessor
-        };
-    });
+            // Construir o objeto de resposta que será inserido no estado, garantindo o campo `id`
+            const respostaInserir = created
+                ? {
+                    id: created.id_resposta || created.id || created.insertId,
+                    id_autor: novaResposta.id_autor,
+                    autor: novaResposta.autor,
+                    id_comentario: id_comentario,
+                    texto: created.texto || created.comentario || created.body || textoResposta,
+                    data_criacao: created.data_criacao || created.data || created.created_at || new Date().toLocaleDateString('pt-BR')
+                }
+                : {
+                    id: Date.now(), // fallback temporário
+                    id_autor: novaResposta.id_autor,
+                    autor: novaResposta.autor,
+                    id_comentario: id_comentario,
+                    texto: textoResposta,
+                    data_criacao: new Date().toLocaleDateString('pt-BR')
+                };
 
-    setRespostasTemp(prev => ({ ...prev, [index]: "" }));
+
+            setComentariosPorProfessor(prev => {
+                if (Array.isArray(prev)) {
+                    return prev.map(c => {
+                        if (c.id === id_comentario) {
+                            const respostas = Array.isArray(c.respostas) ? c.respostas : [];
+                            return { ...c, respostas: [...respostas, respostaInserir] };
+                        }
+                        return c;
+                    });
+                }
+
+                // Caso seja um mapa por professores
+                const professorId = professorSelecionado?.id_professor || professorAtual?.id;
+                return {
+                    ...prev,
+                    [professorId]: (prev[professorId] || []).map(c => {
+                        if (c.id === id_comentario) {
+                            const respostas = Array.isArray(c.respostas) ? c.respostas : [];
+                            return { ...c, respostas: [...respostas, respostaInserir] };
+                        }
+                        return c;
+                    })
+                };
+            });
+
+            setRespostasTemp(prev => ({ ...prev, [index]: "" }));
+        } catch(error){
+            console.error('Erro ao adicionar resposta:', error, error?.response?.data);
+            toast.error('Não foi possível enviar a resposta.');
+        }
   };
 
     // Enviar com ENTER no Input de Resposta (TAREFA 3: Nova Lógica)
     const handleRespostaEnterPress = (e, index) => {
         if (e.key === 'Enter') {
             e.preventDefault(); 
-            adicionarResposta(index);
+            // colocar a função aquiiiiiiiiiiiii
         }
     };
+
+    const excluirComentario = async (idComentario) => {
+        try {
+            const resp = await deleteFunctionComentario(idComentario);
+            if(resp.status === 200){
+                setComentariosPorProfessor(prev => {
+                    if (Array.isArray(prev)) {
+                        return prev.filter(c => c.id !== idComentario);
+                    }
+
+                    // Caso seja mapa por professor
+                    const professorId = professorSelecionado?.id_professor || professorAtual?.id;
+                    if (!professorId) return prev;
+
+                    const comentariosDoProfessor = Array.isArray(prev[professorId]) ? prev[professorId].filter(c => c.id !== idComentario) : [];
+                    return {
+                        ...prev,
+                        [professorId]: comentariosDoProfessor
+                    };
+                });
+                toast.success('Comentário deletado com sucesso.');
+            }
+        } catch (error) {
+            console.error('Erro ao deletar comentário:', error);
+            toast.error('Não foi possível deletar o comentário.');
+        }
+    }
+
+    const excluirResposta = async (idResposta, idComentario) => {
+        try {
+            const idNum = Number(idResposta);
+            if (!idNum || isNaN(idNum)) {
+                toast.error('ID da resposta inválido (frontend).');
+                return;
+            }
+
+            const resp = await deleteFunctionResposta(idNum);
+
+            if (resp && resp.status === 200) {
+                setComentariosPorProfessor(prev => {
+                    if (Array.isArray(prev)) {
+                        return prev.map(comentario => {
+                            if (comentario.id === idComentario) {
+                                return {
+                                    ...comentario,
+                                    respostas: (comentario.respostas || []).filter(r => r.id !== idNum)
+                                };
+                            }
+                            return comentario;
+                        });
+                    }
+
+                    // Caso seja estrutura em MAP (por professor)
+                    const professorId = professorSelecionado?.id_professor || professorAtual?.id;
+                    if (!professorId) return prev;
+
+                    return {
+                        ...prev,
+                        [professorId]: (prev[professorId] || []).map(comentario => {
+                            if (comentario.id === idComentario) {
+                                return {
+                                    ...comentario,
+                                    respostas: (comentario.respostas || []).filter(r => r.id !== idNum)
+                                };
+                            }
+                            return comentario;
+                        })
+                    };
+                });
+
+                toast.success('Resposta deletada.');
+            } else {
+                const errMsg = resp?.data?.err || 'Falha ao deletar resposta';
+                console.warn('Falha ao deletar resposta:', resp && resp.data);
+                toast.error(errMsg);
+            }
+        } catch (error) {
+            console.error('Erro ao deletar resposta:', error, error?.response?.data);
+            const serverMsg = error?.response?.data?.err || error.message;
+            toast.error(`Não foi possível deletar a resposta: ${serverMsg}`);
+        }
+    };
+
 
     // Alterna visibilidade das respostas
     const alternarRespostas = (index) => {
@@ -258,16 +421,16 @@ useEffect(() => {
                     {professorSelecionado ? (
                         <>
                             <div className="comentarios-scroll">
-                                <h4>Observações de {professorSelecionado.nome}</h4>
+                                <h4>Observações de {professorSelecionado.nome_professor}</h4>
 
                                 {/* Lista de comentários */}
                                 {comentariosAtuais.map((comentario, index) => (
                                     <div key={index} className="comentario">
                                         <p className="texto">{comentario.texto}</p>
-                                        <span className="autor">{comentario.autor} ({comentario.data})</span>
+                                        <span className="autor">{comentario.autor || professorSelecionado?.nome_professor || comentario.id_professor} ({comentario.data || comentario.data_criacao || comentario.created_at || '-'})</span>
 
                                         {/* Botão para mostrar/ocultar respostas */}
-                                        {comentario.respostas.length > 0 && ( 
+                                        {(comentario.respostas && comentario.respostas.length > 0) && ( 
                                             <Button
                                                 variant="link"
                                                 className="toggle-respostas"
@@ -279,12 +442,24 @@ useEffect(() => {
 
                                         {/* Respostas visíveis */}
                                         {respostasVisiveis[index] &&
-                                            comentario.respostas.map((resposta, i) => ( 
+                                            comentario.respostas.map((resposta, i) => (
                                                 <div key={i} className="resposta">
                                                     <p className="texto">{resposta.texto}</p>
-                                                    <span className="autor">{resposta.autor} ({resposta.data})</span>
+                                                    <span className="autor">{resposta.autor} ({resposta.data_criacao})</span>
+
+                                                    {/* Só mostra o botão se foi o professor que escreveu */}
+                                                    {resposta.id_autor === professorAtual?.id && (
+                                                        <button
+                                                            className="botao-deletar-resposta"
+                                                            onClick={() => excluirResposta(resposta.id, comentario.id)}
+                                                        >
+                                                            <img src="https://img.icons8.com/?size=100&id=99971&format=png&color=000000" />
+                                                        </button>
+                                                    )}
                                                 </div>
-                                            ))} 
+                                            ))
+                                        }
+
 
                                         
                                         <InputGroup className="mt-2">
@@ -297,7 +472,7 @@ useEffect(() => {
                                                 }
                                                 onKeyDown={(e) => handleRespostaEnterPress(e, index)}
                                             />
-                                            <Button variant="secondary" onClick={() => adicionarResposta(index)}>
+                                            <Button variant="secondary" onClick={() => adicionarResposta(index, comentario?.id)}>
                                                 Responder
                                             </Button>
                                         </InputGroup>
@@ -305,16 +480,40 @@ useEffect(() => {
                                 ))}
                                 {/* Mensagem quando não há comentários */}
                                 {comentariosAtuais.length === 0 && (
-                                    <p className="text-center">Ainda não há observações para {professorSelecionado.nome}.</p>
+                                    <p className="text-center">Ainda não há observações para {professorSelecionado.nome_professor}.</p>
                                 )}
                             </div>
 
-                            {/* Input principal (TAREFA 1: Largura total garantida pelo CSS) */}
+                        </>
+                    ) : (
+                        <>
+                            {comentariosDoProfessorLogado.length > 0 ? (
+                                    <div className="comentarios-scroll">
+                                        <h4>Seus comentários</h4>
+                                        {comentariosDoProfessorLogado.map((comentario, index) => (
+                                            <div key={index} className="comentario">
+                                                <p><strong>Você:</strong></p>
+                                                <button className="botao-deletar" onClick={() => excluirComentario(comentario?.id)}>
+                                                    <img src="https://img.icons8.com/?size=100&id=99971&format=png&color=000000" alt="Deletar comentário" />
+                                                </button>
+                                                <p>{comentario?.texto}</p>
+                                                <p><strong>Data:</strong> {comentario?.data_criacao}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="mensagem-central">
+                                        <p>Você ainda não fez comentários para este aluno.</p>
+                                    </div>
+                            )}
+
+                             <div>
+                                 {/* Input principal (TAREFA 1: Largura total garantida pelo CSS) */}
                             <InputGroup className="mt-3 input-comentario-principal-container">
                                 <Form.Control
                                     type="text"
                                     id="input-comentario-principal" 
-                                    placeholder={`Comentário para ${professorSelecionado.nome}...`}
+                                    placeholder={`Comentário para ${aluno?.nome_aluno}...`}
                                     value={novoComentario}
                                     onChange={(e) => setNovoComentario(e.target.value)}
                                     onKeyDown={handleEnterPress} 
@@ -323,11 +522,8 @@ useEffect(() => {
                                     <Send size={20} />
                                 </Button>
                             </InputGroup>
+                            </div>
                         </>
-                    ) : (
-                        <div className="mensagem-central">
-                            <p>Selecione um curso no painel lateral, e depois um professor para visualizar e adicionar observações.</p>
-                        </div>
                     )}
                 </div>
 

@@ -1,8 +1,7 @@
 import express from 'express';
 import pool from '../database/data-source.js';
-/* teste git hub*/
-const routes = express.Router();
 
+const routes = express.Router();
 routes.get("/", async (req, res) => {
     try {
         const [rows] = await pool.query(`SELECT * FROM tbl_alergias`);

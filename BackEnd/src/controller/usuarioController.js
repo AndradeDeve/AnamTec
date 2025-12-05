@@ -208,7 +208,7 @@ routes.post("/", async (request, response) => {
                 [email]
             );
 
-            if (jaCoordena.length > 0) {
+            if (jaCoordena.length > 3) {
                 return response.status(400).json({
                     err: `Este usuário já é coordenador do curso: ${jaCoordena[0].curso}`
                 });
@@ -222,18 +222,21 @@ routes.post("/", async (request, response) => {
                 [curso]
             );
 
+
             if (cursoLivre.length === 0) {
                 return response.status(400).json({ 
                     err: "Este curso já possui um coordenador." 
                 });
             }
 
-            await pool.query(
+            for(let i = 0; i < cursoLivre.length; i++ ){
+                const [updateCurso] = await pool.query(
                 `UPDATE tbl_curso 
                 SET id_coordenador = (SELECT id FROM tbl_usuario WHERE email = ?) 
                 WHERE curso = ?`,
                 [email, curso]
             );
+            }
         }
 
         const hashedSenha = await hash(senha, 10);
@@ -390,5 +393,3 @@ routes.put("/ativo/:ID", async (request, response) => {
 });
 
 export default routes;
-
-

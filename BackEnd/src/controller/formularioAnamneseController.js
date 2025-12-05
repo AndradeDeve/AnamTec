@@ -3,9 +3,9 @@ import pool from "../database/data-source.js";
 import { validarCPF } from "../utils/cpfValidator.js";
 import { upload } from "../utils/cloudinaryConfig.js";
 
-const enumSexo = ["feminino", "masculino"];
+const enumSexo = ["feminino", "masculino", "não binario", "prefiro não informar", "outros" ];
 const enumTpSangue = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-const enumSimNao = ["sim", "nao"];
+const enumSimNao = ["sim", "nao", "eventualmente"];
 
 const router = express.Router();
 
@@ -183,9 +183,16 @@ router.post("/", (req, res, next) => {
     const logradouroInformacoes = forms.logradouroInformacoes || {};
     const cursoInformacoes = forms.cursoInformacoes || {};
     const responsaveis = Array.isArray(forms.responsavel) ? forms.responsavel : [];
-    console.log(responsaveis)
     let saude = forms.saude || {};
+    console.log("AlunoInfo: ", alunoInformacoes)
+    console.log("Logradouro: ", logradouroInformacoes)
+    console.log("curso: ", cursoInformacoes);
+    console.log("responsalvel: ", responsaveis);
+    console.log("saúde: ", saude)
     
+    if(cursoInformacoes.curso === 'Administração - Ensino Médio'){
+      cursoInformacoes.curso = 'Administração (Ensino médio)'
+    }
     if ((!saude || Object.keys(saude).length === 0) && req.body && (req.body.sexo || req.body.tp_sangue || req.body.peso)) {
       saude = { ...req.body };
     }
@@ -248,13 +255,17 @@ router.post("/", (req, res, next) => {
     // Verifica se aluno existe por RM ou email
     let alunoId = null;
     if (rm) {
-      const [rowRm] = await pool.query(`SELECT id FROM tbl_cadastro_al WHERE rm = ? AND deletedAt IS NULL LIMIT 1`, [rm]);
+      const [rowRm] = await pool.query(`SELECT id FROM tbl_cadastro_al WHERE rm = ? `, [rm]);
       if (rowRm && rowRm.length > 0) alunoId = rowRm[0].id;
     }
 
     if (alunoId) {
       // Atualiza dados do aluno existente
-      return res.status(400).json({err: "Este aluno já possui uma Anamnese."})
+      const [alunosUp]  = await pool.query(
+        `UPDATE tbl_cadastro_al set rm = ?, nome = ?, data_nasc =?,  genero = ?, etnia = ?, email = ?, telefone = ?, resideCom = ?, id_endereco =?
+          where id = ?
+        `, [rm, nome, data_nasc, genero, etnia, email, telefone, resideCom, enderecoId, alunoId]
+      )
     } else {
       const [alunoResult] = await pool.query(
         `INSERT INTO tbl_cadastro_al (rm, nome, data_nasc, genero, etnia, email, telefone, resideCom, id_endereco) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -318,15 +329,11 @@ router.post("/", (req, res, next) => {
 
       // Verifica curso existente
       let cursoId = null;
-      const [existingCurso] = await pool.query(`SELECT id FROM tbl_curso WHERE curso = ? AND turno = ? AND semestre = ? AND modalidade = ? AND deletedAt IS NULL LIMIT 1`, [curso, turno, semestre, modalidade]);
+      const [existingCurso] = await pool.query(`SELECT id FROM tbl_curso WHERE curso = ? and semestre = ?`, [curso, semestre]);
       if (existingCurso && existingCurso.length > 0) {
         cursoId = existingCurso[0].id;
-      } else {
-        const [cursoResult] = await pool.query(
-          `INSERT INTO tbl_curso (curso, turno, semestre, modalidade) VALUES (?, ?, ?, ?)`,
-          [curso, turno, semestre, modalidade]
-        );
-        cursoId = cursoResult.insertId;
+      }else{
+        return res.status(400).json({err: "Curso inválido."})
       }
       if (cursoId) {
         const [existingJ] = await pool.query(`SELECT 1 FROM juncao_al_curso WHERE id_aluno = ? AND id_curso = ? LIMIT 1`, [alunoId, cursoId]);
@@ -336,9 +343,6 @@ router.post("/", (req, res, next) => {
       }
     }
 
-    // Inserções relacionadas à saúde/comportamento
-    // alergias
-    // Reutiliza registros auxiliares quando possível (alergias, diagnostico, etc.) para evitar duplicatas
     let idAlergias = null;
     const alergiaFlag = normalizeYesNo(saude.possuiAlergia || saude.possiuAlergia || saude.possuiAlergia);
     const [existsAlergia] = await pool.query(`SELECT id FROM tbl_alergias WHERE alergias = ? AND tp_alergia <=> ? LIMIT 1`, [alergiaFlag, saude.qualAlergia || null]);
@@ -348,7 +352,7 @@ router.post("/", (req, res, next) => {
       idAlergias = alergiasRes.insertId;
     }
 
-    // diagnostico (se houver)
+    // diagnostico
     let idDiag = null;
     const diagFlag = normalizeYesNo(saude.diagnostica || saude.diagnostico);
     const [existsDiag] = await pool.query(`SELECT id FROM tbl_diagnostico WHERE diagnostico = ? AND tp_diag <=> ? LIMIT 1`, [diagFlag, saude.tp_diag || null]);
@@ -458,7 +462,6 @@ router.post("/", (req, res, next) => {
   
     if (sexoVal && !enumSexo.includes(String(sexoVal).toLowerCase())) return res.status(400).json({ err: "Sexo inválido." });
     if (tp_sangue && !enumTpSangue.includes(String(tp_sangue))) return res.status(400).json({ err: "Tipo sanguíneo inválido." });
-    console.log(gravidezVal)
     if (gravidezVal && !enumSimNao.includes(String(gravidezVal).toLocaleLowerCase())) return res.status(400).json({ err: "Gravidez inválida." });
     if (alcoolVal && !enumSimNao.includes(String(alcoolVal).toLowerCase())) return res.status(400).json({ err: "Álcool inválido." });
     if (fumoVal && !enumSimNao.includes(String(fumoVal).toLowerCase())) return res.status(400).json({ err: "Fumo inválido." });
@@ -490,7 +493,13 @@ router.post("/", (req, res, next) => {
 
     if (saude.peso && (isNaN(peso) || peso <= 0)) return res.status(400).json({ err: "Peso inválido." });
     if (saude.altura && (isNaN(altura) || altura <= 0)) return res.status(400).json({ err: "Altura inválida." });
-    console.log("Laudo:===============================", laudo)
+    const [anamAlu]= await pool.query(
+      `SELECT * FROM tbl_dadosMedicos WHERE id_aluno = ?`, [alunoId]
+    )
+
+    if(anamAlu.length > 0){
+      return res.status(200).json({err: "Aluno Cadastrado com sucesso."})
+    }
     const [dmRes] = await pool.query(
       `INSERT INTO tbl_dadosMedicos (sexo, tp_sangue, peso, altura, gravidez, idade, alcool, fumo, drogas, obs, laudo, id_alergias, id_diagnostico, id_deficiencias, id_restricoes, id_cirurgias, id_medicamentos, id_aluno, id_dificuldades, id_psicologico, id_internet, id_atividadeFisica) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [sexoVal || alunoInformacoes.genero || null, tp_sangue, peso, altura, normalizeYesNo(gravidezVal), idade, normalizeYesNo(alcoolVal), normalizeYesNo(fumoVal), normalizeYesNo(drogasVal), obs, laudo, idAlergias, idDiag, idDef, idRestr, idCirc, idMedi, alunoId, idDiff, idPsi, idInt, idAtiv]

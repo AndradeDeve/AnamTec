@@ -13,7 +13,7 @@ import "../Styles/FormRevisao.css";
 
 function FormRevisao() {
   const navigate = useNavigate();
-  const { dadosFormulario } = useContext(FormContext);
+  const { dadosFormulario, resetFormulario } = useContext(FormContext);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
@@ -38,11 +38,16 @@ function FormRevisao() {
 
       if (response && (response.status === 200 || response.status === 201)) {
         toast.success(backendMessage);
+        // Limpa o formulário salvo (context + localStorage) para nova anamnese
+        // try {
+          // if (typeof resetFormulario === 'function') resetFormulario();
+        // } catch (e) {
+          // console.error('Erro ao resetar formulário:', e);
+        // }
         navigate("/sucesso");
         return;
       }
 
-      // qualquer outro status
       toast.error(backendMessage);
       navigate("/sucesso");
     } catch (error) {

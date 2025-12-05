@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header/Header';
 import DashboardCards from './components/Dashboard/DashboardCards';
-import { getFunctionAluno } from './../services/APIService.js';
-import { postEmailAlunosPendentes } from './../services/APIService.js';
+import { getFunctionAluno, postEmailAlunosPendentes } from './../services/APIService.js';
+import { getUser } from '../helpers/auth.js';
 import FilterBar from './components/SearchBar/FilterBar';
 import StudentTable from './components/StudantTable/StudantTable';
 import ButtonGrid from './components/ButtonGrid/ButtonGrid';
@@ -11,27 +11,39 @@ import { toast } from 'react-toastify';
 export default function MasterDashboard() {
   const [showModal, setShowModal] = useState(false);
   const [alunosFiltrados, setAlunosFiltrados] = useState([]);
-  const [todosAlunos, setTodosAlunos] = useState([]); // ✅ novo estado base
+  const [todosAlunos, setTodosAlunos] = useState([]); 
   const [alunosPendentes, setAlunosPendentes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Busca inicial dos alunos
+
   useEffect(() => {
-    const fetchAlunos = async () => {
-      try {
-        const dados = await getFunctionAluno();
-        setTodosAlunos(dados || []);
-        setAlunosFiltrados(dados || []);
-      } catch (error) {
-        console.error('Erro ao buscar dados dos alunos:', error);
-        setTodosAlunos([]);
-        setAlunosFiltrados([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAlunos();
-  }, []);
+  const fetchAlunos = async () => {
+    try {
+      
+      const userData = getUser();
+      console.log(userData.curso)
+
+      const dadosAlunos = await getFunctionAluno();
+      console.log(dadosAlunos)
+
+      const alunosFilter = userData.curso
+        ? dadosAlunos.filter(aluno => aluno.nome_curso === userData.curso)
+        : dadosAlunos;
+
+      setTodosAlunos(alunosFilter || []);
+      setAlunosFiltrados(alunosFilter || []);
+    } catch (error) {
+      console.error('Erro ao buscar dados dos alunos:', error);
+      setTodosAlunos([]);
+      setAlunosFiltrados([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchAlunos();
+}, []);
+
 
   // 🔹 Quando o usuário clica em um card
   const handleCardClick = (tipo) => {

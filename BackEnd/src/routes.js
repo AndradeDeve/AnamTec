@@ -1,5 +1,5 @@
 import express from 'express';
-import comentariosController from './controller/comentariosController.js';
+import comentarioController from './controller/comentarioControllerTest.js';
 import alunoController from './controller/alunoController.js';
 import usuarioController from './controller/usuarioController.js';
 import responsavelController from './controller/responsavelController.js';
@@ -27,10 +27,10 @@ routes.use("/cirurgias", cirurgiasController);
 routes.use('/resetSenha', authenticate, resetSenhaController);
 routes.use("/deficiencia", deficienciaController);
 routes.use("/alergias", alergiaController);     
-routes.use("/comentarios", comentariosController);
+routes.use("/comentarios", comentarioController);
 routes.use("/responsavel", responsavelController);
 routes.use("/aluno", alunoController);
-routes.use("/user",  usuarioController);
+routes.use("/user", authenticate, usuarioController);
 routes.use("/login", loginController);
 routes.use('/curso', cursoController);
 routes.use("/type", typeController);
@@ -42,3 +42,19 @@ routes.use("/medicamentos", medicamentosController);
 routes.use("/dadosMedicos", dadosMedicosController);    
 
 export default routes;
+
+// Querido programador:
+
+// Quando escrevi este código, só Deus e eu 
+// sabíamos como ele funcionava.
+// Agora, só Deus sabe!
+//  
+// Portanto, se você estiver tentando otimizar
+// alguma função e ela falhar (oque é bem provável),
+// pro favor aumente o contador a abaixo como
+// um aviso para o próximo programador, e
+// lembre-se de que não há mais ninguém que saiba
+// como este código funciona.
+// Boa sorte e que Deus tenha misericórdia de sua alma!
+
+// total_de_horas_perdidas_aqui = 

@@ -50,10 +50,10 @@ function Anamnese() {
         <Container className="mt-4">
             <div className="form-box form-revisao-body">
 
-            <h3 className="font-semibold mb-4 text-center">Revisão dos Dados</h3>
+            <h3 className="fw-bold mb-4 text-center m-auto pt-4">Revisão dos Dados</h3>
 
             {/* Informações Principais */}
-            <Card className="p-3 mb-3 shadow-sm">
+            <Card className="form-size p-3 mb-3 shadow-sm">
                 <h5>Informações Principais</h5>
                 <p><strong>Nome:</strong> {dadosAluno?.nome_aluno}</p>
                 <p><strong>RM:</strong> {dadosAluno?.rm}</p>
@@ -65,11 +65,11 @@ function Anamnese() {
                 <p><strong>Módulo:</strong> {dadosAluno?.modulo_curso}</p>
                 <p><strong>Gênero:</strong> {dadosAluno?.genero_aluno}</p>
                 <p><strong>Email:</strong> {dadosAluno?.email_aluno}</p>
-                <p><strong>Endereço:</strong> {`Rua: ${dadosAluno?.logradouro}, N°: ${dadosAluno?.numero}, Bairro: ${dadosAluno?.bairro}`}</p>
+                <p><strong>Endereço:</strong> {`${dadosAluno?.logradouro}, N°: ${dadosAluno?.numero}, Bairro: ${dadosAluno?.bairro}`}</p>
             </Card>
 
             {/* Responsável */}
-            <Card className="p-3 mb-3 shadow-sm">
+            <Card className="form-size p-3 mb-3 shadow-sm">
                 <h5>Responsável</h5>
                 <p><strong>Nome:</strong> {dadosAluno?.responsavel_nome}</p>
                 <p><strong>CPF:</strong> {dadosAluno?.responsavel_CPF}</p>
@@ -79,7 +79,7 @@ function Anamnese() {
             </Card>
 
             {/* Saúde */}
-            <Card className="p-3 mb-3">
+            <Card className="form-size p-3 mb-3">
                 <h5>Histórico de Saúde</h5>
                 <p><strong>Tipo sanguíneo:</strong> {dadosAluno?.tp_sangue}</p>
                 <p><strong>Fumante:</strong> {dadosAluno?.fumo}</p>
@@ -94,7 +94,7 @@ function Anamnese() {
             </Card>
 
             {/* Comportamento */}
-            <Card className="p-3 mb-3">
+            <Card className="form-size p-3 mb-3">
                 <h5>Comportamento e Emocional</h5>
                 <p><strong>Dificuldade de aprendizagem:</strong> {dadosAluno?.possui_dificuldade}</p>
                 <p><strong>Quais dificuldades:</strong> {dadosAluno?.tp_dificuldades}</p>

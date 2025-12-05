@@ -48,6 +48,7 @@ export default function ControleAcesso() {
     const fetchUser = async () => {
       try{
           const responseUser = await getFunctionUser();
+          console.log(responseUser)
           const responseAl = await getFunctionAlunoControll(); 
           setUsuarios(responseUser.data);
           setAlunos(responseAl.data);
@@ -347,17 +348,17 @@ export default function ControleAcesso() {
                  {itensPagina.map((user, index) => (
 
                     <tr key={index}>
-                      <td>{user.rm || "Não se aplica"}</td>
-                      <td>{user.nome_user || user.nome_aluno}</td>
-                      <td>{user.entidade || "Aluno"}</td>
-                      <td>{user.disciplina || "Não se aplica"}</td>
-                      <td>{user.curso_user || user.nome_curso}</td>
-                      <td>{user.coordenador}</td>
+                      <td>{user?.rm || "Não se aplica"}</td>
+                      <td>{user?.nome_user || user?.nome_aluno}</td>
+                      <td>{user?.entidade || "Aluno"}</td>
+                      <td>{user?.disciplina || "Não se aplica"}</td>
+                      <td>{user?.curso_user || user?.nome_curso}</td>
+                      <td>{user?.coordenador}</td>
                       <td>
                         <button
                           className={`status-badge ${
                             user.status.toLowerCase() === "ativo" ? "ativo" : "inativo"
-                          }`} onClick={() =>deleteAtUser(user.id, user.entidade || "aluno", user.status)}
+                          }`} onClick={() =>deleteAtUser(user?.id, user?.entidade || "aluno", user?.status)}
                           
                         >
                           {user.status}

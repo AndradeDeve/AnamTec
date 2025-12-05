@@ -32,5 +32,22 @@ async function startServer() {
     };
 };
 
-
 startServer();
+
+
+// Querido programador:
+
+// Quando escrevi este código, só Deus e eu 
+// sabíamos como ele funcionava.
+// Agora, só Deus sabe!
+
+// Portanto, se você está tentando otimizar 
+// alguma função e ela falhar (o que é bem provável),
+// por favor, aumente o contador a baixo e invoque o nome de Deus em sua mente
+// antes de começar a depurar o código.
+// Eu lhe asseguro que isso ajudará.
+// Obrigado por sua compreensão.
+
+// total_de_Horas_pedidas_para_entender_este_codigo = 2.142
+
+
