@@ -82,6 +82,16 @@ export function FormProvider({ children}) {
 
     const [dadosFormulario, setDadosFormulario] = useState(loadInitial);
 
+    // Reseta o formulário para o estado padrão e limpa o localStorage
+    const resetFormulario = () => {
+        try {
+            localStorage.removeItem(STORAGE_KEY);
+        } catch (err) {
+            console.error('Erro ao remover estado do localStorage:', err);
+        }
+        setDadosFormulario(defaultState);
+    };
+
     // Salva no localStorage com debounce para evitar escrita excessiva
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -96,7 +106,7 @@ export function FormProvider({ children}) {
     }, [dadosFormulario]);
 
     return (
-        <FormContext.Provider value={{ dadosFormulario, setDadosFormulario }}>
+        <FormContext.Provider value={{ dadosFormulario, setDadosFormulario, resetFormulario }}>
             {children}
         </FormContext.Provider>
     );

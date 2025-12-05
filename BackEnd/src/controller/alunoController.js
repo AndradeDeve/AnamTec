@@ -193,7 +193,6 @@ routes.get("/specific", async (req, res) => {
     if (!rows || rows.length === 0) {
       return res.status(404).json({ err: "Aluno não encontrado." });
     }
-    console.log("Bom dia");
     return res.status(200).json(rows);
   } catch (err) {
     console.error("Erro ao buscar alunos:", err);
@@ -228,7 +227,6 @@ routes.get("/curso", async (req, res) => {
           WHERE al.deletedAt IS NULL  
           AND c.deletedAt IS NULL;`
     );
-    console.log(rows);
     if (!rows || rows.length === 0) {
       return res.status(404).json({ err: "Aluno não encontrado." });
     }
@@ -242,7 +240,7 @@ routes.get("/curso", async (req, res) => {
 
 // Cadastro de aluno
 routes.post("/", async (req, res) => {
-  const { rm, nome, data_nasc, genero, email, telefone, cep, curso } = req.body;
+  const { rm, nome, data_nasc,etnia, resideCom, genero, email, telefone, cep, curso } = req.body;
 
   try {
     const [enderecoExistente] = await pool.query(
@@ -324,9 +322,9 @@ routes.post("/", async (req, res) => {
 
     await pool.query(
       `INSERT INTO tbl_cadastro_al 
-        (rm, nome, data_nasc, genero, email, telefone, id_endereco) 
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [rm, nome, data_nasc, genero, email, telefone, id_endereco]
+        (rm, nome, data_nasc, genero, etnia, email, telefone, resideCom, id_endereco) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [rm, nome, data_nasc, genero, etnia, email, telefone, resideCom, id_endereco]
     );
 
     const [alunoCadastrado] = await pool.query(

@@ -8,45 +8,88 @@ import { VerificarSenha } from '../utils/jwt.js';
 
 const routes = express.Router();
 
-routes.post("/", async(request, response) => {
-    const {email, senha} = request.body;
+routes.post("/", async (request, response) => {
+    const { email, senha } = request.body;
 
-    try{
+    try {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!email || !emailRegex.test(email.trim())){
-            return response.status(401).json({err: "E-mail inválido"});
+
+        if (!email || !emailRegex.test(email.trim())) {
+            return response.status(401).json({ err: "E-mail inválido" });
         }
 
-        const [rows] = await pool.query(`
-            SELECT
-            u.nome as nome,
-            u.senha as senha,
-            u.email as email,
-            u.id as id,
-            t.tipo as type
+        let [result] = await pool.query(
+            `SELECT
+                u.nome,
+                u.senha,
+                u.email,
+                u.id,
+                t.tipo,
+                c.curso
             FROM tbl_usuario u
             INNER JOIN juncao_type_user jut ON u.id = jut.id_user
-            INNER JOIN tbl_type t ON jut.id_type = t.id 
-            WHERE u.email = ? AND u.deletedAt IS NULL
-            `, [email]);
+            INNER JOIN tbl_type t ON jut.id_type = t.id
+            INNER JOIN juncao_curso_user jcu ON u.id = jcu.id_user
+            INNER JOIN tbl_curso c ON jcu.id_curso = c.id  
+            WHERE u.email = ?
+            AND u.deletedAt IS NULL`,
+            [email]
+        );
 
-        if(rows.length === 0){
-            return response.status(401).json({err: "Usuário não encontrado."});
+        // CASO o usuário NÃO tenha curso vinculado
+        if (result.length === 0) {
+            const [resultSemCurso] = await pool.query(
+                `SELECT
+                    u.nome,
+                    u.senha,
+                    u.email,
+                    u.id,
+                    t.tipo
+                FROM tbl_usuario u
+                INNER JOIN juncao_type_user jut ON u.id = jut.id_user
+                INNER JOIN tbl_type t ON jut.id_type = t.id
+                WHERE u.email = ?
+                AND u.deletedAt IS NULL`,
+                [email]
+            );
+
+            result = resultSemCurso; // substitui resultado
         }
 
-        const user = rows[0];       
-        
+        if (result.length === 0) {
+            return response.status(401).json({ err: "Usuário não encontrado." });
+        }
+
+        const user = result[0];
+
         const senhaValida = await VerificarSenha(senha, user.senha);
-        if(!senhaValida){
-            return response.status(401).json({err: "Senha inválida."});
-        }        
-        const token = genereteToken({user:user.nome, email:user.email, type:user.type, id:user.id});
-        return response.status(200).json({response: "Login efetuado com sucesso.", token, typeUser:user.type, email:user.email, nome:user.nome, id:user.id });
-    }catch(err){
+        if (!senhaValida) {
+            return response.status(401).json({ err: "Senha inválida." });
+        }
+
+        const token = genereteToken({
+            user: user.nome,
+            email: user.email,
+            type: user.tipo,
+            id: user.id,
+            curso: user.curso ?? null
+        });
+        return response.status(200).json({
+            response: "Login efetuado com sucesso.",
+            token,
+            typeUser: user.tipo,
+            email: user.email,
+            nome: user.nome,
+            id: user.id,
+            curso: user.curso ?? null
+        });
+
+    } catch (err) {
         console.log("Erro ao efetuar o login:", err);
-        return response.status(500).json({err: "Erro no servidor."});
+        return response.status(500).json({ err: "Erro no servidor." });
     }
-})
+});
+
 
 routes.put("/emailReset", async(request, response) => {
     const {email} = request.body;

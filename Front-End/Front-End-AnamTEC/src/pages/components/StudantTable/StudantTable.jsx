@@ -6,7 +6,7 @@ export default function StudentTable({ alunosFiltrados = [] }) {
   const navigate = useNavigate();
   // 🔹 Estados para paginação (mesma lógica do ControleAcesso)
   const [correntPage, setCorrentPage] = useState(1);
-  const [itensPorPagina] = useState(10);
+  const [itensPorPagina] = useState(7);
 
   // 🔹 Lógica idêntica ao ControleAcesso.jsx
   const indexUltimoItem = correntPage * itensPorPagina;

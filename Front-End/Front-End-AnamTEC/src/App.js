@@ -25,20 +25,40 @@ function App() {
       <Routes>
         <Route path="/" element={<Login/>} />
         <Route path="/Cadastro" element={
-            // <ProtectedRouter roles={['coordenador pedagógico']}>  
-                <Cadastro /> 
-            // </ProtectedRouter>
+            <ProtectedRouter roles={['coordenador pedagógico']}>  
+              <Cadastro /> 
+            </ProtectedRouter>
           } />
         <Route path="/ResetarSenha" element={<ResetPassW />} />
-       <Route path="/Home" element={
-        <ProtectedRouter>
-            <MasterDashboard />
-        </ProtectedRouter>} />
-        <Route path="/Anamnese" element={<Anamnese />} />
-        <Route path="/Observacoes" element={<ObservacoesUsers />} />
-        <Route path="/Controle" element={<ControllAcess />} />
-        <Route path="/config" element={<Configuracoes />} />
-        <Route path="/relatorios" element={<ReportsDashboard />} />
+        <Route path="/Home" element={
+          <ProtectedRouter>
+              <MasterDashboard />
+          </ProtectedRouter>} />
+        <Route path="/Anamnese" element={
+          <ProtectedRouter>
+            <Anamnese />
+          </ProtectedRouter>
+        } />
+        <Route path="/Observacoes" element={
+          <ProtectedRouter>
+            <ObservacoesUsers />
+          </ProtectedRouter>
+          } />
+        <Route path="/Controle" element={
+          <ProtectedRouter roles={['coordenador pedagógico']}>
+            <ControllAcess />
+          </ProtectedRouter>
+        } />
+        <Route path="/config" element={
+          <ProtectedRouter>
+            <Configuracoes />
+          </ProtectedRouter>
+        } />
+        <Route path="/relatorios" element={
+          <ProtectedRouter roles={['coordenador pedagógico']}>
+            <ReportsDashboard />
+          </ProtectedRouter>
+        } />
         <Route path="/NaoEncontrado" element={<NaoAchou />} />
       </Routes>
     </Router>

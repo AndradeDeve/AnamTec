@@ -135,7 +135,7 @@ function FormInform() {
     navigate("/FormResp");
   };
 
-  const handleVoltar = () => navigate("/Home");
+  const handleVoltar = () => navigate("/");
   
   return (
     <>
@@ -274,14 +274,17 @@ function FormInform() {
               <Form.Select value={informacoes.curso}  isInvalid={!!erros.curso} onChange={(e) => handleChange("curso", e.target.value)}>
                 <option value="">Selecione o curso</option>
                 <option value="Administração">Administração</option>
-                <option value="Administração - Ensino Médio">Administração - Ensino Médio</option>
+                <option value="Administração (Ensino médio)">Administração - Ensino Médio</option>
                 <option value="Contabilidade">Contabilidade</option>
                 <option value="Recursos Humanos">Recursos Humanos</option>
                 <option value="Desenvolvimento de Sistemas">Desenvolvimentos de Sistemas</option>
-                <option value="Desenvolvimento de Sistemas - Ensino Médio">Desenvolvimento de Sistemas - Ensino Médio</option>
+                <option value="Desenvolvimento de Sistemas (Ensino médio)">Desenvolvimento de Sistemas - Ensino Médio</option>
+                <option value="Redes de Computadores">Redes de Computadores</option>
+                <option value="Redes de Computadores (Ensino médio)">Redes de Computadores - Ensino médio</option>
                 <option value="Informática">Informática</option>
                 <option value="Eletroeletrônica">Eletoreletrônica</option>
-                <option value="Automação Industrial - Ensino Médio">Automação Idustrial - Ensino Médio</option>
+                <option value="Automação Industrial (Ensino Médio)">Automação Idustrial - Ensino Médio</option>
+                <option value="Agenciamento de viagens">Agenciamento de viagens</option>
               </Form.Select>
               <Form.Control.Feedback type="invalid"> {erros.curso} </Form.Control.Feedback>  
             </Form.Group>
@@ -308,10 +311,9 @@ function FormInform() {
               <Form.Label>Módulo:<span style={{ color: "red" }}>*</span></Form.Label>
               <Form.Select value={informacoes.modulo} isInvalid={!!erros.modulo} onChange={(e) => handleChange("modulo", e.target.value)}>
                 <option value="">Selecione o módulo</option>
-                <option value="Módulo 1">Módulo 1</option>
-                <option value="Módulo 2">Módulo 2</option>
-                <option value="Módulo 3">Módulo 3</option>
-                <option value="Ensino Médio">Ensino Médio</option>
+                <option value="1">Módulo 1</option>
+                <option value="2">Módulo 2</option>
+                <option value="3">Módulo 3</option>
               </Form.Select>
               <Form.Control.Feedback type="invalid"> {erros.modulo} </Form.Control.Feedback>
             </Form.Group>

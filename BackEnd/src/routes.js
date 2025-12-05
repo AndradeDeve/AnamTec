@@ -30,7 +30,7 @@ routes.use("/alergias", alergiaController);
 routes.use("/comentarios", comentarioController);
 routes.use("/responsavel", responsavelController);
 routes.use("/aluno", alunoController);
-routes.use("/user",  usuarioController);
+routes.use("/user", authenticate, usuarioController);
 routes.use("/login", loginController);
 routes.use('/curso', cursoController);
 routes.use("/type", typeController);
